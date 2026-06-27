@@ -1,0 +1,488 @@
+{
+  "_meta": {
+    "document": "STRIKERS_HANDOFF_GENERATION_PROMPT",
+    "version": "1.0",
+    "date": "June 2026",
+    "purpose": "Reusable prompt and schema for generating a lossless project handoff JSON at the end of any STRIKERS research project session. Load this into a new chat and follow the instructions to produce a complete handoff for that project.",
+    "usage": "Paste the contents of prompt_for_claude into a new Claude chat at the END of a project session, after all outputs have been built. Claude will generate a populated handoff JSON following the schema defined here."
+  },
+  "prompt_for_claude": "At the end of this session, generate a lossless handoff JSON file for this project. The handoff must be self-contained and complete enough that a new Claude chat with no prior context can recreate or adapt any output from this session.\n\nSave the file as STRIKERS_[PROJECTNAME]_HANDOFF_v1.json and also push it to the project GitHub repo so it is always retrievable.\n\nPopulate every key in the schema below from the actual content of this session. Do not leave placeholders \u2014 if something was not built, mark it explicitly as null or \"not built this session\" with a note.\n\nThe JSON must include these top-level keys:\n\n_meta: document name, version, date, purpose, and an opening_instruction string that tells the next Claude chat exactly what to do first when loading this file.\n\nproject_identity: study name and abbreviation, paper type (scoping review / RCT / framework synthesis / cohort etc), authors as a list with Lead and CI labelled by role, full 18-or-N author list, institution primary and secondary, GitHub account, repo name, live URL, survey URL or null, GA Measurement ID.\n\ndesign_system: full palette as hex values with use-case notes for each, typography (body font, mono font, weights used, use cases for each), spacing system, border radius values, shadow values, mobile breakpoints.\n\nlogos_and_brand_assets: every logo file used with its display size in nav and footer, the partner banner file and placement, QR code target URL and generation parameters.\n\npage_architecture: ordered list of every section with id, anchor, nav label, purpose (one sentence), required or optional, and a components list describing every element in that section.\n\ninteractive_components: every JS function by name with its exact logic described, drawer open/close pattern, share API pattern (mobile vs desktop), scroll reveal IntersectionObserver config, any other interactive elements.\n\nanimations: every CSS keyframe used with its name, from/to values, and the timing/delay applied to each element that uses it.\n\nauthors_strip: full author list as it appears on the page, Lead label on first author, CI label on last, institutional line, any project group (e.g. EKAD) in the sub-line.\n\nposter_schema: if posters were built, full content schema for each \u2014 title, paper type tag, header colours, layout description, every section with its content, figures used, footer content. If no poster built, null.\n\ngithub_deployment: repo name, live URL, Pages source branch and path, whether repo is public or private, GA snippet placement, blob API push method steps, token scope.\n\ncontent_to_replace: explicit numbered list of every element a new chat must swap out to adapt this page for a different study. Be specific \u2014 name the exact strings, not just categories.\n\nkeep_identical: explicit list of everything that must remain unchanged across all STRIKERS pages \u2014 CSS variables, font imports, logo files, partner banner, JS functions, animation keyframes, footer structure, authors strip CSS classes.\n\nstanding_rules: the non-negotiable rules that apply to every STRIKERS output, derived from the full session history.\n\nnext_steps_outstanding: anything unfinished, deferred, or explicitly noted as a future task during this session.",
+  "schema": {
+    "_meta": {
+      "document": "string \u2014 STRIKERS_[PROJECTNAME]_HANDOFF_v1",
+      "version": "string",
+      "date": "string",
+      "purpose": "string",
+      "opening_instruction": "string \u2014 tells the next chat what to do first when loading this file"
+    },
+    "project_identity": {
+      "study_name": "string",
+      "abbreviation": "string",
+      "paper_type": "string \u2014 e.g. PRISMA-ScR Scoping Review / Retrospective Cohort / Framework Synthesis",
+      "authors": [
+        {
+          "name": "string",
+          "role": "Lead | CI | null"
+        }
+      ],
+      "author_group": "string or null \u2014 e.g. EKAD Project Group with member names",
+      "institution_primary": "string",
+      "institution_secondary": "string",
+      "github_account": "andrewhallorthosports",
+      "github_repo": "string",
+      "live_url": "string",
+      "survey_url": "string or null",
+      "ga_measurement_id": "string \u2014 G-XXXXXXXXXX"
+    },
+    "design_system": {
+      "palette": {
+        "note": "Each entry: hex, css_var, use",
+        "ink": {
+          "hex": "#0E0C28",
+          "var": "--ink",
+          "use": "Primary text, dark buttons"
+        },
+        "ink2": {
+          "hex": "#2C2A4A",
+          "var": "--ink2",
+          "use": "Body text secondary"
+        },
+        "muted": {
+          "hex": "#6B6888",
+          "var": "--muted",
+          "use": "Secondary text, descriptions"
+        },
+        "light": {
+          "hex": "#9896B0",
+          "var": "--light",
+          "use": "Eyebrows, labels, captions"
+        },
+        "border": {
+          "hex": "#E2E0F0",
+          "var": "--border",
+          "use": "All card borders, dividers"
+        },
+        "pale": {
+          "hex": "#F4F3FC",
+          "var": "--pale",
+          "use": "Section backgrounds, card hover"
+        },
+        "bg": {
+          "hex": "#FAFAFA",
+          "var": "--bg",
+          "use": "Page background"
+        },
+        "white": {
+          "hex": "#FFFFFF",
+          "var": "--white",
+          "use": "Cards, nav background"
+        },
+        "project_accent": "string \u2014 primary accent colour for this specific project, used on borders, tags, buttons, figures"
+      },
+      "typography": {
+        "body_font": "Inter",
+        "mono_font": "JetBrains Mono",
+        "google_fonts_url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap",
+        "body_use": "Section titles (800), hero title (800), body prose (400), lead text (300)",
+        "mono_use": "All labels, eyebrows, buttons, tags, codes, abstract text, table content, captions, nav links, footer text, drawer headers, authors strip"
+      },
+      "spacing": {
+        "section_padding": "72px 24px",
+        "inner_max_width_mobile": "640-720px",
+        "inner_max_width_desktop": "720-960px via @media min-width:768px",
+        "nav_height": "52px"
+      },
+      "border_radius": {
+        "cards": "4px",
+        "buttons": "3px",
+        "nav_dropdown": "6px",
+        "pill": "20px"
+      }
+    },
+    "logos_and_brand_assets": {
+      "primary_logo": {
+        "file": "STRIKERS_St_Andrews_Combined_Logo.png",
+        "nav_height": "30-34px",
+        "footer_height": "34-44px",
+        "use": "Nav left, footer centre \u2014 single combined asset for all pages"
+      },
+      "partner_banner": {
+        "file": "Screenshot_2026-06-17_at_13_07_45.png",
+        "placement": "Between hero/stats and first content section",
+        "label": "Collaborative institutions and partners",
+        "height": "32px logos, 12px padding top and bottom",
+        "reuse": "Identical across all STRIKERS pages"
+      },
+      "qr_code": {
+        "target_url": "string \u2014 the live page URL, not the survey URL",
+        "fill_color": "#1A1840",
+        "back_color": "white",
+        "error_correction": "ERROR_CORRECT_H",
+        "output_size": "1200x1200px for print",
+        "library": "qrcode[pil] Python"
+      }
+    },
+    "page_architecture": {
+      "note": "Ordered list of sections. Adapt content, keep structure.",
+      "sections": [
+        {
+          "id": "hero",
+          "anchor": null,
+          "nav_label": null,
+          "purpose": "First impression \u2014 study figure dominant, title, subtitle, authors CTA",
+          "required": true,
+          "dark_background": true,
+          "components": [
+            "animated orbs background",
+            "combined logo",
+            "eyebrow text",
+            "tag chip",
+            "h1 title with accent span",
+            "subtitle p",
+            "study figure (image or SVG)",
+            "hero CTA button",
+            "scroll cue"
+          ]
+        },
+        {
+          "id": "stats_strip",
+          "anchor": null,
+          "nav_label": null,
+          "purpose": "Key numerical findings at a glance",
+          "required": false,
+          "note": "Use for empirical studies with headline stats. Omit for framework papers.",
+          "components": [
+            "dark accent background",
+            "grid of stat-block elements (large number + label)"
+          ]
+        },
+        {
+          "id": "partner_banner",
+          "anchor": null,
+          "nav_label": null,
+          "purpose": "Institutional trust signal",
+          "required": true,
+          "components": [
+            "label",
+            "horizontally scrollable logo strip"
+          ]
+        },
+        {
+          "id": "authors_strip",
+          "anchor": null,
+          "nav_label": null,
+          "purpose": "Compact author list with role labels",
+          "required": true,
+          "components": [
+            "Authors label",
+            "names in JetBrains Mono with Lead and CI spans",
+            "dashed sub-line with institutions and project group"
+          ]
+        },
+        {
+          "id": "programme",
+          "anchor": "#programme",
+          "nav_label": "Papers",
+          "purpose": "Full abstract(s) with poster access",
+          "required": true,
+          "components": [
+            "paper-card per paper",
+            "paper-tag",
+            "paper-ttl",
+            "abstract sections (abs-lbl + abs-txt)",
+            "poster-btns (View / Download / Share)",
+            "poster-drawer (inline image viewer)"
+          ]
+        },
+        {
+          "id": "comparison",
+          "anchor": "#comparison",
+          "nav_label": "Compare",
+          "purpose": "Field positioning versus adjacent disciplines",
+          "required": false,
+          "note": "Include for framework and scoping review papers. Omit for empirical studies.",
+          "components": [
+            "horizontally scrollable table",
+            "study column highlighted in accent colour",
+            "footnote with acronym key"
+          ]
+        },
+        {
+          "id": "results",
+          "anchor": "#results",
+          "nav_label": "Results",
+          "purpose": "Key findings with data tables and stat cards",
+          "required": false,
+          "note": "Use for empirical studies. Replace with domains/framework section for synthesis papers.",
+          "components": [
+            "results-grid cards",
+            "data tables",
+            "impact-grid",
+            "risk factor tables"
+          ]
+        },
+        {
+          "id": "domains",
+          "anchor": "#domains",
+          "nav_label": "Domains",
+          "purpose": "Framework structure in detail",
+          "required": false,
+          "note": "Use for framework synthesis papers with defined domain structures.",
+          "components": [
+            "quad-grid panels",
+            "OA strip",
+            "domain items with codes"
+          ]
+        },
+        {
+          "id": "conclusions",
+          "anchor": "#conclusions",
+          "nav_label": "Conclusions",
+          "purpose": "Numbered key findings",
+          "required": true,
+          "components": [
+            "numbered concl-item list with concl-num and concl-text"
+          ]
+        },
+        {
+          "id": "tools",
+          "anchor": "#tools",
+          "nav_label": "Tools",
+          "purpose": "Downloadable outputs and inline readers",
+          "required": false,
+          "components": [
+            "arch-card per tool",
+            "spec-list",
+            "dl-btn (PDF + DOCX)",
+            "view-btn opening os-drawer"
+          ]
+        },
+        {
+          "id": "presentation",
+          "anchor": "#presentation",
+          "nav_label": "Slides",
+          "purpose": "Inline conference slide viewer",
+          "required": false,
+          "components": [
+            "pres-btn toggle",
+            "slide-drawer with paginated slide images",
+            "lazy loading"
+          ]
+        },
+        {
+          "id": "survey",
+          "anchor": "#survey",
+          "nav_label": "Survey",
+          "purpose": "Survey participation and sharing",
+          "required": false,
+          "note": "Omit if no associated survey (e.g. Hybrid Athlete).",
+          "components": [
+            "QR code block",
+            "Take the survey primary CTA",
+            "secondary group (Share survey / Share page / Email / LinkedIn)"
+          ]
+        },
+        {
+          "id": "contact",
+          "anchor": "#contact",
+          "nav_label": null,
+          "purpose": "Share page and contact CI",
+          "required": true,
+          "components": [
+            "QR code",
+            "Share page button",
+            "Email button (pre-populated subject)",
+            "LinkedIn button"
+          ]
+        }
+      ]
+    },
+    "interactive_components": {
+      "scroll_reveal": {
+        "class": "reveal",
+        "js": "const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:0.08}); document.querySelectorAll('.reveal').forEach(el=>io.observe(el));",
+        "css_entry": "opacity:0;transform:translateY(14px);transition:opacity 0.5s ease,transform 0.5s ease;",
+        "css_active": "opacity:1;transform:none;"
+      },
+      "drawer_toggle": {
+        "function": "toggleDrawer(id)",
+        "js": "function toggleDrawer(id){const d=document.getElementById(id);d.classList.toggle('open');if(d.classList.contains('open'))setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}",
+        "css_closed": "display:none",
+        "css_open": "display:block"
+      },
+      "share_api": {
+        "function": "doShare(title,text,url)",
+        "js": "function doShare(title,text,url){if(navigator.share){navigator.share({title,text,url}).catch(()=>{});}else{navigator.clipboard.writeText(url).then(()=>{const el=document.getElementById('shareDone');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}).catch(()=>window.open(url,'_blank'));}}",
+        "page_url": "Hardcoded to live GitHub Pages URL \u2014 never use window.location.href",
+        "confirmation_element": "div#shareDone with class toggle show"
+      },
+      "nav_dropdown": {
+        "function": "toggleOtherResearch()",
+        "behaviour": "Opens full-width panel on mobile, positioned dropdown on desktop (min-width:480px)",
+        "close_on_outside_click": true
+      }
+    },
+    "animations": {
+      "fadeUp": {
+        "keyframe": "from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}",
+        "use": "All hero text elements, sequential delays 0.1s\u20130.6s, 0.5s ease forwards"
+      },
+      "fadeIn": {
+        "keyframe": "from{opacity:0;}to{opacity:1;}",
+        "use": "Scroll cue, 1s 2s ease forwards"
+      },
+      "scaleIn": {
+        "keyframe": "from{opacity:0;transform:scale(0.94);}to{opacity:1;transform:scale(1);}",
+        "use": "Hero figure, 0.9s 0.4s cubic-bezier(0.22,1,0.36,1) forwards"
+      },
+      "orbFloat": {
+        "keyframe": "0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-20px) scale(1.05);}66%{transform:translate(-20px,30px) scale(0.95);}",
+        "use": "Hero background orbs, 8-9s ease-in-out infinite, staggered delays"
+      },
+      "figFloat": {
+        "keyframe": "0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}",
+        "use": "Hero and card figures, 6-7s ease-in-out infinite, staggered delays between cards"
+      },
+      "cardIn": {
+        "keyframe": "from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}",
+        "use": "Hub project cards, 0.6s ease both, delays 0.5s / 0.65s / 0.8s per card"
+      }
+    },
+    "authors_strip": {
+      "css_classes": {
+        "authors-strip": "background:var(--pale);border-bottom:1px solid var(--border);padding:14px 20px;",
+        "authors-inner": "max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 0;",
+        "authors-label": "JetBrains Mono 8px 700 uppercase letter-spacing:0.14em \u2014 'Authors'",
+        "authors-names": "JetBrains Mono 9.5px 400 \u2014 all names separated by \u00b7",
+        "ci": "font-weight:600;color:var(--ink) \u2014 applied to Lead (first) and CI (last) author",
+        "ci-role": "8px light colour \u2014 (Lead) or (CI) label",
+        "authors-sub": "8px light \u2014 institutions and project group, dashed top border"
+      },
+      "lead_author": "First listed author \u2014 span.ci + span.ci-role '(Lead)'",
+      "ci_author": "Last listed author (A J Hall) \u2014 span.ci + span.ci-role '(CI)'",
+      "rule": "Neither Lead nor CI are bolded. Role is indicated only by font-weight:600 and the role label. No <strong> tags."
+    },
+    "poster_schema": {
+      "note": "Populate from session if posters were built. Null if not.",
+      "format": "A0 portrait \u2014 33.11 x 46.81 inches in pptxgenjs",
+      "header": {
+        "background": "hex colour \u2014 project accent dark",
+        "left_logos": [
+          "STRIKERS S mark",
+          "St Andrews crest"
+        ],
+        "title_style": "Bold white large \u2014 study title",
+        "contact": "ajh52@st-andrews.ac.uk | @andrewhallortho",
+        "right_logo": "strikerselite sports injury group dublin"
+      },
+      "layout_options": [
+        "2-column",
+        "2-col top + full-width results + 3-col bottom",
+        "custom"
+      ],
+      "footer": "Sponsor logos strip on white \u2014 reuse same banner"
+    },
+    "github_deployment": {
+      "account": "andrewhallorthosports",
+      "repo": "string \u2014 kebab-case project name",
+      "live_url": "string",
+      "pages_source": "main branch / root",
+      "repo_must_be_public": "Required for GitHub Pages on free plan",
+      "make_public": "repo Settings \u2192 Danger Zone \u2192 Change visibility \u2192 Make public",
+      "ga_snippet_placement": "Immediately after <head> tag",
+      "ga_measurement_id": "string \u2014 get from analytics.google.com, replace both G-XXXXXXXXXX instances",
+      "blob_api_push_method": {
+        "why": "Files over 1MB exceed GitHub Contents API limit",
+        "steps": [
+          "POST /repos/{owner}/{repo}/git/blobs with base64 content \u2192 get new_blob_sha",
+          "GET /repos/{owner}/{repo}/git/refs/heads/main \u2192 current commit SHA",
+          "GET /repos/{owner}/{repo}/git/commits/{sha} \u2192 tree SHA",
+          "POST /repos/{owner}/{repo}/git/trees with base_tree + new blob entry \u2192 new_tree_sha",
+          "POST /repos/{owner}/{repo}/git/commits with message, tree, parent \u2192 new_commit_sha",
+          "PATCH /repos/{owner}/{repo}/git/refs/heads/main with new_commit_sha"
+        ],
+        "token_scope": "Classic PAT, repo scope",
+        "auth": "Auth.Token(TOKEN) \u2014 not deprecated login_or_token"
+      }
+    },
+    "content_to_replace": [
+      "Page <title> tag",
+      "Hero eyebrow text",
+      "Hero tag chip text",
+      "Hero h1 title and accent span",
+      "Hero subtitle paragraph",
+      "Hero figure \u2014 base64 image or SVG",
+      "Stats strip values and labels",
+      "Authors strip \u2014 full name list, Lead name, CI name, institutional sub-line",
+      "All abstract section text (Background, Objectives, Design, Setting, Sources, Outcomes, Results, Conclusions)",
+      "Paper tag labels (PM1/PM2 etc)",
+      "Paper titles",
+      "Poster image base64 data",
+      "Poster PDF filename in download href",
+      "Comparison table content (columns, rows, footnote)",
+      "Domain/framework section content",
+      "Results section data, tables, and stat values",
+      "Conclusions numbered list",
+      "Tool arch-card content and download filenames",
+      "Slide images base64 data",
+      "Survey URL (both in href and in doShare JS)",
+      "PAGE_URL constant in JS",
+      "QR code base64 image",
+      "Email mailto subject line",
+      "Footer conference/venue text",
+      "Google Analytics Measurement ID (both instances)",
+      "GitHub repo name in all URLs",
+      "Nav section anchor links (adapt to sections present)"
+    ],
+    "keep_identical": [
+      "Combined logo base64 (STRIKERS_St_Andrews_Combined_Logo.png)",
+      "Partner banner base64 (Screenshot_2026-06-17_at_13_07_45.png)",
+      "All CSS custom properties (--ink, --ink2, --muted, --light, --border, --pale, --bg, --white)",
+      "Google Fonts CDN link (Inter + JetBrains Mono)",
+      "All six animation keyframes (fadeUp, fadeIn, scaleIn, orbFloat, figFloat, cardIn)",
+      "IntersectionObserver scroll reveal implementation",
+      "toggleDrawer() function",
+      "doShare() function and share button pattern",
+      "toggleOtherResearch() dropdown and outside-click handler",
+      "Nav structure (logo left, links + hub button right)",
+      "Other STRIKERS Research dropdown (update with new project when built)",
+      "Authors strip CSS classes",
+      "Partner banner HTML and CSS",
+      "Footer structure and combined logo",
+      "GA snippet structure (just swap Measurement ID)",
+      "Mobile optimisations (min-width:0 on nav-left, overflow-x:auto on tables, -webkit-overflow-scrolling:touch on drawers)",
+      "CI email: ajh52@st-andrews.ac.uk",
+      "CI LinkedIn: https://www.linkedin.com/in/andrewhallortho",
+      "Hub URL in Other STRIKERS Research dropdown: https://andrewhallorthosports.github.io/strikers-elite-sports-group/"
+    ],
+    "standing_rules": [
+      "British English throughout all outputs",
+      "No em dashes anywhere \u2014 use colons, commas, or parentheses",
+      "No AI or synthesis caveats on live pages \u2014 belongs in methods text only",
+      "No invented citations \u2014 every source externally verifiable",
+      "No conference or event references on live pages (no UKCCIIS, no IOC Medical Research Centre, no event year) \u2014 these belong in methods text or poster only",
+      "No bold or highlight on A J Hall in author lists \u2014 distinguished by role label (CI) only",
+      "First author distinguished by role label (Lead) only \u2014 same subtle treatment as CI, no bold",
+      "Hospital name: Royal Infirmary of Edinburgh (not Royal Infirmary Edinburgh)",
+      "No status badges on hub (no Live / In Development / Coming Soon / No associated survey)",
+      "PROTOTYPE label on draft tools (PM-NEAT etc)",
+      "Structural and architectural decisions are Andrew's \u2014 Claude executes faithfully",
+      "PAGE_URL always hardcoded to live GitHub Pages URL \u2014 never use window.location.href",
+      "QR code on poster points to study landing page URL, not survey URL",
+      "QR code on landing page survey section points to survey URL",
+      "All pages must include the Other STRIKERS Research nav dropdown linking to hub and all live projects",
+      "Authors strip placed after partner banner, before first content section",
+      "Google Analytics GA4 snippet placed immediately after <head> tag"
+    ],
+    "next_steps_outstanding": {
+      "note": "Populate from session. List anything unfinished or explicitly deferred.",
+      "example_entries": [
+        "PRISMA flow diagram \u2014 exclusion counts needed before build",
+        "Evidence strength chart \u2014 18 claims by category",
+        "Survey URL and QR \u2014 retrieve from prior session before building survey section",
+        "Custom domain \u2014 purchase and configure when ready",
+        "GA Measurement ID \u2014 get from analytics.google.com and push to replace G-XXXXXXXXXX"
+      ]
+    }
+  }
+}
