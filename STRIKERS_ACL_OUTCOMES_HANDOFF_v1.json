@@ -1,0 +1,530 @@
+{
+  "_meta": {
+    "document": "STRIKERS_ACL_OUTCOMES_HANDOFF",
+    "version": "1.0",
+    "date": "June 2026",
+    "purpose": "Lossless handoff for the ACL Outcomes study landing page. Contains all content, design, architecture, and deployment information needed to recreate, update, or adapt the page in a new Claude chat session.",
+    "opening_instruction": "Load this JSON first. It contains everything needed to update or rebuild the ACL Outcomes landing page at https://andrewhallorthosports.github.io/acl-outcomes/. Read all sections before making any changes. Use the github_deployment section for all pushes. Follow standing_rules without exception."
+  },
+  "project_identity": {
+    "study_name": "Clinical, Functional and Sport-Related Outcomes Following ACL Reconstruction",
+    "abbreviation": "ACL Outcomes",
+    "paper_type": "Retrospective cohort study",
+    "presentation": "UKCCIIS 2026 \u2014 IOC Medical Research Centre",
+    "presentation_note": "Conference reference removed from live page per standing rules \u2014 appears only in footer citation and presentation section",
+    "authors": [
+      {
+        "name": "R Cullinan",
+        "role": "Lead"
+      },
+      {
+        "name": "L Baxendale-Smith",
+        "role": null
+      },
+      {
+        "name": "T Williamson",
+        "role": null
+      },
+      {
+        "name": "E Sutherland",
+        "role": null
+      },
+      {
+        "name": "L Watson",
+        "role": null
+      },
+      {
+        "name": "N D Clement",
+        "role": null
+      },
+      {
+        "name": "I R Murray",
+        "role": null
+      },
+      {
+        "name": "T O White",
+        "role": null
+      },
+      {
+        "name": "P Walmsley",
+        "role": null
+      },
+      {
+        "name": "A J Hall",
+        "role": "CI"
+      }
+    ],
+    "author_group": {
+      "name": "EKAD Project Group",
+      "members": [
+        "I Daniels",
+        "F Dyer",
+        "K Milne",
+        "J M Leow",
+        "S Silvestre",
+        "G Snowden",
+        "R Webb"
+      ]
+    },
+    "institution_primary": "STRIKERS Elite Sports Group, Dublin, Ireland",
+    "institution_secondary": "School of Medicine, University of St Andrews, UK",
+    "hospital": "Royal Infirmary of Edinburgh",
+    "hospital_note": "Always 'Royal Infirmary of Edinburgh' \u2014 never 'Royal Infirmary Edinburgh'",
+    "ci_email": "ajh52@st-andrews.ac.uk",
+    "ci_linkedin": "https://www.linkedin.com/in/andrewhallortho",
+    "github_account": "andrewhallorthosports",
+    "github_repo": "acl-outcomes",
+    "live_url": "https://andrewhallorthosports.github.io/acl-outcomes/",
+    "survey_url": null,
+    "survey_note": "No associated survey for this project",
+    "ga_measurement_id": "G-WBBKXNFM9F",
+    "ga_note": "Shared across all STRIKERS pages \u2014 same ID"
+  },
+  "key_findings": {
+    "n_patients": 512,
+    "mean_age_yrs": 29.2,
+    "male_pct": 71.9,
+    "mean_followup_months": 47,
+    "further_surgery_pct": 17.6,
+    "further_surgery_n": 90,
+    "mean_time_to_further_surgery_months": 15.5,
+    "further_surgery_range_months": "2-55",
+    "revision_aclr_pct": 6.3,
+    "revision_aclr_n": 32,
+    "further_surgery_breakdown": [
+      {
+        "procedure": "Revision ACL reconstruction",
+        "n": 32
+      },
+      {
+        "procedure": "Arthrolysis",
+        "n": 25
+      },
+      {
+        "procedure": "Meniscectomy",
+        "n": 18
+      },
+      {
+        "procedure": "Surgical washout",
+        "n": 6
+      },
+      {
+        "procedure": "Osteochondral procedure",
+        "n": 4
+      },
+      {
+        "procedure": "Other",
+        "n": 5
+      }
+    ],
+    "risk_factors_table": [
+      {
+        "factor": "Age at index surgery",
+        "effect": "Diff \u22120.3 (\u22122.54 to 1.88)",
+        "p": "0.771",
+        "result": "NS"
+      },
+      {
+        "factor": "Sex",
+        "effect": "OR 0.90 (0.54 to 1.47)",
+        "p": "0.330",
+        "result": "NS"
+      },
+      {
+        "factor": "Mechanism of index injury",
+        "effect": "\u2014",
+        "p": "0.289",
+        "result": "NS"
+      },
+      {
+        "factor": "Concurrent injury at presentation",
+        "effect": "OR 1.91 (0.80 to 4.50)",
+        "p": "0.135",
+        "result": "NS"
+      }
+    ],
+    "risk_factor_finding": "After adjustment for confounders, no independent variable was associated with reoperation (p \u2265 0.082) or revision ACL reconstruction (p \u2265 0.161)",
+    "proms": {
+      "response_rate": "268 of 512 patients (52%)",
+      "followup_at_proms_months": 47,
+      "satisfaction_mean": "8/10",
+      "satisfaction_sd": 2.2,
+      "satisfaction_scale": "0 worst, 10 best",
+      "ikdc_mean": 80,
+      "ikdc_sd": 16.5,
+      "nps_mean": "9/10",
+      "nps_sd": 1.8,
+      "qol_negative_pct": 64,
+      "qol_severe_pct": 17.5,
+      "work_negative_pct": 40,
+      "sick_leave_pct": 90,
+      "sick_leave_median_weeks": 7.4,
+      "relationships_negative_pct": 25,
+      "relationships_severe_pct": 4.9,
+      "median_return_to_play_weeks": 52,
+      "return_to_play_iqr_weeks": 44,
+      "did_not_return_within_4yr_pct": 31,
+      "did_not_return_within_4yr_n_of": "81 of 261",
+      "top_sports_pre_injury": [
+        {
+          "sport": "Football",
+          "n": 135
+        },
+        {
+          "sport": "Golf",
+          "n": 92
+        },
+        {
+          "sport": "Gym / fitness",
+          "n": 71
+        },
+        {
+          "sport": "Running",
+          "n": 50
+        },
+        {
+          "sport": "Rugby",
+          "n": 47
+        }
+      ]
+    },
+    "conclusions": [
+      "1 in 6 underwent further surgery within 2 years; revision ACLr (6.3%), arthrolysis (4.9%), meniscectomy (3.5%).",
+      "Risk of reoperation and revision was not predicted by age, sex, mechanism of injury, or index procedure.",
+      "Satisfaction and function were high, yet the impact on work, relationships, and return to sport was substantial.",
+      "These findings support honest informed consent and high-quality surgical and rehabilitation support."
+    ]
+  },
+  "design_system": {
+    "project_accent": "#4A90D9",
+    "project_accent_dark": "#1A3F6F",
+    "project_accent_pale": "#EBF4FF",
+    "hero_gradient": "linear-gradient(150deg,#0A1020 0%,#0E1828 45%,#1A2840 75%,#1A3040 100%)",
+    "orb_colours": [
+      "#4A90D9",
+      "#1A5C8A",
+      "#2A3F5C"
+    ],
+    "shared_palette": {
+      "ink": "#0E0C28",
+      "ink2": "#2C2A4A",
+      "muted": "#6B6888",
+      "light": "#9896B0",
+      "border": "#E2E0F0",
+      "pale": "#F4F3FC",
+      "bg": "#FAFAFA",
+      "white": "#FFFFFF"
+    },
+    "typography": {
+      "body": "Inter (300,400,500,600,700,800)",
+      "mono": "JetBrains Mono (300,400,500,600,700)",
+      "google_fonts": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
+    }
+  },
+  "assets": {
+    "hero_figure": {
+      "file": "istockphoto-161735631-612x612-1.jpg",
+      "description": "X-ray style knee anatomy photo \u2014 blue wireframe knee with orange/red ACL highlighted centrally",
+      "treatment": "Circular crop via border-radius:50%, blue glow via filter:drop-shadow(0 0 40px rgba(74,144,217,0.4)), figFloat animation",
+      "size_in_hero": "width:min(280px,80vw)",
+      "optimised_size": "400x400px JPEG quality 85-88"
+    },
+    "combined_logo": {
+      "file": "STRIKERS_St_Andrews_Combined_Logo.png",
+      "nav_height": "30px",
+      "footer_height": "34px"
+    },
+    "partner_banner": {
+      "file": "Screenshot_2026-06-17_at_13_07_45.png",
+      "height": "32px"
+    },
+    "qr_code": {
+      "target_url": "https://andrewhallorthosports.github.io/acl-outcomes/",
+      "fill_color": "#1A1840",
+      "back_color": "white",
+      "error_correction": "ERROR_CORRECT_H",
+      "box_size": 12,
+      "border": 3,
+      "output_size": "1200x1200px",
+      "file": "ACL_Outcomes_QR.png"
+    },
+    "presentation": {
+      "source_file": "CLINICAL__FUNCTIONAL___SPORT-RELATED_OUTCOMES_AFTER_ACLR_-_UKCCIIS_2026_Presentation.pptx",
+      "n_slides": 15,
+      "render_width": "900px wide JPEG quality 82",
+      "embed_method": "base64 inline, loading=lazy",
+      "slide_aspect": "16:9 (900x506px rendered)"
+    }
+  },
+  "page_architecture": {
+    "file": "index.html",
+    "type": "Single self-contained HTML \u2014 all assets base64 embedded",
+    "approximate_size": "1.1-1.2MB",
+    "sections_in_order": [
+      {
+        "id": "nav",
+        "type": "fixed",
+        "left": "Combined STRIKERS + St Andrews logo (30px height)",
+        "right": "Section links (Results, PROMs, Conclusions, Slides) + '\u2190 All Research' button linking to hub",
+        "hub_btn_style": "font-family JetBrains Mono, 9px, OA purple colour, 1px border, border-radius 3px",
+        "mobile": "section links hidden below 640px, hub button always visible"
+      },
+      {
+        "id": "hero",
+        "dark_bg": true,
+        "gradient": "linear-gradient(150deg,#0A1020 0%,#0E1828 45%,#1A2840 75%,#1A3040 100%)",
+        "layout": "2-column grid on desktop (text left, figure right), single column on mobile",
+        "desktop_breakpoint": "768px",
+        "text_elements": [
+          "hero-eyebrow: 'STRIKERS Elite Sports Group \u00b7 School of Medicine, University of St Andrews'",
+          "hero-tag: removed (was IOC/UKCCIIS \u2014 removed per standing rules)",
+          "hero-title: 'Clinical, Functional and Sport-Related / Outcomes After ACL Reconstruction' with span in #7AB8E8",
+          "hero-sub: 512 consecutive patients, minimum 24-month follow-up, Royal Infirmary of Edinburgh",
+          "hero-authors: REMOVED \u2014 authors now in authors-strip below partner banner",
+          "hero-cta: 'View results \u2192' button linking to #results"
+        ],
+        "figure": "Knee anatomy photo \u2014 circular, blue glow, figFloat animation"
+      },
+      {
+        "id": "stats_strip",
+        "bg": "#1A3F6F (acl-dark)",
+        "border": "1px solid rgba(74,144,217,0.2) top and bottom",
+        "grid": "2-col mobile / 3-col 640px / 6-col 900px",
+        "stats": [
+          {
+            "value": "512",
+            "label": "Patients"
+          },
+          {
+            "value": "29.2",
+            "label": "Mean age (yrs)"
+          },
+          {
+            "value": "71.9%",
+            "label": "Male"
+          },
+          {
+            "value": "47mo",
+            "label": "Mean follow-up"
+          },
+          {
+            "value": "17.6%",
+            "label": "Further surgery"
+          },
+          {
+            "value": "6.3%",
+            "label": "Revision ACLr"
+          }
+        ]
+      },
+      {
+        "id": "partner_banner",
+        "label": "Collaborative institutions and partners",
+        "logo_height": "32px",
+        "scrollable_mobile": true
+      },
+      {
+        "id": "authors_strip",
+        "bg": "var(--pale)",
+        "border_bottom": "1px solid var(--border)",
+        "lead_author": "R Cullinan (Lead)",
+        "ci_author": "A J Hall (CI)",
+        "institutional_sub": "EKAD Project Group: I Daniels \u00b7 F Dyer \u00b7 K Milne \u00b7 J M Leow \u00b7 S Silvestre \u00b7 G Snowden \u00b7 R Webb \u00b7 Royal Infirmary of Edinburgh \u00b7 School of Medicine, University of St Andrews"
+      },
+      {
+        "id": "results",
+        "anchor": "#results",
+        "nav_label": "Results",
+        "sections": [
+          {
+            "name": "Further Surgery",
+            "bg": "white",
+            "eyebrow": "Results \u00b7 Further Surgery",
+            "title": "Approximately one in six needed further surgery",
+            "lead": "90 of 512 patients (17.6%) underwent further ipsilateral knee surgery. Mean time to further surgery was 15.5 months (range 2\u201355 months).",
+            "components": [
+              "2-col results-grid (17.6% card + 6.3% card)",
+              "surgery breakdown table"
+            ]
+          },
+          {
+            "name": "Risk Factors",
+            "bg": "var(--pale)",
+            "eyebrow": "Results \u00b7 Risk Factors",
+            "title": "No association with age, sex, mechanism, or procedure",
+            "components": [
+              "risk factor table with 4 rows"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "proms",
+        "anchor": "#proms",
+        "nav_label": "PROMs",
+        "bg": "white",
+        "eyebrow": "Patient-Reported Outcomes",
+        "title": "High satisfaction and good function \u2014 but a substantial wider burden",
+        "lead": "268 of 512 patients completed the survey (52%). Mean follow-up at time of PROMs collection: 47 months.",
+        "components": [
+          "3-col proms-grid (satisfaction 8/10, IKDC 80, NPS 9/10)",
+          "3-col impact-grid (QoL 64%, work 40%, relationships 25%)",
+          "Return to play subsection (52wks median, 31% did not return within 4yr)",
+          "Top sports pill tags (Football 135, Golf 92, Gym 71, Running 50, Rugby 47)"
+        ]
+      },
+      {
+        "id": "conclusions",
+        "anchor": "#conclusions",
+        "nav_label": "Conclusions",
+        "bg": "var(--pale)",
+        "eyebrow": "Conclusions",
+        "title": "What this means for patients and clinicians",
+        "numbered_list": 4
+      },
+      {
+        "id": "presentation",
+        "anchor": "#presentation",
+        "nav_label": "Slides",
+        "bg": "var(--pale)",
+        "eyebrow": "Presentation",
+        "title": "Conference Slides",
+        "lead": "Full presentation deck \u2014 15 slides.",
+        "components": [
+          "pres-btn toggle",
+          "slide-drawer (dark bg #0A0A14)",
+          "15 slides lazy-loaded"
+        ]
+      },
+      {
+        "id": "contact",
+        "anchor": "#contact",
+        "bg": "white",
+        "eyebrow": "This study",
+        "title": "Share or get in touch",
+        "components": [
+          "QR code block (points to acl-outcomes page URL)",
+          "Share page button (doShare)",
+          "Email button (mailto:ajh52@st-andrews.ac.uk?subject=ACL%20Outcomes%20Study%20Enquiry)",
+          "LinkedIn button"
+        ]
+      },
+      {
+        "id": "footer",
+        "bg": "var(--ink)",
+        "logo_height": "34px",
+        "text": "STRIKERS Elite Sports Group, Dublin, Ireland \u00b7 School of Medicine, University of St Andrews, UK / Cullinan et al. 2026 / ajh52@st-andrews.ac.uk"
+      }
+    ]
+  },
+  "css_components": {
+    "nav": ".nav-logo{height:30px} .nav-hub{color:var(--oa);border:1px solid rgba(74,56,152,0.25);} .nav-links hidden below 640px",
+    "hero": ".hero-fig img{width:min(280px,80vw);border-radius:50%;filter:drop-shadow(0 0 40px rgba(74,144,217,0.4));animation:figFloat 7s ease-in-out infinite}",
+    "stats_strip": ".stats-inner grid 2/3/6 col responsive. .stat-n JetBrains Mono 28px 700 white. .stat-l 8px 400 rgba(255,255,255,0.45)",
+    "res_card": "border-left:3px solid var(--acl). .res-stat 28px 700. .res-label 13px muted",
+    "surgery_table": "thead bg:#1A3F6F white. tbody hover:var(--acl-pale). td last-child font-weight:600 text-align:right",
+    "prom_card": "text-align:center. .prom-n 32px 700 var(--acl)",
+    "impact_card": "background:var(--pale). .impact-n 22px 700 var(--ink)",
+    "concl_item": "flex gap:14px. .concl-num 20px 700 var(--acl) opacity:0.4. .concl-text 14px ink2",
+    "slide_drawer": "bg:#0A0A14. max-height:75vh overflow-y:auto. .s-pgn pale bg + border-bottom",
+    "authors_strip": "pale bg, border-bottom. .ci font-weight:600 color:var(--ink). .ci-role 8px light. .authors-sub 8px light dashed-top-border",
+    "btn_acl": "background:var(--acl) #4A90D9. hover:#3A7DC9"
+  },
+  "js_functions": {
+    "scroll_reveal": "IntersectionObserver threshold:0.08 on all .reveal elements",
+    "toggleSlides": "function toggleSlides(){const d=document.getElementById('slideDrawer');d.classList.toggle('open');if(d.classList.contains('open'))setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}",
+    "doShare": "navigator.share() on mobile, navigator.clipboard.writeText() on desktop, shows #shareDone for 3s",
+    "sharePage": "doShare('ACL Outcomes \u2014 STRIKERS Research','Clinical, functional and sport-related outcomes following ACL reconstruction \u2014 analysis of 512 consecutive patients.',PAGE_URL)",
+    "PAGE_URL": "'https://andrewhallorthosports.github.io/acl-outcomes/'",
+    "scroll_behaviour": "html{scroll-behavior:smooth}"
+  },
+  "animations": {
+    "fadeUp": "from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;} \u2014 hero text 0.5s ease forwards, delays 0.1-0.6s",
+    "scaleIn": "from{opacity:0;transform:scale(0.94);}to{opacity:1;transform:scale(1);} \u2014 hero figure 0.9s 0.4s cubic-bezier(0.22,1,0.36,1) forwards",
+    "orbFloat": "0%,100%{translate(0,0)scale(1)} 33%{translate(20px,-25px)scale(1.05)} 66%{translate(-15px,20px)scale(0.95)} \u2014 orbs 9s infinite staggered",
+    "figFloat": "0%,100%{translateY(0)} 50%{translateY(-10px)} \u2014 hero figure 7s infinite",
+    "reveal": "opacity:0;transform:translateY(14px) \u2192 in: opacity:1;transform:none \u2014 transition 0.5s ease"
+  },
+  "github_deployment": {
+    "account": "andrewhallorthosports",
+    "repo": "acl-outcomes",
+    "branch": "main",
+    "pages_source": "/ (root of main branch)",
+    "live_url": "https://andrewhallorthosports.github.io/acl-outcomes/",
+    "repo_visibility": "public",
+    "ga_measurement_id": "G-WBBKXNFM9F",
+    "ga_snippet": "Immediately after <head> tag \u2014 async gtag.js + config G-WBBKXNFM9F",
+    "files_in_repo": [
+      "index.html \u2014 full self-contained landing page (~1.1MB)"
+    ],
+    "push_method": {
+      "note": "File is >1MB \u2014 must use git blob API, not contents API",
+      "steps": [
+        "GET /repos/andrewhallorthosports/acl-outcomes/git/trees/main \u2014 find index.html blob SHA",
+        "GET /repos/andrewhallorthosports/acl-outcomes/git/blobs/{sha} \u2014 decode base64",
+        "Patch content in Python",
+        "POST /git/blobs with new base64 \u2014 get new_blob_sha",
+        "GET /git/refs/heads/main \u2014 current commit SHA",
+        "GET /git/commits/{sha} \u2014 tree SHA",
+        "POST /git/trees with base_tree + new blob",
+        "POST /git/commits with message, tree, parent",
+        "PATCH /git/refs/heads/main with new commit SHA"
+      ],
+      "token": "Classic PAT repo scope \u2014 retrieve from Andrew's secure storage; do not store in handoff",
+      "poll_pages": "GET /repos/.../pages every 8s until status=='built'"
+    }
+  },
+  "hub_card": {
+    "hub_repo": "strikers-elite-sports-group",
+    "card_accent": "#4A90D9",
+    "card_bg": "linear-gradient(135deg,#0A1828 0%,#1A2840 100%)",
+    "card_glow": "rgba(74,144,217,0.35)",
+    "figure": "Knee anatomy photo circular (same istockphoto asset), 220x220px object-fit:cover border-radius:50%",
+    "tag": "Retrospective Cohort \u00b7 Orthopaedics",
+    "name": "ACL Reconstruction Outcomes",
+    "desc": "Clinical, functional, and sport-related outcomes following ACL reconstruction \u2014 analysis of 512 consecutive patients at the Royal Infirmary of Edinburgh.",
+    "href": "https://andrewhallorthosports.github.io/acl-outcomes/",
+    "nav_label": "ACL Outcomes"
+  },
+  "content_to_replace_for_new_study": [
+    "Page <title>",
+    "Hero eyebrow institution text",
+    "Hero h1 title and accent span colour",
+    "Hero subtitle paragraph",
+    "Hero figure \u2014 swap knee photo for new study figure",
+    "Stats strip \u2014 values and labels",
+    "Authors strip \u2014 full name list, Lead name, institutional sub-line, project group",
+    "All results section content \u2014 data, tables, stat cards",
+    "PROMs section \u2014 all values",
+    "Conclusions numbered list",
+    "Presentation slides base64 data and slide count",
+    "Contact section QR base64 and target URL",
+    "Email subject line in mailto href",
+    "PAGE_URL constant in JS",
+    "Footer citation text",
+    "GA Measurement ID (both instances in GA snippet)",
+    "GitHub repo name in all URLs",
+    "Nav section anchor links",
+    "Hub card content (in strikers-elite-sports-group repo)"
+  ],
+  "standing_rules": [
+    "British English throughout",
+    "No em dashes \u2014 use colons, commas, or parentheses",
+    "No conference or event references on live pages \u2014 removed from hero, footer, nav, all sections",
+    "No bold on A J Hall \u2014 (CI) role label only, font-weight:600 via .ci class",
+    "First author (R Cullinan) \u2014 (Lead) role label only, same .ci class treatment",
+    "No <strong> tags on any author name",
+    "Hospital: always 'Royal Infirmary of Edinburgh' \u2014 never 'Royal Infirmary Edinburgh'",
+    "No associated survey for this project \u2014 no survey section, no QR pointing to survey",
+    "PAGE_URL hardcoded \u2014 never window.location.href",
+    "QR code points to the study page URL, not a survey URL",
+    "All pages include Other STRIKERS Research nav dropdown (not present on ACL page \u2014 add if rebuilding nav)"
+  ],
+  "next_steps_outstanding": {
+    "prisma_flow": "Not applicable \u2014 cohort study not scoping review",
+    "other_strikers_dropdown": "The ACL page nav does not include the Other STRIKERS Research dropdown present on PM page \u2014 consider adding for consistency",
+    "manuscript": "Conference presentation complete. Journal submission not yet initiated.",
+    "additional_analyses": "Risk factor analysis complete. Further subgroup analyses not yet planned.",
+    "survey": "No associated survey \u2014 not required"
+  }
+}
