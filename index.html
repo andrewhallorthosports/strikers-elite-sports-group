@@ -290,6 +290,24 @@ nav{flex-wrap:nowrap;gap:10px;}
 @media(max-width:1100px){.nav-ecosystem{display:none;}}
 @media(max-width:767px){.nav-affiliated{display:none;}}
 
+
+/* ── STRIKERS BACKRONYM STRIP ── */
+.backronym-section{background:#0E0C28;padding:48px 24px 56px;border-top:1px solid rgba(255,255,255,0.08);}
+.backronym-inner{max-width:1100px;margin:0 auto;}
+.backronym-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#6B6888;text-align:center;display:block;margin-bottom:28px;}
+.backronym-row{display:flex;justify-content:center;flex-wrap:wrap;gap:0;}
+.backronym-unit{display:flex;flex-direction:column;align-items:center;padding:0 14px;position:relative;opacity:0;animation:letterIn 0.6s ease forwards;}
+.backronym-unit:not(:last-child)::after{content:'';position:absolute;right:-1px;top:8px;bottom:8px;width:1px;background:rgba(255,255,255,0.08);}
+.backronym-letter{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:800;background:linear-gradient(180deg,#9C8FFF,#5FC9C9);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;margin-bottom:8px;transition:transform 0.25s ease;}
+.backronym-unit:hover .backronym-letter{transform:translateY(-3px) scale(1.08);}
+.backronym-word{font-size:10.5px;font-weight:600;color:#9896B0;text-align:center;letter-spacing:0.02em;line-height:1.3;max-width:74px;}
+@keyframes letterIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+@media(max-width:700px){
+  .backronym-row{gap:0;}
+  .backronym-unit{padding:0 8px;margin-bottom:14px;}
+  .backronym-letter{font-size:22px;}
+  .backronym-word{font-size:9px;max-width:54px;}
+}
 </style>
 </head>
 <body>
@@ -301,10 +319,10 @@ nav{flex-wrap:nowrap;gap:10px;}
   </a>
 
   <div class="nav-ecosystem">
-    <a href="https://strikerselitesports.com/" class="nav-strikers-badge">STRIKERS Elite</a>
+    <span class="nav-affiliated-pill">Overview</span>
+    <a href="https://strikerselitesports.com/" class="nav-strikers-badge">STRIKERS Elite Sports</a>
     <span class="nav-affiliated-pill">SCOTTISH Network</span>
     <span class="nav-affiliated-pill">Aurora Performance</span>
-    <span class="nav-affiliated-pill">Our Group</span>
   </div>
 
   <div class="nav-right">
@@ -315,23 +333,23 @@ nav{flex-wrap:nowrap;gap:10px;}
       <div class="nav-research-menu" id="navResearchMenu" role="menu">
         <a href="https://strikerselitesports.com/performance-medicine/" class="nav-research-item">
           <span class="nav-research-dot" style="background:#4A3898;"></span>
-          <span><span class="nav-research-label">Performance Medicine</span><span class="nav-research-sub">PRISMA-ScR scoping review</span></span>
+          <span><span class="nav-research-label">Performance Medicine</span></span>
         </a>
         <a href="https://strikerselitesports.com/sports-medicine-event-care/" class="nav-research-item">
           <span class="nav-research-dot" style="background:#1A7888;"></span>
-          <span><span class="nav-research-label">Event Medicine (SMEC)</span><span class="nav-research-sub">Sports medicine event care</span></span>
+          <span><span class="nav-research-label">Event Medicine (SMEC)</span></span>
         </a>
         <a href="https://strikerselitesports.com/acl-outcomes/" class="nav-research-item">
           <span class="nav-research-dot" style="background:#4A90D9;"></span>
-          <span><span class="nav-research-label">ACL Outcomes</span><span class="nav-research-sub">Cullinan et al. 2026</span></span>
+          <span><span class="nav-research-label">ACL Outcomes</span></span>
         </a>
         <a href="https://strikerselitesports.com/hybrid-athlete/" class="nav-research-item">
           <span class="nav-research-dot" style="background:#1A7888;"></span>
-          <span><span class="nav-research-label">Hybrid Athlete</span><span class="nav-research-sub">Scoping review — HIFT/MSK</span></span>
+          <span><span class="nav-research-label">Hybrid Athlete</span></span>
         </a>
         <a href="https://strikerselitesports.com/retired-athlete-knee-health/" class="nav-research-item">
           <span class="nav-research-dot" style="background:#2D7F7A;"></span>
-          <span><span class="nav-research-label">Retired Athlete Knee Health</span><span class="nav-research-sub">Scoping review — OA</span></span>
+          <span><span class="nav-research-label">Retired Athlete Knee Health</span></span>
         </a>
       </div>
     </div>
@@ -356,7 +374,7 @@ nav{flex-wrap:nowrap;gap:10px;}
   <div class="hero-inner">
     <div class="hero-copy">
       <span class="hero-eyebrow reveal">STRIKERS Elite Sports Group</span>
-      <h1 class="hero-title reveal">Performance medicine research, <span>built on evidence</span></h1>
+      <h1 class="hero-title reveal">Clinical Research for <span>Health, Performance &amp; Human Potential</span></h1>
       <p class="hero-sub reveal">Integrated sport science, performance medicine, and clinical research from STRIKERS Elite Sports Group, supported by the School of Medicine, University of St Andrews and collaborators from leading international sporting and healthcare organisations.</p>
       <div class="hero-cta-row reveal">
         <a href="#projects" class="hero-cta-primary">View Current Research</a>
@@ -411,6 +429,23 @@ nav{flex-wrap:nowrap;gap:10px;}
           </div>
         </div>
       </a>
+    </div>
+  </div>
+</section>
+
+<!-- STRIKERS BACKRONYM -->
+<section class="backronym-section">
+  <div class="backronym-inner">
+    <span class="backronym-label">What STRIKERS Stands For</span>
+    <div class="backronym-row">
+          <div class="backronym-unit" style="animation-delay:0.05s;"><span class="backronym-letter">S</span><span class="backronym-word">Specialist</span></div>
+          <div class="backronym-unit" style="animation-delay:0.12s;"><span class="backronym-letter">T</span><span class="backronym-word">Treatment &</span></div>
+          <div class="backronym-unit" style="animation-delay:0.19s;"><span class="backronym-letter">R</span><span class="backronym-word">Rehabilitation</span></div>
+          <div class="backronym-unit" style="animation-delay:0.26s;"><span class="backronym-letter">I</span><span class="backronym-word">of Injuries in</span></div>
+          <div class="backronym-unit" style="animation-delay:0.33s;"><span class="backronym-letter">K</span><span class="backronym-word">Kicking,</span></div>
+          <div class="backronym-unit" style="animation-delay:0.4s;"><span class="backronym-letter">E</span><span class="backronym-word">Explosive &</span></div>
+          <div class="backronym-unit" style="animation-delay:0.47s;"><span class="backronym-letter">R</span><span class="backronym-word">Running</span></div>
+          <div class="backronym-unit" style="animation-delay:0.54s;"><span class="backronym-letter">S</span><span class="backronym-word">Sports</span></div>
     </div>
   </div>
 </section>
