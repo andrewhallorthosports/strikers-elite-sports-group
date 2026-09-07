@@ -1,1 +1,419 @@
-.
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E0C28">
+<title>STRIKERS Clinical Academic Fellowship</title>
+<meta name="description" content="STRIKERS Clinical Academic Fellowship in Sports, Exercise &amp; Performance Medicine: The Pillars of SEM. BASEM Travelling Fellowship 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E0C28; --pale:#F4F3FC; --rule:#E2E0F0;
+  --muted:#6B6888; --accent:#4A3898; --col:760px; --r:4px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--pale);color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--col);margin:0 auto;padding:0 20px}
+a{color:var(--accent)}
+h1,h2,h3{line-height:1.25;letter-spacing:-0.012em;margin:0;text-wrap:balance}
+h1{font-size:clamp(21px,3.9vw,28px);font-weight:700}
+h2{font-size:15px;font-weight:600;margin:0 0 12px;font-family:"JetBrains Mono",monospace;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+h3{font-size:16px;font-weight:600;margin:0 0 4px}
+p{margin:0 0 14px}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+header.top{background:var(--ink);color:var(--pale);padding:26px 0 24px}
+header.top .kicker{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:#A8A4D6;margin-bottom:9px}
+header.top h1{color:#fff}
+header.top .sub{margin:9px 0 0;font-size:14.5px;color:#BDB9E0}
+header.top .sub2{margin:5px 0 0;font-size:11.5px;letter-spacing:.05em;color:#8B87BE;
+  font-family:"JetBrains Mono",monospace}
+
+section{padding:34px 0;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:0}
+
+.signbox{background:#fff;border:1px solid var(--rule);border-radius:var(--r);
+  padding:18px 18px;margin:22px 0 0}
+.signbox .lab{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.signbox p.hint{font-size:14px;color:var(--muted);margin:0 0 12px}
+.gaterow{display:grid;gap:9px}
+@media(min-width:520px){ .gaterow{grid-template-columns:1fr auto} }
+
+label{display:block;font-size:12.5px;font-weight:500;margin-bottom:5px}
+input,textarea{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:#fff;
+  border:1px solid var(--rule);border-radius:var(--r);padding:11px 12px}
+textarea{min-height:80px;resize:vertical}
+input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+button{font-family:inherit;font-size:15px;font-weight:600;color:var(--pale);background:var(--ink);
+  border:1px solid var(--ink);border-radius:var(--r);padding:11px 20px;cursor:pointer;min-height:44px}
+button:disabled{opacity:.35;cursor:not-allowed}
+button.ghost{background:transparent;color:var(--ink)}
+.actions{display:grid;gap:9px}
+@media(min-width:520px){ .actions{display:flex;gap:9px} }
+
+.pane{display:none}
+.pane.shown{display:block}
+.who{border-left:2px solid var(--accent);padding:2px 0 2px 14px;margin:4px 0 16px}
+.who .nm{font-weight:600}
+.who .rl,.who .og{font-size:14px;color:var(--muted)}
+.fields{display:grid;gap:13px;margin-bottom:14px}
+.check{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--rule);
+  border-radius:var(--r);padding:13px;background:#FBFAFF}
+.check input{width:19px;height:19px;margin:1px 0 0;flex:0 0 auto}
+.check label{margin:0;font-weight:400;font-size:14px;line-height:1.5}
+
+.letter{border:1px solid var(--rule);border-radius:var(--r);padding:18px;margin:14px 0;
+  font-size:14px;line-height:1.6;background:#FBFAFF}
+.letter .hd{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:12px}
+.letter .sig{margin-top:16px;padding-top:12px;border-top:1px solid var(--rule);
+  font-size:13px;color:var(--muted)}
+
+.status{margin-top:12px;font-size:14px;padding:11px 13px;border-radius:var(--r);display:none}
+.status.show{display:block}
+.status.ok{background:#E9F3EC;border:1px solid #BBD8C4;color:#1D4A2C}
+.status.err{background:#FBECEC;border:1px solid #E2BEBE;color:#7A2222}
+
+.lede{font-size:17px}
+.three{display:grid;gap:10px;margin-top:16px}
+@media(min-width:640px){ .three{grid-template-columns:repeat(3,1fr)} }
+.dom{border:1px solid var(--rule);background:#fff;border-radius:var(--r);padding:14px 16px}
+.dom .n{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--accent);
+  display:block;margin-bottom:6px}
+.dom p{margin:0;font-size:14px;color:var(--muted)}
+
+.grp{border-top:1px solid var(--rule);padding:14px 0;display:grid;gap:3px}
+@media(min-width:600px){ .grp{grid-template-columns:110px 1fr;gap:18px} }
+.grp .place{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent);letter-spacing:.04em}
+.grp .what{font-size:15px}
+.grp .what span{color:var(--muted)}
+
+.tl{border-top:1px solid var(--rule);padding:11px 0;display:grid;gap:2px}
+@media(min-width:600px){ .tl{grid-template-columns:150px 1fr;gap:18px} }
+.tl .w{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted)}
+.tl .e{font-size:14.5px}
+
+.note{font-size:13.5px;color:var(--muted)}
+ul.plain{padding-left:17px;margin:12px 0 0;font-size:14.5px}
+ul.plain li{margin-bottom:7px}
+
+footer{background:var(--ink);color:#A8A4D6;padding:26px 0;font-size:12px;line-height:1.7}
+footer a{color:#C9C5EA}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">BASEM Travelling Fellowship 2026</div>
+    <h1>STRIKERS Clinical Academic Fellowship in Sports, Exercise &amp; Performance Medicine</h1>
+    <p class="sub">The Pillars of SEM</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Aim</h2>
+    <p class="lede">To spend a structured year developing my clinical and academic expertise across the three domains of Sport, Exercise &amp; Musculoskeletal Medicine (SEM), being team and athlete care, musculoskeletal medicine, and exercise medicine, with colleagues who deliver quality and expertise in these domains across a range of contexts.</p>
+
+    <div class="signbox" id="signbox">
+      <div class="lab">Host confirmation</div>
+      <div id="gate">
+        <p class="hint">If you have agreed to teach or host part of this year, enter the passphrase you were sent. It opens your confirmation and nothing else.</p>
+        <div class="gaterow">
+          <input id="pw" type="text" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="basem-yourname" aria-label="Passphrase">
+          <button type="button" id="unlock">Open</button>
+        </div>
+        <div class="status" id="gatestatus"></div>
+      </div>
+
+      <form id="f" class="pane" novalidate>
+        <div class="who">
+          <div class="nm" id="w_name"></div>
+          <div class="rl" id="w_role"></div>
+          <div class="og" id="w_org"></div>
+        </div>
+        <p class="hint" style="margin:0 0 12px">Your address is prefilled from your institution's published details. Please correct it if it is wrong or if you would rather use another.</p>
+        <div class="fields">
+          <div>
+            <label for="email">Your email address</label>
+            <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="name@institution.org">
+          </div>
+          <div>
+            <label for="addr">Correspondence address</label>
+            <textarea id="addr" style="min-height:62px" placeholder="Institution, street, city, postcode, country"></textarea>
+          </div>
+          <div>
+            <label for="notes">Private note to Andrew Hall (optional)</label>
+            <textarea id="notes" placeholder="Dates that suit, the scope you would prefer, or anything you would rather say directly. This does not appear on the letter."></textarea>
+          </div>
+        </div>
+        <div class="check">
+          <input id="confirms" type="checkbox">
+          <label for="confirms" id="checklabel"></label>
+        </div>
+        <div class="letter">
+          <div class="hd">CONFIRMATION OF SUPPORT &nbsp;·&nbsp; BASEM TRAVELLING FELLOWSHIP 2026</div>
+          <p id="l_body"></p>
+          <p id="l_themes" style="margin-bottom:0"></p>
+          <div class="sig">
+            <div id="l_name"></div>
+            <div id="l_role"></div>
+            <div id="l_org"></div>
+            <div id="l_addr" style="white-space:pre-line"></div>
+            <div id="l_email"></div>
+            <div id="l_date" class="mono" style="margin-top:6px"></div>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" id="submit" disabled>Confirm support</button>
+          <button type="button" class="ghost" id="preview">Download PDF only</button>
+        </div>
+        <div class="status" id="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Summary</h2>
+    <p>My practice is strongest where orthopaedic surgery and elite sport meet, and thinner elsewhere. Very few clinicians practise across all three domains, and no single centre teaches all three well, which is why this is proposed as a series of short attachments rather than one long one. Each is paired with work already under way, and the fellowship would facilitate collaborations that are multidisciplinary, multifocal and multicentre.</p>
+    <p>The timing is relevant, since BASEM and the Faculty of Sport &amp; Exercise Medicine are merging to form a new College of Sport, Exercise &amp; Musculoskeletal Medicine. I intend to build this fellowship around developing the knowledge, skills and experience required to make a valued and sustained contribution to the College, and to help drive the specialty into an era of greater impact as an independent, yet increasingly integrated, clinical and academic field of practice.</p>
+    <div class="three">
+      <div class="dom"><span class="n">01</span><h3>Team and athlete care</h3><p>Athlete health systems, injury and illness prevention, and the safe delivery of sporting events.</p></div>
+      <div class="dom"><span class="n">02</span><h3>Musculoskeletal medicine</h3><p>Sports injury and trauma across the life course, including children, young people and people with disability.</p></div>
+      <div class="dom"><span class="n">03</span><h3>Exercise medicine</h3><p>Physical activity, obesity and cardiometabolic health, joint preservation, and population services.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Outline</h2>
+    <div class="grp"><div class="place">Dublin</div><div class="what">Clinical and academic practice across general and performance populations; integrated surgical, medical and specialist rehabilitation care of upper and lower limb injury in elite sport; <span>the training, governance and service development structures of a separately constituted Faculty. In 2027 Dublin hosts the 10th UEFA Medical Symposium, and the Irish Open in nearby Kildare.</span></div></div>
+    <div class="grp"><div class="place">Scotland</div><div class="what">Sports event medicine at championship and community level; injury and illness surveillance at an IOC research centre; national clinical pathway design, and the governance and health economics of elective services; <span>sports knee surgery, robot-assisted surgery, and sports traumatology including state of the art care in muscle and tendon injuries.</span></div></div>
+    <div class="grp"><div class="place">London</div><div class="what">Leadership and education in elite sports medicine and surgery; sports knee surgery from elite performance to healthy active living; event medicine epidemiology and the older athlete; <span>physical activity engagement through digital and social media, and cross-sector collaboration between health and social care, business and sport.</span></div></div>
+    <div class="grp"><div class="place">Berlin</div><div class="what">Rehabilitation, strength and conditioning, and physical activity engagement <span>delivered outside a health service.</span></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The year</h2>
+    <div class="tl"><div class="w">Throughout 2026&ndash;27</div><div class="e">Repeated clinical attachments at Fortius Clinic, London, and at Blackrock Clinic and UPMC Sports Surgery Clinic, Dublin, alongside scheduled remote teaching</div></div>
+    <div class="tl"><div class="w">Throughout 2026&ndash;27</div><div class="e">Ongoing research workstreams, each paired with the visits that inform it</div></div>
+    <div class="tl"><div class="w">October 2026</div><div class="e">Alfred Dunhill Links Championship, St Andrews, and its physical activity and public health programme</div></div>
+    <div class="tl"><div class="w">2026 and 2027</div><div class="e">Faculty of Sport &amp; Exercise Medicine (Ireland) Annual Scientific Conference</div></div>
+    <div class="tl"><div class="w">2 to 4 Feb 2027</div><div class="e">10th UEFA Medical Symposium, Convention Centre Dublin</div></div>
+    <div class="tl"><div class="w">2026 to 2027</div><div class="e">Legends Tour events</div></div>
+    <div class="tl"><div class="w">2027</div><div class="e">Edinburgh Orthopaedic and Sports Medicine Conference; SCOT winter orthopaedic meeting</div></div>
+    <div class="tl"><div class="w">11 to 18 Jul 2027</div><div class="e">The Open, St Andrews</div></div>
+    <div class="tl"><div class="w">19 to 27 Jul 2027</div><div class="e">Irish Open, The K Club, Kildare</div></div>
+    <p class="note" style="margin-top:16px">The Open and the Irish Open fall in consecutive weeks, so one period of travel covers championship medical operations in two jurisdictions.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Afterwards</h2>
+    <ul class="plain">
+      <li>Applied first in my own clinics and in the sporting environments I cover.</li>
+      <li>A minimum dataset for event care surveillance, and completion of the Sports Medicine Event Care framework.</li>
+      <li>One worked example of practice, education or service design for each domain, with the conditions it depends on set out honestly.</li>
+      <li>A comparison of the training routes and curricula encountered.</li>
+      <li>A report to BASEM, a conference presentation, at least six peer-reviewed articles, and an edited special issue.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="data">
+  <div class="wrap">
+    <h2>Data handling</h2>
+    <ul class="plain">
+      <li>No personal details are readable in this page. Each person's name, role and institution are encrypted under a key derived from that person's own passphrase, so a passphrase opens one record and reveals nothing about anyone else.</li>
+      <li>Confirmations are sent over an encrypted connection to a database hosted in London. The credential in this page can add a confirmation and nothing else, so no visitor can read what anyone has submitted.</li>
+      <li>The signed letter is stored privately and a copy downloads to your own device. Only Dr Andrew J Hall can read submissions, using a credential held offline.</li>
+      <li>No cookies, no analytics, no tracking. Write to <a href="mailto:andrew@andrewhallortho.uk">andrew@andrewhallortho.uk</a> to see, correct or delete your confirmation.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>STRIKERS Elite Sports Group &nbsp;·&nbsp; University of St Andrews and Dublin &nbsp;·&nbsp; <a href="mailto:andrew@andrewhallortho.uk">andrew@andrewhallortho.uk</a></div>
+    <div style="margin-top:10px;color:#8B87BE" class="mono">Symposion &nbsp;·&nbsp; research application system &nbsp;·&nbsp; Dr Andrew J Hall &nbsp;·&nbsp; ORCID 0000-0002-4582-8368</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+  var SB_URL = "https://rzokxmobuvrruwavhjzw.supabase.co";
+  var SB_KEY = "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16";
+  var VAULT = {"c4e3cda887187d21":{"iv":"QNaQmmn6OsdlqNJ9","ct":"2Fohzwins7oqZlmn0tDNi1hv0jk+vf05bx72d5p3T0EEEENOA1mQxBuz2xnE2eRYmWj1HESBKXAauqQbvXFhy7mElPWtKrqtE8xfKrPQgrndNNoetWALcwSKO+1QGud3CbsfBai1huBKRIfTs8hlXPqGyOpCh0usinqHodbjc8w4IFPfyAGyNSYlBX84Xv0OdWR5rmD0vAuIy250icPV3xorEzF7EFwZoVxeqyHUkkykydfACfvEh6DDhuj7puKneyQx22vO1rl/GQRQHyKiD0TTFJ7pDUiskF6KTYk9zDzKXGUAUh9sZ3spRIMPBzU4wL4UPU5OBZT0dLbALj/lsL05aDVOEEf/Ip40Xjhb+FBs1XamWeNQqGQeEicTVYI9jtOPkrio2PR+Lu7Zrpzkdsi3Vji0TtcV4CbjS4pX/2OOx70ea1Ijb8Sc4sfgo46+V50h43idSsk0wVPG4gx4NX+xymwm3oUgFLUjyGFmbXn4zLWpZVwKJTaYib9qxecM6GGCX2BXlyNJiwCxVcESJm12wUAt+iW80El1p/aVd8RPQBIGx+Lwx8khfMZiakst7rh8si4kb0qdj16m29OY/Kox705ChOE4PWKq5yxvlI8gqk8Ol4WZKQKQAfKVACGfDiwfxOHc3K5n0QdVrUoxFE/ZhsfbbetpeoMexJE1WXODp0jMwWA="},"e720298f42e57074":{"iv":"k0IFZkDcx3A6j6Ba","ct":"5W1sACqRKvdqbbLHIzXKtkVgq98WeS1jYsXZpgoRPMMcCUdfgV+sHPwHw6JEu3l9g/OG5CGRJGKb6N5ixCNKJL8bWhXl+gKxEzlGC/PabQCnnyTzuS0oNDTW+GV1AWtWGGVtSnUGrQesVJJM6l4lyQ+kwQvDCLqZvaccthH4mH0foFcx3WgWefboEecxmv4X/5NAN+zd+SmB1r+a5DbO+VNMzComp/Jy1lLCJqnUwVMU9g6YG95FktNikFkFN939wxsX6fEe5+vbbRFAm0RPoZKtcL6TkDBvOux0rLezHNzO15TTcD10GaXSJxTdNot+kRsbWxgBQTSIqFDWbxZC6rz59XEAQD01Owl0EVMeTJf6pA2zc5F+8VNqTAsHiFjCX9eiUexAkmna6eC9VULZLKRytbaMIQZHG+Ut+HnjV83n5ogP3alzDUCcQlYY5ikG8Uw9DMBsrqxWz6MkRnoR3zSKUU/gc8CUQXJU2IQU3RL+Xfv5GEqeRUz7WLaYRRy2XirVJIxcs6DF9Rd2og9a8KQODFzv2KLcaOjGD8QWR7tjCeZIdEVvYcSmbgfUMfP6Rwde0X5or+J+1ye9++3b8Ts="},"b67b0eedebaa38ad":{"iv":"5VMTt0FtyEaEo6CW","ct":"vT2x4JdJo/zl/SqGeEaORfj5u/BZb73idp0zh7wGGmuRAQekwhUARUtCT5KA00qJcFB7ERuQhXdbE+0OU75zFvGr6HvqixUqUuGnqd60du8FQl/oZ2BLRPc0bmZl7nC8ssXHqC8NzyJqWMp59FlqncNcs2EPCTEF6M4BXInYH81yo0Sb2pxL4GYhOGfLPknsJ2QO/BTcC7CNchr9ZkAaGPoegur9Du2jOJD+8QkIz7956uR7IE+BEOck7Zos/4mAoKYMSN5FVYSMmMiIQbDYc9KEOKjxkNQuXbxwiPPACIqidFPhx5w6KbHqEmaK5LkY1kSZwUaMwLxOTERuBa3F1PzYs7bl9prnBj85I2LTs8yn3pZMN9jsie8iZ60ppVzxB/2j7EJsX/NAvJ7Vi4lDOuMj9aZz/bEayElBWZoLvYFv42FUa9D0wcHb2khIl5hlVqTlsZmaDaAtTcBPjVDlWEi/cLjevisb"},"8cb7f53678c7bb6c":{"iv":"4usm6NXHAM+RLOUy","ct":"whp3UFJDI5zv95obPi6yPOTuFimBR/N+KQfKEBfWsNeJ23ZtlYeJMIkWvVix/itmu4TEZDGM46bLyqPbQ2LWg1jyzR0VPNQar0/EHR/sqAoWomeqz40k2iYLLFdN6nawortRNaz8Wo5m7T+/qkWXmuGHvJeF35K9wqR/Ey1LTucq2WLY1ilIxo5EnT7D8zvYlND/1kBk0RNqf//IxhhfSENtVVGOU6HAu9bvuVew1rbXgrYu3Xe388DR8V+3W0ZMsWOogQGsiISkqpLzkJ/+59a8C/MoxkjBV2JGU9cQNIJWoDPXaSlSANMSqunEr0EYMoS5LqCdFlzMcEUqyzLzQoI6E5u0hWglII7lLgESMBGzPwjyaAk4NMjqgcQcwtVSjwfSkyeGPWO+Nnmnay4Ty5y1J2QFXrdegSnGOyhT1WrWKVfoLCk9Wqo/w2JjCTY="},"256d62268116a407":{"iv":"7k3Lgnjg7Prxc/3Z","ct":"e090xM96QBTSEV8kHUlRnRb0c7IC7glvmmEp6EUG2Jcb2lO9zBc9n0owK40M+mR7MQvq8Tmy/7zdqVJZu8g7M2gUJVsa5VoR0hZva7HxB8oEUx6dTHAxzmHn8kHOa16IomDmuyc685lMDcKLIcQvIhhe9F7QUkdZd6UOcMhMZ/mdRIZzZ7XomENkjD8kYTeVsJo4VCUyLm+ZWYw/gE/CgQiMnp9k6qk6xS4mKrCA4XK8sfGxr1wnfjqm2vaFIjmL2Pk6V3orGidfrCCw/Agau66YTOd4H6CCNAzV30u1SATX827e0Aw0H1C9w8sIyyGCipQzdK9REw+qygHPQdCwGDdvmKRcpIi/NPEkpPdUrK67W5bAa4N3ghDmAvEC024janjLJiAuffuHkh65A9jExRa9G+ohQ23yJ7OKLbilVSCzHU6seb+3zADj3PL5fKjEKOLGDh2vGyWXFWJ/JzGZ6jHw+DWBfCxMLRtXy32JkFf7u+zeZMZZsKmVgIcELSMVsHkTqyDh6LZ9uSgy0uKbvhJTkbgi+iUg3wxV6dAKjvmqSAKjuzIByHog00+VEXCgoCEs1aPvgaxO0US+ArwaXRbX"},"88c8750afb9dc87d":{"iv":"sA83bC3zL+D7h2Vn","ct":"UL4Og8JA/0uhLY7DixEv0bl4JSaoa3rGfOf2LqvrRoYcjcuE6gYC7wnVDgZFCMc7vCzBdEv6xXJBy9PmZ94ARG1pXzqHW8LbielIPI3os/LLqIQdjNEjAJneM78kJpTLRknBIBJq/kuQLKHpJFwIr3Re8fOmgRK61Vx3WWE0kF1hRc/VnvSpGQPDnYHlhc0aKsSOnflJKyrAKIinyXBfaXpn027VcOERZ9t6fmcFLis6VPo7ybVHrZ0EvMqDi/VxnA6j5JcaAqmQOL/3p9NAxU6Mp5L+x9vqG0AIeS/vW9fzv/Bk6266DIhDl+t8wqxb6b6WniZLnDzZhrCujEePreYTctkJZXcd6yr0wVxrDBqlZsdlMr1uZYABlVjs2tkwazjLAsm338kqtBzYeTMO3iNT+LTEfOXVSs6+Q2RMD4p0O9EMdfKnfuSIlyjnSZkDdGaxt/CBoULSW8OSocc/MVbsjy97xNWUP92VVGt/otUZ7VKEk7osn+dOxVATQmL6SO7Ti676PF8IV1rVb7suNolVMIoksVV6hy1+6c0yLku5Mm8iOmopNSi5NZeI5QrWUpdxdjINM0ISXsDJjUsrQYJ4LC4Pu3nJsm0GuoofnhD/+56WY5nm2pd7dY3GWmX7LA4="},"4997d2d34186be28":{"iv":"jsTyLRmxrQnDpcW7","ct":"/SHDXic8UZFZjEy2GVgAr72bX/jnTmwAMxFgCd/Ed2Co/PDpPmzPoxyOHmvDX0hlfp+wxqF6K336JxRaXxYPLmHBy4bfhJJh3eDUUPvYWyoXCm2u5Xu+/MdcHahIkcKM2usqPkJRlL8AnDq6sHHr8E9Bie6tVSct6/S97QvBTZtC5mctfaOYDJ+OpL5c3bO0EPtbCnBgaLjSo/TLpF9eO9osXtgquffdgE+CqmjP5G+QGl5CFW9bk75WM9Q4xBlJLd0yjoSu1MVzMJ2uK3gmeNTdgS7s4CRi5pORe+TTW5mntUCSKuGCq0nRL5M9dvK3NSR+duicsa9/0YC/Mk8hJOubUrS02c7RIoKEErs2/n0Bv9iL3EKuA1aQFq7q7aCpC563cTTN5oH/lTTgNVLQq3jLAhZCRq4MRpUXFiBlgkWR1N3Q5tw3vZFJOwnJfsyWBZ18eAjcJQGtqdiRDRqHCExyqdzJzX8EmeVG5bDzwXL+DbbO2NFQc+/a6kdQjGbRRKIooUGPEG+hZETKwjA6gOQu4ziCainHQIXdtTm+zQ=="},"25b1a0b7f6655b32":{"iv":"putU3rKXsMoOOddU","ct":"4tX4YIuBIwJkIuQbVr1Za7IpLyzIU8i8JQo8GXRN/LtZhw5tuQ+NTNi1/tgD8RB53qJ7VK94O4/3EamL7F9z9k0urCxuLfMjXa0EcPTeh6vJhx0crWMUlWqlYhTpOF1XMCmDolbSqz1w33lZywqAkj+Nd8SGYWHLKZxOlAe7suBFDccUnfaMKSUXqdyKAp0+J8WbYM53rey5maqpL6LNfu1nN1f6MhloaIItXVr0PLyVxXjHRwNQDdoZP2RIOl4IybGq6dtVv0vCPvL1hLIoRVfjXioyeez6O7PVN+PKdMoq+frtH7Zo/vhP/9P42gYguwaftlEmg1DY4NiETHQvo+FgL9isBGHZTXyfSjtj3nHqWiWRWDg9db046NRqGY+1c6wI7Euv5/r2WVcb/x5Ofv7eQehptZqQ/UDgmVCMwUzQ6JrZNiQe7XBL9fjw/GLYJhVZfllW4zS4SaTTKW00V4KToZL6MNjnWeSKQZtynag3mt38xQbiHP1a0tHlfHg3my+pc6kDcqLKtK2mKRcDAvl9wd0PLbWBphmTtQY8CVjWxxJp/OmquKR6MRl+O1btkzEXNUESetSY8zxLqD4xIpyY4PSnVfGOP1RKFrY9MAT+zy1o1DRvFXlREOiOQ8VYLiO4zRpCMO98+pLQYk4IitQzOr4="},"5abd7160d844ca23":{"iv":"S0hWj56+/za0rVW6","ct":"6AgVhinXjM28mGrHC5BmePZrcJNQsf9fu6Qi7dCuU98YrU80KUOwrGGfQGvf/QxtCJ4bohRb8slW0xBcx3JRE7U3dPfnBZ0hgmik5Sni6/4zgmFvZL5XhDKCtU1R79ni7RjDmvYb9T25qQNJBUUZfuJFQEmtY3REyjsK+d+5ngPoJHzFMdhnn9gv1McIbbDGhdoq6OWingAExmpRWVtmT+8cdCUpt+sI04oOkZI/jNbOcaee0IQv5K1Rm82SvjzV/gJUsMzs503D/saBVngIbH1HmJwmf49wQjXrpBOHLEeTxHNY++QuPPD33t3PzH3Iiq/HN7smG/rwK9+yURuuA94VqhNdR5i7tf/ZcInzdlPNUcYGdydrl5gO6kdGNYTXjJZJc9U4jGZTUWx3xO9iIwxi1QgFnKFSVrGNgcayHX0Z9nbXVl+1oOL8hXVr8ufKf/PJL8lD4Okd77TtlaMUX+SNmpgNyG7O4P7WhWAp/Np/chFw/beVCSxFD4Vatts+L0cRS9t4X1Uc5/1jj6PGSUDwAHDSADmp1oBt3VxCwjQ266BdGLOJqTCypAMJK7u1JjjYUPtFucvfZ/neASWnEATR1uE/v31uVB7HPn43oOpiDSNSVyLLV9tr8/K7MhTDc/QbUEeI50++EOakEegwgUUxsrNzmWpUGm3F0EzjKgvi1fqyjUPaX5Wzas63bqrRuqlkI6Y="},"658ec077766ecc61":{"iv":"2l57raCjM9KL4eTO","ct":"SV4j1P3Vvp8Pbm1q86WqO5K6tJCOCZjaEYJKKBzhYpYAi4HTkMmATVbSWsYSm08ueoh/qoaOoNNE31n/QjqPsBCnMYA8UCgjbp0VBPNjqb2rykJnXTJLnZvwkBLkMUTmQ5HFIE3Q9GLUiLrVAiHBe2Y8gM0tDCgIutfAQ6GiikxnMpV+K73b6sY1MYyyugzvYL5HuHOpW/Mhb+8dVhw6a5BKgV4dD/H/e75O1xXVrWz4PecqCHdeS/kMAmzjwKhDMAd9lDFf0MfpDmD7u0pWjfIBTlDzSuPxBwPF+Ec4r3samza7/KqBeHt+kaGP7+Jy41LBm1REWyb1qm0UcKxSF4epPP5QGk7DAWe9CEEaPEtAHlJXzfuInFDES1RDE1/iD3v77qbfCDlmgYqRdS1HmsnpupCxWQR8Y0P+xw7aUSQ3VxmxKtCcPPYXy+8KwrXMlpJpGFzGa3r4+bL01JxH0Ecc+uPJSVY+0O4Wdg4JOjxteNTyOtudeW5hcb2R6AYLKnflMmWoKkUO+n7gp4EBzE78TNOCCANGLUkD0Eg4Ik7Enlx+iw=="},"39268e96e4ace104":{"iv":"KpZluLk/tqJGtW+M","ct":"VD+exDjNTsZsw+35+ds3PdVcvzoqm8mQnmxiqG2Z+D12ySY33rR45xmy5W8KRNTU7bkcPhZWun2UCuWP9ZXiFg2qd7rNndFuxBC4C6SMtac15DgzA3C51pd0KSj4r83A4n5fcAZ8+sNZISnZJ5/bHKZYWzBVJfAb4DIRT9GrmgRbbGk6f5cJSiMZ06OlhA5SHnD98LiPsrDf+1oXkPIz9IHh1uHdP4qttxYbNpDLb3aKE0FQvIw1Dxv3oSpg+wcZkoVxuKEV2ihCDa4UOodQgLIGfdZkILlvg21fy/TuTw0EqNbLnISKBQhv/Q96r7QOvnBXVNUXD+tcy9WBHvHS0ApXDHzqXGRFmFK2whHjq6YRZCUhUPqdHKcleJ6/H4wyiN1xW1iap7+mP01AR9iv52kC+Nyh1wfucIddOaRcu7kc1kc3gRjD4Ga6"},"200a0b17e19fe97d":{"iv":"WY9cPJOaz+lLedRU","ct":"51ywjBEa31VV/KWD5tyStImnfV/z486Hm3vrDmlcW4jtXPaMgHtYWDdwRrVrWRL3i4V2DwruervGx8UcbLE2tRw1GfIqVN7boXH9oZk4Ibjciybxp+L1F/D9M99IBnLMvy8CELbuLBvPscXsZbI/9pl9HALy/gSG9/m/GKfB0WtgwOtpA5Vn7dwL68NugaHrpR6Ht47N06c9WR70BM4UVHivwIbTwxtzLJ73oM4548VnZ0qWk5P4xirm/2BFJhU3eaxtBjzHH3G2cT+1HsVfGN9AQ9gyvxGG+Kw85gUnahOuzPeoTuqiW48/KVD22TPg2lwP9kBeVb+ipTACLQIG6SIlK7pVXWihOldmtKcgHSSR1Si3lI08oPejfCnxDiMyHyPMBvtj5c7kmH6YzZpTF4P1vBpKZ2zvb62RqzLLTt34Zn7wa1T4XeSHRBiK8F6eOvM++3pDa0VblXqEDex/SKMB8uR+tdntWi3z5EOAOYYpzehlVV5UjAZo1pVsapHIGsJfm+8qfcNTreXMCFxbwWKA0Zb9oPyFQctCqqAEzJzQzw3FnMzSwsia5cnXB6B6RQ17id5AAu8="},"f5a238985b8321d4":{"iv":"ASKiNpSRNGTRMdCC","ct":"ao5c07C16pZlyVVfZ1HjZZspJLDTx3hAYXIIwtBd2SpqlXu/2ayJ4aMMMQ1kyElIW8JoLDXgFB78op2UbwuwXXTJEDcDkBCv3uVMYEpHkIVZ8Y2Y6zzC8NlYvWwuYHYEFNPFlxaB0t7V71+8RLtNnvolSPmU/5AVMiNonkfV9cDf6UDkqspFAg+KdsvxuHZtKMY6lujMbmjnnOvCF7nX1QUOgUXtoOqkhwnpu1XIllkkpgU/UGTtgn2V3QsZFEg5d7CjIQtHD3F4j44pRbqac10pbtNlv9bSfJh4kBndvDV2NE3FHHEedtgh+L6lPP18rlfguc0SYGNdIdOZs7bHzDcZVqBEdPOrGS6d215EwdD8y8Sm7fkoOm0GnXZZ+SVsQu42DVM06rIEqkG1k6ywwD8S2qHz4QRkNlyCbUv49/fRa0101bA="},"21bbd0e8840ec7d2":{"iv":"e1EZy7F1TXsoxkMr","ct":"4kfUf2BA6yk23L1EXQ/0KbKgAC6Byqk0o1FkslAKsMUvXj4HfmwR2C3gJu6OsYUxomycmTgOm7SLClNVhHgprQXgpTtfOPZj28SIaKJcruH4zl/lTakvaxuRnahvQvfK0W0Nc5bOSe9RNLhPJYl3CMA0HWRVi8TxGTr547Chto//G0hDUKx3i5OYpcU3IUzxWZWz54JwHQlmDL5wyLGYeTFiRRj0qccvLnGK6OZ8FmsZk1MXZUk0cPbH3OzCOhfPGUkL90sz3Tbjk52lg089unCAm4OV+iFIE3neRz+eMfTd5sn1PKJyb+uolAcU53Tm7rY0pWV+AbUgaXlAOCeawbaVUmJRkjxKPUhIeQz2wy4X7dF8Pm9pDQzbxNTJhHOMPXPiywMz/4vKhaliqMTON76GI0CZEO3fQONmrA+FJ1u5AhEoLMoUxDZtjA0tSgdkCFT2nhaKTqEhgxM="}};
+  var SALT = "sem-pillars-fellowship-2026";
+  var $ = function(id){ return document.getElementById(id); };
+  var me = null;
+
+  var subtle = (window.crypto && window.crypto.subtle) ? window.crypto.subtle : null;
+
+  function enc(s){ return new TextEncoder().encode(s); }
+  function b64(s){ var r=atob(s), a=new Uint8Array(r.length); for(var i=0;i<r.length;i++){a[i]=r.charCodeAt(i);} return a; }
+  function hex(b){ return Array.prototype.map.call(new Uint8Array(b), function(x){ return ("0"+x.toString(16)).slice(-2); }).join(""); }
+
+  function openRecord(pw){
+    return subtle.digest("SHA-256", enc("id::"+pw)).catch(function(){
+      throw new Error("CRYPTO");
+    }).then(function(d){
+      var rec = VAULT[hex(d).slice(0,16)];
+      if(!rec){ throw new Error("NOMATCH"); }
+      return subtle.importKey("raw", enc(pw), "PBKDF2", false, ["deriveKey"])
+        .then(function(base){
+          return subtle.deriveKey({name:"PBKDF2", salt:enc(SALT), iterations:150000, hash:"SHA-256"},
+            base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+        })
+        .then(function(k){ return subtle.decrypt({name:"AES-GCM", iv:b64(rec.iv)}, k, b64(rec.ct)); })
+        .then(function(pt){ return JSON.parse(new TextDecoder().decode(pt)); })
+        .catch(function(e){ throw new Error(e && e.message === "NOMATCH" ? "NOMATCH" : "CRYPTO"); });
+    });
+  }
+
+  function say(el, kind, msg){ el.className = "status show " + kind; el.textContent = msg; }
+  function dateStr(){ return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}); }
+
+  if(!subtle){
+    say($("gatestatus"), "err", "This page cannot unlock a confirmation when it is opened as a downloaded file, because browsers withhold the cryptography it uses outside a secure connection. Please open the link you were sent instead.");
+  }
+
+  function bodyText(){
+    if(me.kind === "collab"){
+      return "I confirm that I support this application to the BASEM Travelling Fellowship 2026, and that I would be glad to work with the applicant during the award year, between October 2026 and December 2027.";
+    }
+    return "I confirm that the applicant to the BASEM Travelling Fellowship 2026 would be welcome to visit " + me.org + " during the award year, between October 2026 and December 2027, and that I would act as host supervisor for that visit.";
+  }
+  function themesText(){ return "I would support the applicant's learning in " + me.themes + "."; }
+
+  function render(){
+    var email = ($("email").value || "").trim();
+    $("l_body").textContent = bodyText();
+    $("l_themes").textContent = themesText();
+    $("l_name").textContent = me.title + " " + me.name;
+    $("l_role").textContent = me.role;
+    $("l_org").textContent = me.org;
+    $("l_addr").textContent = ($("addr").value || "").trim();
+    $("l_email").textContent = email;
+    $("l_date").textContent = dateStr();
+    $("submit").disabled = !($("confirms").checked && /.+@.+\..+/.test(email));
+  }
+
+  function go(){
+    if(!subtle){ return; }
+    var pw = ($("pw").value || "").trim().toLowerCase().replace(/[\u2010-\u2015\u2212]/g, "-").replace(/\s+/g, "");
+    if(!pw){ return; }
+    openRecord(pw).then(function(rec){
+      me = rec;
+      $("w_name").textContent = rec.title + " " + rec.name;
+      $("w_role").textContent = rec.role;
+      $("w_org").textContent = rec.org;
+      $("addr").value = rec.addr || "";
+      $("checklabel").textContent = rec.kind === "collab"
+        ? "I confirm my support for this application, and that I would be glad to work with the applicant during the award year."
+        : "I confirm my support for this application, that the applicant would be welcome to visit during the award year, and that I would act as host supervisor for that visit.";
+      $("gate").style.display = "none";
+      $("f").classList.add("shown");
+      render();
+      $("email").focus();
+    }).catch(function(e){
+      if(e && e.message === "CRYPTO"){
+        say($("gatestatus"), "err", "This page cannot unlock a confirmation when it is opened as a downloaded file, because browsers withhold the cryptography it uses outside a secure connection. Please open the link you were sent instead.");
+      } else {
+        say($("gatestatus"), "err", "That passphrase was not recognised. Check the message it came in, or reply to it and I will send another.");
+      }
+    });
+  }
+
+  $("unlock").addEventListener("click", go);
+  $("pw").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); go(); } });
+  ["email","notes","addr"].forEach(function(id){ $(id).addEventListener("input", function(){ if(me){ render(); } }); });
+  $("confirms").addEventListener("change", function(){ if(me){ render(); } });
+
+  function letterText(){
+    return ["CONFIRMATION OF SUPPORT","BASEM Travelling Fellowship 2026",
+      "The Pillars of Sport, Exercise & Musculoskeletal Medicine: developing clinical and academic expertise to support health and human performance","",
+      bodyText(),"",themesText(),"","",
+      me.title+" "+me.name, me.role, me.org, ($("addr").value||"").trim(),
+      ($("email").value||"").trim(), "", "Date: "+dateStr()].join("\n");
+  }
+
+  function buildPdf(){
+    var doc = new window.jspdf.jsPDF({unit:"pt", format:"a4"});
+    var M=64, W=595.28-(M*2), y=84;
+    doc.setFont("helvetica","bold"); doc.setFontSize(9); doc.setTextColor(74,56,152);
+    doc.text("BASEM TRAVELLING FELLOWSHIP 2026", M, y); y+=16;
+    doc.setTextColor(14,12,40); doc.setFontSize(15);
+    doc.text("Confirmation of support", M, y); y+=10;
+    doc.setDrawColor(226,224,240); doc.line(M,y,M+W,y); y+=26;
+    doc.setFont("helvetica","normal"); doc.setFontSize(10.5);
+    [bodyText(), themesText()].forEach(function(p){
+      var l = doc.splitTextToSize(p, W); doc.text(l, M, y); y += (l.length*15)+12;
+    });
+    y+=14; doc.setDrawColor(226,224,240); doc.line(M,y,M+W,y); y+=22;
+    doc.setFont("helvetica","bold"); doc.text(me.title+" "+me.name, M, y); y+=15;
+    doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(107,104,136);
+    [me.role, me.org, ($("addr").value||"").trim(), ($("email").value||"").trim()].forEach(function(x){
+      if(x){ var ls=doc.splitTextToSize(x,W); doc.text(ls,M,y); y+=ls.length*13; }
+    });
+    y+=8; doc.setFont("courier","normal"); doc.setFontSize(9);
+    doc.text("Confirmed via strikerselitesports.com  |  "+dateStr(), M, y);
+    return doc;
+  }
+
+  function fileName(){
+    return "BASEM_TF26_Support_" + me.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")
+      + "_" + new Date().toISOString().slice(0,10) + ".pdf";
+  }
+
+  $("preview").addEventListener("click", function(){ if(me){ buildPdf().save(fileName()); } });
+
+  $("f").addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn=$("submit"); btn.disabled=true; btn.textContent="Sending...";
+    var doc=buildPdf(), name=fileName(), blob=doc.output("blob");
+    var row={ title:me.title, full_name:me.name, email:($("email").value||"").trim(),
+      role_title:me.role, centre:me.org, visit_group:me.group, confirms_support:true,
+      correspondence_address:($("addr").value||"").trim(),
+      notes:($("notes").value||"").trim(), letter_text:letterText(), pdf_path:name,
+      user_agent:navigator.userAgent };
+    fetch(SB_URL+"/storage/v1/object/fellowship-support/"+encodeURIComponent(name), {
+      method:"POST", headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/pdf"}, body:blob
+    }).catch(function(){})
+    .then(function(){
+      return fetch(SB_URL+"/rest/v1/fellowship_support", { method:"POST",
+        headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+        body:JSON.stringify(row) });
+    })
+    .then(function(r){
+      if(!r.ok){ throw new Error(r.status); }
+      doc.save(name);
+      Array.prototype.forEach.call($("f").querySelectorAll("input,textarea,button"), function(el){ el.disabled=true; });
+      say($("status"),"ok","Thank you. Your confirmation has been recorded, and a PDF copy has downloaded to your device.");
+    })
+    .catch(function(){
+      doc.save(name); btn.disabled=false; btn.textContent="Confirm support";
+      say($("status"),"err","The confirmation could not be recorded automatically, and a PDF has downloaded instead. Please email it to andrew@andrewhallortho.uk.");
+    });
+  });
+})();
+</script>
+</body>
+</html>
