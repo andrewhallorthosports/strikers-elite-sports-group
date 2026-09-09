@@ -379,8 +379,9 @@ footer a{color:#C9C5EA}
   }
 
   function fileName(){
+    var iso = new Date().toISOString();
     return "BASEM_TF26_Support_" + me.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")
-      + "_" + new Date().toISOString().slice(0,10) + ".pdf";
+      + "_" + iso.slice(0,10) + "_" + iso.slice(11,16).replace(":","") + ".pdf";
   }
 
   $("preview").addEventListener("click", function(){ if(me){ buildPdf().save(fileName()); } });
