@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pillars of SEM &mdash; Supporters dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{ --ink:#0E0C28; --pale:#F4F3FC; --rule:#E2E0F0; --muted:#6B6888; --accent:#4A3898; --r:4px; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--pale);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
+  font-size:15.5px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+header{background:var(--ink);color:#fff;padding:22px 0}
+header .kicker{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#A8A4D6}
+header h1{font-size:20px;margin:6px 0 0}
+main{padding:26px 0 60px}
+.gatecard{max-width:520px;margin:40px auto;background:#fff;border:1px solid var(--rule);border-radius:var(--r);padding:24px}
+.gatecard h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 10px;font-family:"JetBrains Mono",monospace}
+.gatecard p{font-size:14px;color:var(--muted);margin:0 0 14px}
+label{display:block;font-size:12.5px;font-weight:500;margin-bottom:5px}
+input{width:100%;font-family:inherit;font-size:15px;border:1px solid var(--rule);border-radius:var(--r);padding:10px 12px;margin-bottom:12px}
+button{font-family:inherit;font-size:14.5px;font-weight:600;color:#fff;background:var(--ink);border:1px solid var(--ink);
+  border-radius:var(--r);padding:10px 18px;cursor:pointer}
+.err{background:#FBECEC;border:1px solid #E2BEBE;color:#7A2222;padding:10px 12px;border-radius:var(--r);font-size:13.5px;margin-top:10px;display:none}
+.err.show{display:block}
+.hidden{display:none}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--rule);border-radius:var(--r);padding:12px 14px}
+.stat .n{font-size:22px;font-weight:700}
+.stat .l{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:"JetBrains Mono",monospace}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);font-size:13.5px;vertical-align:top}
+th{background:#FBFAFF;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.04em;
+  padding:2px 7px;border-radius:3px;background:#EFEBFF;color:var(--accent)}
+.tag.legacy{background:#FBECEC;color:#7A2222}
+.note{max-width:280px;color:var(--muted);font-size:12.5px}
+.small{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar button.ghost{background:transparent;color:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">Pillars of SEM &middot; restricted to Andrew Hall</div>
+    <h1>Supporters dashboard</h1>
+  </div>
+</header>
+<main class="wrap">
+
+  <div class="gatecard" id="gatecard">
+    <h2>Enter your Supabase credential</h2>
+    <p>This page reads the confirmations table directly, using the service role key for the Symposion project. The key is held only in this browser tab's memory: it is never written to storage, never sent anywhere but Supabase, and is gone the moment you close or reload the tab.</p>
+    <label for="key">Service role key</label>
+    <input id="key" type="password" autocomplete="off" placeholder="eyJ...">
+    <button id="load" type="button">Open dashboard</button>
+    <div class="err" id="gateerr"></div>
+    <p class="small" style="margin-top:14px">Project Settings &rarr; API &rarr; service_role key, in the Symposion Supabase project. Do not paste this key anywhere else, and do not share this page.</p>
+  </div>
+
+  <div id="dash" class="hidden">
+    <div class="toolbar">
+      <div class="stats" id="stats"></div>
+      <button class="ghost" id="forget" type="button">Forget key &amp; lock</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>Name</th><th>Role</th><th>Centre</th><th>Group</th>
+          <th>Passcode used</th><th>Submitted</th><th>Note</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="small" style="margin-top:16px" id="footnote"></p>
+  </div>
+
+</main>
+<script>
+(function(){
+  var SB_URL = "https://rzokxmobuvrruwavhjzw.supabase.co";
+  var $ = function(id){ return document.getElementById(id); };
+  var serviceKey = null;
+
+  function esc(s){ var d=document.createElement("div"); d.textContent = s||""; return d.innerHTML; }
+  function fmtDate(iso){
+    try{ return new Date(iso).toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
+    catch(e){ return iso; }
+  }
+
+  function showErr(msg){ var e=$("gateerr"); e.textContent = msg; e.className = "err show"; }
+
+  function load(){
+    serviceKey = ($("key").value || "").trim();
+    if(!serviceKey){ return; }
+    $("load").disabled = true; $("load").textContent = "Loading...";
+    fetch(SB_URL + "/rest/v1/fellowship_support?select=*&order=created_at.desc", {
+      headers: { "apikey": serviceKey, "Authorization": "Bearer " + serviceKey }
+    }).then(function(r){
+      if(!r.ok){ throw new Error(r.status === 401 || r.status === 403 ? "That key was rejected. Check it is the service_role key, not the publishable key." : "Request failed (" + r.status + ")."); }
+      return r.json();
+    }).then(function(rows){
+      render(rows);
+      $("gatecard").classList.add("hidden");
+      $("dash").classList.remove("hidden");
+    }).catch(function(e){
+      showErr(e.message || "Could not reach Supabase.");
+      $("load").disabled = false; $("load").textContent = "Open dashboard";
+    });
+  }
+
+  // Only rows carrying an access_code are shown: either the new
+  // strikers-username-ref passcode scheme, or the sentinel
+  // "legacy-grandfathered" set by hand for the four pre-scheme submissions
+  // Andrew asked to keep visible (Walmsley; Gee, the version without the
+  // personal note; Kerin, most recent; Kearney, most recent). Every other
+  // pre-scheme row stays out of this view by design, not by omission.
+  function render(rows){
+    var visible = rows.filter(function(r){ return !!r.access_code; });
+    var counts = {};
+    visible.forEach(function(r){ var g = r.visit_group || "Other"; counts[g] = (counts[g]||0) + 1; });
+
+    var statsHtml = '<div class="stat"><div class="n">' + visible.length + '</div><div class="l">Confirmed</div></div>';
+    Object.keys(counts).sort().forEach(function(g){
+      statsHtml += '<div class="stat"><div class="n">' + counts[g] + '</div><div class="l">' + esc(g) + '</div></div>';
+    });
+    $("stats").innerHTML = statsHtml;
+
+    $("rows").innerHTML = visible.map(function(r){
+      var legacy = r.access_code === "legacy-grandfathered";
+      var tag = legacy
+        ? '<span class="tag legacy">legacy, kept</span>'
+        : '<span class="tag mono">' + esc(r.access_code) + '</span>';
+      return "<tr>"
+        + "<td><strong>" + esc((r.title||"") + " " + (r.full_name||"")) + "</strong><br><span class=\"small\">" + esc(r.email||"") + "</span></td>"
+        + "<td>" + esc(r.role_title||"") + "</td>"
+        + "<td>" + esc(r.centre||"") + "</td>"
+        + "<td>" + esc(r.visit_group||"") + "</td>"
+        + "<td>" + tag + "</td>"
+        + "<td class=\"small\">" + fmtDate(r.created_at) + "</td>"
+        + "<td class=\"note\">" + esc(r.notes||"") + "</td>"
+        + "</tr>";
+    }).join("");
+
+    var hidden = rows.length - visible.length;
+    $("footnote").textContent = hidden > 0
+      ? hidden + " earlier confirmation" + (hidden === 1 ? "" : "s") + " from before the passcode scheme changed " + (hidden === 1 ? "is" : "are") + " held in the table but not shown here, as instructed."
+      : "";
+  }
+
+  $("load").addEventListener("click", load);
+  $("key").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); load(); } });
+  $("forget").addEventListener("click", function(){
+    serviceKey = null;
+    $("key").value = "";
+    $("dash").classList.add("hidden");
+    $("gatecard").classList.remove("hidden");
+    $("gateerr").className = "err";
+  });
+})();
+</script>
+</body>
+</html>
