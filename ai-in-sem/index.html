@@ -67,6 +67,17 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.96);backdrop
 .nav-hub-btn:hover{background:#f0f4f8;text-decoration:none;}
 @media(max-width:767px){.nav-section-links{display:none;}}
 
+/* ── SURVEY PORTAL RIBBON — sits directly under the sticky nav, first thing
+   in the document flow after it, so it is in the first viewport on every
+   device regardless of hero height. ── */
+.survey-ribbon{background:var(--ink);padding:13px 20px;}
+.survey-ribbon-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.survey-ribbon-k{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C9AEEB;}
+.survey-ribbon-d{font-size:12.5px;color:rgba(255,255,255,0.82);margin-top:3px;}
+.survey-ribbon-btn{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);background:#fff;border-radius:5px;padding:9px 18px;white-space:nowrap;text-decoration:none;transition:background 0.15s,color 0.15s;flex-shrink:0;}
+.survey-ribbon-btn:hover{background:var(--purple);color:#fff;text-decoration:none;}
+@media(max-width:520px){.survey-ribbon-inner{flex-direction:column;align-items:stretch;text-align:center;}.survey-ribbon-btn{width:100%;text-align:center;}}
+
 .hero {
   padding: 100px 24px 56px;
   text-align: center;
@@ -335,6 +346,16 @@ footer { background: var(--pale); border-top: 1px solid var(--border); padding: 
     <a href="https://strikerselitesports.com/" class="nav-hub-btn">← Hub</a>
   </div>
 </nav>
+
+<div class="survey-ribbon">
+  <div class="survey-ribbon-inner">
+    <div class="survey-ribbon-text">
+      <div class="survey-ribbon-k">AI in SEM &middot; Stakeholder Survey</div>
+      <div class="survey-ribbon-d">Nine to twelve minutes &middot; no identifying details &middot; closes 11 March 2027</div>
+    </div>
+    <a href="https://strikerselitesports.com/ai-in-sem/survey/" class="survey-ribbon-btn">Take the survey &rarr;</a>
+  </div>
+</div>
 
 <section class="hero" id="home">
   <div class="hero-inner">
