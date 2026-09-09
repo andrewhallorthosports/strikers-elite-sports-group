@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artificial intelligence in sport, exercise and musculoskeletal medicine</title>
+<meta name="description" content="A study of stakeholder perspectives. Symposion Althing.">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/survey-core@1.12.24/defaultV2.min.css" rel="stylesheet">
+
+<style>
+/* ------------------------------------------------------------------
+   Symposion Althing
+   Palette: parchment ground, navy-led ink, teal for the live and
+   interactive, burnt umber given structural rather than decorative
+   presence. Class and style are permanent.
+   ------------------------------------------------------------------ */
+:root {
+  --parchment:  #F7F4ED;
+  --bone:       #FBF9F4;
+  --ivory:      #FFFEFA;
+  --rule:       #DED6C6;
+
+  --navy:       #1B2E44;
+  --navy-soft:  #33506E;
+  --teal:       #1F6F6B;
+  --teal-soft:  #2E8F87;
+  --umber:      #7A4A2B;
+
+  --ink:        #16202B;
+  --ink-mid:    #47535F;
+  --ink-faint:  #7A8590;
+
+  --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --body: "Spectral", Georgia, "Times New Roman", serif;
+
+  --measure: 46rem;
+  --measure-wide: 64rem;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A quiet meander along the top. Structural, not ornamental. */
+.ath-meander {
+  height: 6px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--navy) 0 14px, transparent 14px 20px,
+      var(--navy) 20px 26px, transparent 26px 40px);
+  opacity: .28;
+}
+
+header.ath-head {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2.6rem 1.5rem 1.2rem;
+}
+
+.ath-eyebrow {
+  font-family: var(--body);
+  font-size: .72rem;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  color: var(--umber);
+  margin: 0 0 .9rem;
+  font-weight: 500;
+}
+.ath-eyebrow span { color: var(--ink-faint); }
+
+h1.ath-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 4.6vw, 2.9rem);
+  line-height: 1.14;
+  letter-spacing: .004em;
+  margin: 0 0 .7rem;
+  color: var(--navy);
+}
+
+.ath-standfirst {
+  font-size: 1.02rem;
+  color: var(--ink-mid);
+  margin: 0;
+  max-width: 34rem;
+}
+
+.ath-rule {
+  max-width: var(--measure);
+  margin: 1.6rem auto 0;
+  padding: 0 1.5rem;
+}
+.ath-rule hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+main {
+  max-width: var(--measure-wide);
+  margin: 0 auto;
+  padding: 1.4rem 1.5rem 4rem;
+}
+
+/* The prose measure is right for reading and wrong for a ten-point matrix.
+   At 46rem a ten-column matrix is clipped after the fourth column, so a
+   respondent who does not scroll sideways can only reach the bottom of the
+   scale, which biases the measure rather than merely annoying them. The
+   survey therefore gets a wider column while the masthead, standfirst and
+   completion text keep the reading measure. */
+main > #surveyContainer { max-width: none; }
+main > section#completion { max-width: var(--measure); margin: 0 auto; }
+
+/* ---------- SurveyJS overrides ---------- */
+
+.sd-root-modern {
+  background: transparent;
+  font-family: var(--body);
+  --sjs-general-backcolor: var(--ivory);
+  --sjs-primary-backcolor: var(--teal);
+  --sjs-primary-backcolor-dark: var(--teal-soft);
+  --sjs-primary-forecolor: #FFFFFF;
+  --sjs-general-forecolor: var(--ink);
+  --sjs-border-default: var(--rule);
+  --sjs-corner-radius: 3px;
+}
+.sd-body { padding-inline: 0 !important; }
+.sd-page { padding: 0 !important; }
+
+.sd-title, .sd-page__title {
+  font-family: var(--display) !important;
+  font-weight: 500 !important;
+  color: var(--navy) !important;
+  letter-spacing: .005em;
+}
+.sd-page__title { font-size: 1.65rem !important; line-height: 1.2 !important; }
+.sd-page__description {
+  font-family: var(--body) !important;
+  color: var(--ink-mid) !important;
+  font-size: .97rem !important;
+}
+
+.sd-question {
+  background: var(--bone);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--umber);
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1.15rem;
+  border-radius: 2px;
+}
+.sd-question__title {
+  font-family: var(--body) !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  color: var(--ink) !important;
+  line-height: 1.45 !important;
+}
+.sd-question__description {
+  color: var(--ink-faint) !important;
+  font-size: .88rem !important;
+}
+
+.sd-table__cell--header {
+  font-family: var(--body) !important;
+  font-size: .78rem !important;
+  color: var(--ink-mid) !important;
+  font-weight: 500 !important;
+  letter-spacing: .01em;
+}
+.sd-table__row .sd-table__cell:first-child { font-size: .95rem; }
+.sd-matrix tr:nth-child(even) { background: rgba(31,111,107,.035); }
+
+/* Ten columns have to fit without a sideways scroll. SurveyJS sizes these
+   columns itself, so the only safe levers are the padding it applies and the
+   width it gives the statement column. Do not set table-layout here: with
+   sd-table--columnsautowidth it produces a table some hundred times the
+   viewport width. */
+.sd-matrix__table .sd-table__cell { min-width: 4rem !important; padding-left: .3rem !important; padding-right: .3rem !important; }
+.sd-matrix__table .sd-table__cell--row-text { min-width: 11rem !important; }
+.sd-matrix__table .sd-table__cell--header { padding: .4rem .3rem !important; }
+
+/* A ten-point rating wraps to a vertical stack when it is squeezed, which put
+   1 at the top of the list while its label said Bottom. Kept on one row. */
+.sd-rating__item-text { padding-left: .35rem !important; padding-right: .35rem !important; }
+
+.sd-item__control-label { font-size: .97rem !important; }
+.sd-input, .sd-comment {
+  background: var(--ivory) !important;
+  border: 1px solid var(--rule) !important;
+  font-family: var(--body) !important;
+  font-size: 1rem !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+.sd-input:focus, .sd-comment:focus {
+  border-color: var(--teal) !important;
+  outline: 2px solid rgba(31,111,107,.22) !important;
+  outline-offset: 1px;
+}
+
+.sd-btn {
+  font-family: var(--body) !important;
+  font-size: .95rem !important;
+  letter-spacing: .02em;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+}
+.sd-btn--action {
+  background: var(--navy) !important;
+  color: #fff !important;
+  border: 1px solid var(--navy) !important;
+}
+.sd-btn--action:hover { background: var(--teal) !important; border-color: var(--teal) !important; }
+.sd-navigation__prev-btn {
+  background: transparent !important;
+  color: var(--ink-mid) !important;
+  border: 1px solid var(--rule) !important;
+}
+
+.sd-progress { background: var(--rule) !important; }
+.sd-progress__bar { background: var(--teal) !important; }
+.sd-progress__text { font-size: .8rem !important; color: var(--ink-faint) !important; }
+
+/* The supplied logo has a white ground. On this parchment page that would read
+   as a white box, so the asset itself has had its background remapped to the
+   exact page colour rather than being set on a white card. If the page colour
+   ever changes, regenerate the asset; do not add a white panel behind it. */
+.ath-logo {
+  display: block;
+  width: min(440px, 78%);
+  height: auto;
+  margin: 0 0 1.6rem;
+}
+.ath-logo--foot { width: min(360px, 68%); margin: 0 0 1.2rem; opacity: .92; }
+
+/* Progress confirmation. The opening page promises that each completed section
+   is kept, so the respondent is shown it happening, and shown plainly when it
+   has not. */
+.ath-save {
+  position: sticky;
+  top: .6rem;
+  z-index: 5;
+  margin: 0 0 .9rem;
+  padding: .5rem .85rem;
+  border-radius: 2px;
+  font-size: .88rem;
+  border: 1px solid var(--rule);
+  background: var(--ivory);
+  width: fit-content;
+  max-width: 100%;
+}
+.ath-save--ok  { color: var(--teal); border-color: rgba(31,111,107,.35); }
+.ath-save--err { color: var(--umber); border-color: rgba(122,74,43,.45); background: #FDF6F0; }
+@media (prefers-reduced-motion: no-preference) {
+  .ath-save--ok { transition: opacity .25s ease; }
+}
+
+/* Governance detail. Present and findable, deliberately not prominent. */
+.ath-gov { margin-top: 1.8rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
+.ath-gov summary {
+  cursor: pointer;
+  font-size: .85rem;
+  color: var(--ink-mid);
+  letter-spacing: .01em;
+}
+.ath-gov summary:hover { color: var(--teal); }
+.ath-gov__body { margin-top: .9rem; max-width: 42rem; }
+.ath-gov__body p { font-size: .85rem; color: var(--ink-mid); margin: 0 0 .8rem; }
+.ath-gov__body strong { color: var(--ink); font-weight: 600; }
+
+.ath-info p, .ath-scenario p { margin: 0 0 .85rem; }
+.ath-scenario {
+  border-left: 3px solid var(--teal);
+  background: rgba(31,111,107,.05);
+  padding: .95rem 1.1rem;
+  font-style: italic;
+}
+.ath-info p:last-child { margin-bottom: 0; color: var(--ink-faint); font-size: .9rem; }
+
+/* ---------- Completion and the unlinked interest form ---------- */
+
+.ath-done {
+  background: var(--bone);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--teal);
+  padding: 2rem 1.6rem;
+  border-radius: 2px;
+}
+.ath-done h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.8rem;
+  color: var(--navy);
+  margin: 0 0 .8rem;
+}
+.ath-done p { margin: 0 0 1rem; color: var(--ink-mid); }
+
+.ath-eoi {
+  margin-top: 1.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px dashed var(--rule);
+}
+.ath-eoi label {
+  display: block;
+  font-size: .93rem;
+  margin-bottom: .45rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+.ath-eoi .ath-note {
+  font-size: .86rem;
+  color: var(--ink-faint);
+  margin: .5rem 0 .9rem;
+}
+.ath-eoi input[type=email], .ath-eoi select {
+  width: 100%;
+  max-width: 26rem;
+  padding: .6rem .7rem;
+  font-family: var(--body);
+  font-size: 1rem;
+  background: var(--ivory);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.ath-eoi input[type=email]:focus, .ath-eoi select:focus {
+  border-color: var(--teal);
+  outline: 2px solid rgba(31,111,107,.22);
+}
+.ath-eoi button {
+  font-family: var(--body);
+  font-size: .95rem;
+  padding: .6rem 1.3rem;
+  background: var(--navy);
+  color: #fff;
+  border: 1px solid var(--navy);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.ath-eoi button:hover { background: var(--teal); border-color: var(--teal); }
+.ath-eoi button[disabled] { opacity: .5; cursor: default; }
+
+.ath-status { font-size: .9rem; margin-top: .8rem; }
+.ath-status.ok   { color: var(--teal); }
+.ath-status.err  { color: var(--umber); }
+
+footer.ath-foot {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  border-top: 1px solid var(--rule);
+  font-size: .82rem;
+  color: var(--ink-faint);
+}
+footer.ath-foot p { margin: 0 0 .4rem; }
+.ath-mark {
+  font-family: var(--display);
+  font-size: .95rem;
+  letter-spacing: .12em;
+  color: var(--navy-soft);
+  text-transform: uppercase;
+}
+/* For anyone who reads the source. Þingvellir, 930: the assembly on the plain. */
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .sd-question { padding: .95rem 1rem; }
+  header.ath-head { padding-top: 1.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="ath-meander" aria-hidden="true"></div>
+
+<header class="ath-head">
+  <img class="ath-logo" src="./strikers-st-andrews.png"
+       alt="University of St Andrews and STRIKERS Elite Sports Injury Group, Dublin"
+       width="440" height="136">
+  <p class="ath-eyebrow">Symposion Althing <span>&middot; stakeholder study</span></p>
+  <h1 class="ath-title">Artificial intelligence in sport, exercise and musculoskeletal medicine</h1>
+  <p class="ath-standfirst">
+    Priorities for these tools have so far been set by the literature and by
+    regulators. This study asks the people who will use them, build them, buy
+    them and receive them.
+  </p>
+</header>
+
+<div class="ath-rule"><hr></div>
+
+<main>
+  <p class="ath-save" id="saveState" role="status" aria-live="polite" hidden></p>
+  <div id="surveyContainer"></div>
+
+  <section id="completion" hidden>
+    <div class="ath-done">
+      <h2>Thank you</h2>
+      <p>Your answers have been recorded. Nothing that identifies you was collected.</p>
+
+      <div class="ath-eoi">
+        <p><strong>A second phase</strong></p>
+        <p class="ath-note">
+          We are planning a consensus study that will take the statements this
+          survey generates and test them formally. If you would be willing to be
+          contacted about it, leave an email address below. It is stored in a
+          separate place from your answers and cannot be connected to them.
+          Leaving it is entirely optional and you can close this page instead.
+        </p>
+        <label for="eoiEmail">Email address</label>
+        <input type="email" id="eoiEmail" autocomplete="email" placeholder="you@example.org">
+        <label for="eoiRole">Broadly, which group are you in?</label>
+        <select id="eoiRole">
+          <option value="">Please choose</option>
+          <option value="clinical">Clinical</option>
+          <option value="research">Research or academic</option>
+          <option value="industry">Industry, development or investment</option>
+          <option value="policy">Policy, regulation or management</option>
+          <option value="user">Service user, patient or athlete</option>
+        </select>
+        <div>
+          <button id="eoiSubmit" type="button">Register interest</button>
+        </div>
+        <p class="ath-status" id="eoiStatus" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ath-foot">
+  <img class="ath-logo ath-logo--foot" src="./strikers-st-andrews.png"
+       alt="University of St Andrews and STRIKERS Elite Sports Injury Group, Dublin"
+       width="360" height="111">
+  <p class="ath-mark">Symposion &middot; Althing</p>
+  <p>Study conducted by STRIKERS Elite Sports Injury Group and the University of St Andrews.</p>
+  <p>Questions about this study: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a></p>
+
+  <details class="ath-gov">
+    <summary>How your answers are handled</summary>
+    <div class="ath-gov__body">
+      <p><strong>What we hold.</strong> We do not ask for your name, your workplace
+      or your email address, and none is stored with your answers. Your responses
+      are held in an access-controlled database hosted in the United Kingdom and
+      are reported only in aggregate, or as short anonymous quotations that carry
+      nothing capable of identifying you.</p>
+
+      <p><strong>Free text.</strong> We ask you not to name people, hospitals,
+      employers or patients. Every free-text answer is screened automatically for
+      personal information before any member of the research team reads or quotes
+      it, and is not used until it has passed that screen.</p>
+
+      <p><strong>Network addresses.</strong> Our hosting provider records the
+      network address of visiting devices as part of running the service, as any
+      website does. Those records sit outside the survey database, are never
+      joined to your answers, and are not available to the research team for
+      analysis. We state this rather than claim that nothing whatever is recorded.</p>
+
+      <p><strong>If you register for the second phase.</strong> Your email address
+      is written to a separate table with no link of any kind to your answers: no
+      shared identifier, and only the date rather than the time of day, so that
+      the two cannot be matched by when they arrived. You can ask us to remove it
+      at any point.</p>
+
+      <p><strong>Standards.</strong> Information is handled in accordance with the
+      UK General Data Protection Regulation and the Data Protection Act 2018, and
+      we apply the Caldicott principles to any information capable of identifying
+      an individual. The University of St Andrews is the data controller.</p>
+
+      <p><strong>Governance status.</strong> This study has been assessed using the
+      NHS Health Research Authority decision tools and does not require NHS
+      Research Ethics Committee review. Written confirmation is held with the study
+      documents and is available on request.</p>
+
+      <p>Questions, or a request to withdraw your registration:
+      <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
+    </div>
+  </details>
+</footer>
+
+<!-- UMD builds, loaded in order. survey.core defines window.Survey; survey-js-ui
+     attaches the renderer to it. survey-definition.js defines window.ALTHING. -->
+<script>
+  /* Live Symposion Supabase project (rzokxmobuvrruwavhjzw, eu-west-2/London).
+     The anon key is a publishable key: safe in client code only because RLS
+     is enabled and the anon role holds INSERT (and the save_progress /
+     public_response_count RPCs) and nothing else on these two tables. */
+  /* Study-facing settings. The consent page interpolates both of these; before
+     9 September neither was set, so the first thing a respondent saw was an
+     unresolved {closingDate} and {contact}. */
+  window.ALTHING_CONTACT      = "ajh52@st-andrews.ac.uk";
+  window.ALTHING_CLOSING_DATE = "11 March 2027";
+
+  window.ALTHING_SUPABASE_URL = "https://rzokxmobuvrruwavhjzw.supabase.co";
+  window.ALTHING_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6b2t4bW9idXZycnV3YXZoanp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMjMwMTksImV4cCI6MjEwMzU5OTAxOX0.0RIHEDL23I6Sub5P47Ibex93WY-zRS2qte30z8wZccY";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/survey-core@1.12.24/survey.core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/survey-js-ui@1.12.24/survey-js-ui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="./survey-definition.js"></script>
+
+<script>
+/* Wrapped in an IIFE deliberately. survey-definition.js is a classic script,
+   so its top-level `const surveyJson` already occupies global scope; naming
+   the same identifiers here without a closure throws
+   "Identifier 'surveyJson' has already been declared" and the page dies
+   before it renders. */
+(function () {
+"use strict";
+
+const { Model } = window.Survey;
+const { createClient } = window.supabase;
+const {
+  surveyJson, INSTRUMENT_VERSION, chooseAnchor, setRoleStems,
+  roleCode, modulesComplete, coreComplete, MODULES
+} = window.ALTHING;
+
+/* ------------------------------------------------------------------
+   Configuration.
+   The anon key is a PUBLISHABLE key and is meant to be in client code.
+   It is safe here only because row level security is enabled and the
+   anon role holds INSERT and nothing else. If you ever grant anon
+   SELECT on these tables, this page starts leaking every response.
+   ------------------------------------------------------------------ */
+const SUPABASE_URL      = window.ALTHING_SUPABASE_URL      || "REPLACE_WITH_PROJECT_URL";
+const SUPABASE_ANON_KEY = window.ALTHING_SUPABASE_ANON_KEY || "REPLACE_WITH_ANON_KEY";
+
+/* Configuration is validated rather than assumed. createClient throws on a
+   malformed URL, and an unguarded throw here kills the whole script before
+   the survey renders, leaving a blank page and a cryptic console error. The
+   survey therefore renders either way; only submission depends on this. */
+const CONFIGURED = /^https:\/\/.+\.supabase\.(co|in)$/.test(SUPABASE_URL)
+                && SUPABASE_ANON_KEY.length > 20;
+
+let supabase = null;
+if (CONFIGURED) {
+  try {
+    supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+  } catch (e) {
+    console.error("Althing: Supabase client could not be created.", e);
+  }
+} else {
+  console.warn(
+    "Althing: Supabase is not configured. The survey will render but " +
+    "responses cannot be saved. Set window.ALTHING_SUPABASE_URL and " +
+    "window.ALTHING_SUPABASE_ANON_KEY before this script runs."
+  );
+}
+
+const startedAt = Date.now();
+const survey = new Model(surveyJson);
+let anchorChosen = null;
+
+/* The consent page interpolates these. Set before the first render. */
+survey.setVariable("contact", window.ALTHING_CONTACT || "ajh52@st-andrews.ac.uk");
+survey.setVariable("closingDate", window.ALTHING_CLOSING_DATE || "");
+
+/* ------------------------------------------------------------------
+   Saving by module (instrument v3.1).
+
+   The v3.1 design promises the respondent, on the first page, that each
+   completed section is kept. That promise is only true if the row exists
+   before the end of the survey, so the row is created once the respondent
+   has consented and left the opening page, and is updated every time a
+   page is left thereafter.
+
+   Updates go through the save_progress function rather than an UPDATE.
+   The anon role has INSERT on responses and EXECUTE on save_progress, and
+   no UPDATE grant at all, so the only row a respondent can ever alter is
+   the one whose token matches the one held in this tab. The token is
+   generated in the browser, never shown, and never stored anywhere else,
+   so it identifies the response and not the person.
+   ------------------------------------------------------------------ */
+const responseToken =
+  (window.crypto && typeof window.crypto.randomUUID === "function")
+    ? window.crypto.randomUUID()
+    : null;
+
+let rowCreated = false;
+let saveInFlight = null;
+
+/* Everything save_progress is willing to update, read off the live model.
+   Deliberately excludes arm and instrument_version, which are set once at
+   insert and must not drift mid-response. */
+/* modulesComplete() in survey-definition.js only counts a module once the
+   respondent has moved PAST it, which is right mid-survey but wrong at the
+   end: on completion currentPage is no longer a meaningful position, the
+   comparison collapses, and every module would look incomplete. Since an
+   empty modules_complete is coalesced away by save_progress but
+   core_complete is not, that would quietly mark finished responses as
+   core_complete = false. At completion the same rule is therefore applied
+   without the position test. */
+function modulesAtCompletion() {
+  const done = new Set();
+  for (const p of survey.visiblePages) {
+    const m = MODULES[p.name];
+    if (!m) continue;
+    if (p.questions.every((q) => !q.isRequired || !q.isEmpty())) done.add(m);
+  }
+  return [...done];
+}
+
+function currentState(isComplete) {
+  const data = { ...survey.data };
+  const lastPage = data.__lastPage;
+  delete data.__lastPage;
+  const mods = isComplete ? modulesAtCompletion() : modulesComplete(survey);
+  return {
+    completed:        !!isComplete,
+    core_complete:    coreComplete(mods),
+    modules_complete: mods,
+    anchor_key:       anchorChosen ? anchorChosen.key : null,
+    anchor_inputs:    anchorChosen ? anchorChosen.inputs : null,
+    payload:          data,
+    last_page:        typeof lastPage === "number" ? lastPage : survey.currentPageNo,
+    duration_seconds: Math.min(86400, Math.round((Date.now() - startedAt) / 1000)),
+    role_code:        roleCode(data),
+    country:          data.A2 || null,
+    career_stage:     data.A4 || null
+  };
+}
+
+/* Creates the row on first call and returns whether a fresh row was made,
+   so the caller can skip the redundant update that would otherwise follow. */
+async function ensureRow(isComplete) {
+  if (rowCreated) return false;
+  const state = currentState(isComplete);
+  const { error } = await supabase.from("responses").insert({
+    instrument_version: INSTRUMENT_VERSION,
+    response_token:     responseToken,
+    arm:                survey.data.arm === "service_user" ? "service_user" : "professional",
+    ...state
+  });
+  if (error) {
+    console.error("Althing: initial insert failed", error);
+    showSaveState("error");
+    return false;
+  }
+  rowCreated = true;
+  return true;
+}
+
+/* Serialised: page changes can fire faster than a round trip, and two
+   overlapping writes would race to set modules_complete. */
+async function saveProgress(isComplete) {
+  if (!supabase || !responseToken) return false;
+  saveInFlight = (saveInFlight || Promise.resolve()).then(async () => {
+    if (await ensureRow(isComplete)) return true;
+    if (!rowCreated) return false;
+    const { data, error } = await supabase.rpc("save_progress", {
+      p_token: responseToken,
+      p_row:   currentState(isComplete)
+    });
+    if (error) {
+      console.error("Althing: save_progress failed", error);
+      showSaveState("error");
+      return false;
+    }
+    if (Number(data) !== 1) {
+      console.error("Althing: save_progress matched", data, "rows, expected 1");
+      showSaveState("error");
+      return false;
+    }
+    showSaveState("saved");
+    return true;
+  });
+  return saveInFlight;
+}
+
+/* The opening page promises that each completed section is kept. A promise the
+   respondent cannot see being honoured is worth very little, so the save is
+   shown: a brief tick on success, and a persistent warning if a save fails, so
+   nobody carries on for ten minutes believing their answers are being kept
+   when they are not. */
+let saveStateTimer = null;
+function showSaveState(state) {
+  const el = document.getElementById("saveState");
+  if (!el) return;
+  clearTimeout(saveStateTimer);
+  if (state === "saved") {
+    el.textContent = "✓ Progress saved";
+    el.className = "ath-save ath-save--ok";
+    el.hidden = false;
+    saveStateTimer = setTimeout(() => { el.hidden = true; }, 2600);
+  } else {
+    el.textContent = "⚠ Your last answers could not be saved. Check your connection; earlier sections are still kept.";
+    el.className = "ath-save ath-save--err";
+    el.hidden = false;
+  }
+}
+
+/* Exposed for debugging and for the headless render check. Read-only use. */
+window.__athSurvey = survey;
+
+/* Free-text items are where the "no identifiable data" claim can fail: the
+   schema cannot stop a respondent typing a colleague's name, a hospital or a
+   patient detail into a comment box. Prevention is cheap and is applied to
+   every comment item at once here, so a new free-text item cannot be added
+   later and silently miss the warning. Detection is the second layer and
+   belongs downstream: run Presidio over the free-text fields before anyone
+   reads them, per the Charybdis design. */
+const PII_NOTE =
+  "Please do not include names of people, hospitals, employers or patients. " +
+  "Describe roles and settings instead.";
+
+survey.getAllQuestions().forEach((q) => {
+  if (q.getType() === "comment" && !q.description) q.description = PII_NOTE;
+});
+
+/* Role-conditional wording for the escalation items, applied as soon as
+   the respondent declares a role. */
+survey.onValueChanged.add((sender, options) => {
+  if (options.name === "A1") {
+    setRoleStems(sender, Number(options.value));
+  }
+});
+
+/* The dynamic anchor. Computed once, when the respondent arrives at the
+   page that shows it, from answers already given. Thresholds are fixed in
+   survey-definition.js and are not tuned after launch. */
+survey.onCurrentPageChanging.add((sender, options) => {
+  if (options.newCurrentPage && options.newCurrentPage.name === "page_VOICE") {
+    anchorChosen = chooseAnchor(sender.data);
+    sender.setVariable("anchorText", anchorChosen.text);
+  }
+});
+
+/* Paradata for attrition analysis only. No cursor tracking, no keystrokes.
+   The save here is what makes the retention design real: a respondent who
+   closes the tab after the core keeps everything up to that point. */
+survey.onCurrentPageChanged.add((sender) => {
+  sender.setValue("__lastPage", sender.currentPageNo, false, false);
+  saveProgress(false);
+});
+
+/* Answer-by-answer saving, so a respondent who abandons midway through a page
+   still contributes the answers they gave on it rather than only the pages
+   they finished. Debounced, because a matrix row emits a change per click and
+   an unthrottled save would mean a write per radio button.
+
+   Consent-gated deliberately: the consent checkbox is itself a value change on
+   the opening page, and nothing may be written before it is ticked. The row is
+   created by the first save that passes this guard, so someone who opens the
+   page, reads the information and leaves without consenting leaves no row. */
+let entrySaveTimer = null;
+/* Once the survey is completed no further answer-level save may run. A pending
+   debounced save firing after completion would carry isComplete false and would
+   overwrite completed = true on a finished response, silently turning a complete
+   response into a partial one. Caught by the full-walk test, not by inspection. */
+let finished = false;
+function consentGiven() {
+  const c = survey.data.consent;
+  return Array.isArray(c) ? c.indexOf("yes") !== -1 : c === "yes";
+}
+survey.onValueChanged.add((sender, options) => {
+  if (options.name === "__lastPage") return;
+  if (finished || !consentGiven()) return;
+  clearTimeout(entrySaveTimer);
+  entrySaveTimer = setTimeout(() => saveProgress(false), 1500);
+});
+
+/* A last save on the way out, for the respondent who closes the tab rather
+   than navigating. sendBeacon is not usable here because the write goes
+   through the Supabase client, so this is best-effort by design. */
+window.addEventListener("pagehide", () => {
+  if (!finished && consentGiven() && rowCreated) saveProgress(false);
+});
+
+survey.onComplete.add(async (sender, options) => {
+  options.showSaveInProgress("Saving");
+  finished = true;
+  clearTimeout(entrySaveTimer);
+
+  if (!supabase) {
+    console.error("Althing: not configured, response NOT saved.", currentState(true));
+    options.showSaveError(
+      "This survey is not yet connected to its database, so your answers " +
+      "were not saved. Please tell ajh52@st-andrews.ac.uk."
+    );
+    return;
+  }
+
+  const ok = await saveProgress(true);
+
+  if (!ok) {
+    /* Sections completed earlier were saved as the respondent went, so this
+       reports the final write only, and does not claim the whole response
+       was lost when it was not. */
+    options.showSaveError(
+      "We could not save the last part of your answers. Anything you " +
+      "completed earlier has been kept. Please email " +
+      "ajh52@st-andrews.ac.uk and we will look into it."
+    );
+    return;
+  }
+
+  options.showSaveSuccess();
+  document.getElementById("surveyContainer").hidden = true;
+  const done = document.getElementById("completion");
+  done.hidden = false;
+  done.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+/* Render. survey-core is headless; survey-js-ui supplies the renderer and
+   adds SurveyUI.renderSurvey. Both forms are tried because the exported
+   surface has moved between minor versions. */
+if (window.SurveyUI && typeof window.SurveyUI.renderSurvey === "function") {
+  window.SurveyUI.renderSurvey(survey, document.getElementById("surveyContainer"));
+} else if (typeof survey.render === "function") {
+  survey.render("surveyContainer");
+} else {
+  document.getElementById("surveyContainer").innerHTML =
+    '<p style="color:#7A4A2B">The survey could not be loaded. Please email ' +
+    'ajh52@st-andrews.ac.uk.</p>';
+  console.error("Althing: no SurveyJS renderer found on the page.");
+}
+
+/* ------------------------------------------------------------------
+   Expression of interest. Writes to a different table, with no key back
+   to the response, and the table stores a DATE rather than a timestamp
+   so that two rows cannot be rejoined by arrival time.
+   ------------------------------------------------------------------ */
+const eoiBtn    = document.getElementById("eoiSubmit");
+const eoiStatus = document.getElementById("eoiStatus");
+
+eoiBtn.addEventListener("click", async () => {
+  const email = document.getElementById("eoiEmail").value.trim();
+  const role  = document.getElementById("eoiRole").value;
+
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    eoiStatus.textContent = "That does not look like an email address.";
+    eoiStatus.className = "ath-status err";
+    return;
+  }
+
+  if (!supabase) {
+    eoiStatus.textContent = "Registration is not available yet. Please email ajh52@st-andrews.ac.uk.";
+    eoiStatus.className = "ath-status err";
+    return;
+  }
+
+  eoiBtn.disabled = true;
+  eoiStatus.textContent = "Registering";
+  eoiStatus.className = "ath-status";
+
+  const { error } = await supabase
+    .from("delphi_interest")
+    .insert({ email, role_band: role || null });
+
+  if (error && error.code === "23505") {
+    eoiStatus.textContent = "You are already on the list. Nothing further needed.";
+    eoiStatus.className = "ath-status ok";
+    return;
+  }
+  if (error) {
+    console.error("Althing EOI insert failed", error);
+    eoiStatus.textContent = "That did not save. Please email ajh52@st-andrews.ac.uk instead.";
+    eoiStatus.className = "ath-status err";
+    eoiBtn.disabled = false;
+    return;
+  }
+
+  eoiStatus.textContent = "Registered. Thank you.";
+  eoiStatus.className = "ath-status ok";
+  document.getElementById("eoiEmail").disabled = true;
+  document.getElementById("eoiRole").disabled = true;
+});
+
+})();
+</script>
+</body>
+</html>
