@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Symposion: the pathway to heart transplantation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#F2EDE2; --bone:#E7DFCD; --ivory:#FBF8F1; --ink:#26231D; --navy:#1E2D4A;
+  --teal:#2B7A78; --teal-wash:#E3EFEC; --umber:#6E4A2E; --muted:#6A6355; --rule:#D8CFBC;
+  --alert:#8A2F22; --alert-wash:#F6E6E1;
+  --display:'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --body:'Spectral', Georgia, 'Times New Roman', serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--parchment);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.62;font-feature-settings:"onum" 1,"kern" 1}
+a{color:var(--navy);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--teal)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:2px}
+button{font-family:var(--body);font-size:15px;cursor:pointer}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none!important}
+
+/* Gate */
+.gate{min-height:100vh;display:grid;place-items:center;padding:24px 16px;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 0.5px), var(--rule) calc(50% - 0.5px), var(--rule) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 0 0/100% 100% no-repeat,
+    var(--parchment)}
+.gate-card{width:min(440px,100%);background:var(--ivory);border:1px solid var(--rule);border-top:3px solid var(--umber);padding:36px 32px 30px;position:relative}
+.wordmark{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.42em;color:var(--navy);margin:0}
+.gate-card h1{font-family:var(--display);font-weight:600;font-size:34px;line-height:1.08;color:var(--navy);margin:22px 0 10px}
+.gate-card p{color:var(--muted);font-size:15.5px;margin:0 0 22px}
+.field label{display:block;font-size:14.5px;margin-bottom:6px;color:var(--ink)}
+.field input{width:100%;font-family:var(--body);font-size:17px;padding:11px 12px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:2px}
+.field input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-wash)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--navy);background:var(--navy);color:var(--ivory);padding:10px 18px;border-radius:2px;font-weight:500}
+.btn:hover{background:#16223a}
+.btn.quiet{background:transparent;color:var(--navy)}
+.btn.quiet:hover{background:var(--bone)}
+.btn.live{background:var(--teal);border-color:var(--teal)}
+.btn.live:hover{background:#226563}
+.gate-card .btn{margin-top:16px;width:100%;justify-content:center;padding:12px}
+.err{margin-top:14px;background:var(--alert-wash);color:var(--alert);border-left:3px solid var(--alert);padding:10px 12px;font-size:14.5px}
+.gate-foot{margin-top:24px;font-size:13px;color:var(--muted)}
+
+/* App frame */
+.top{background:var(--ivory);border-bottom:1px solid var(--rule)}
+.top-in{max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.top .wordmark{flex:0 0 auto}
+.top .ws{font-family:var(--display);font-size:20px;color:var(--ink);margin:0;flex:1 1 260px;line-height:1.2}
+.top nav{display:flex;gap:4px;flex-wrap:wrap}
+.top nav button{background:none;border:0;padding:8px 12px;color:var(--muted);border-bottom:2px solid transparent;font-size:15.5px}
+.top nav button[aria-current="page"]{color:var(--navy);border-bottom-color:var(--umber)}
+.top nav button:hover{color:var(--navy)}
+.sync{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.sync .dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
+.sync.ok .dot{background:var(--teal)}
+.sync.pending .dot{background:var(--umber)}
+
+.shell{max-width:1240px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:270px minmax(0,1fr) 290px;gap:40px;align-items:start}
+.shell.wide{grid-template-columns:minmax(0,1fr)}
+@media (max-width:1100px){.shell{grid-template-columns:240px minmax(0,1fr)}.ledger{grid-column:2}}
+@media (max-width:780px){.shell{grid-template-columns:minmax(0,1fr);gap:24px}.ledger{grid-column:auto}.rail{position:static!important}}
+
+/* Route switch and rail */
+.rail{position:sticky;top:20px}
+.route{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);background:var(--ivory);margin-bottom:22px}
+.route button{background:none;border:0;padding:10px 8px;font-size:14.5px;color:var(--muted);line-height:1.25}
+.route button[aria-pressed="true"]{background:var(--navy);color:var(--ivory)}
+.steps{list-style:none;margin:0;padding:0;position:relative}
+.steps::before{content:"";position:absolute;left:15px;top:8px;bottom:8px;width:1px;background:var(--umber);opacity:.55}
+.steps li{position:relative}
+.steps button{display:grid;grid-template-columns:31px 1fr;gap:12px;align-items:baseline;width:100%;text-align:left;background:none;border:0;padding:7px 0;color:var(--ink);font-size:15.5px;line-height:1.35}
+.steps .node{font-variant-numeric:lining-nums;width:31px;height:31px;border-radius:50%;background:var(--parchment);border:1px solid var(--umber);display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:16px;color:var(--umber);position:relative;top:7px}
+.steps li.done .node{background:var(--navy);border-color:var(--navy);color:var(--ivory)}
+.steps li.current .node{box-shadow:0 0 0 3px var(--parchment),0 0 0 4px var(--teal)}
+.steps li.current button{color:var(--navy);font-weight:500}
+.steps button:hover .t{text-decoration:underline;text-underline-offset:3px}
+.tally{margin-top:20px;font-size:14px;color:var(--muted)}
+.steps-toggle{display:none}
+@media (max-width:780px){
+  .steps-toggle{display:flex;justify-content:space-between;width:100%;background:var(--ivory);border:1px solid var(--rule);padding:10px 14px;color:var(--navy);font-size:15px;border-radius:2px}
+  .rail:not(.open) .steps,.rail:not(.open) .tally{display:none}
+  .rail.open .steps{margin-top:14px}
+}
+.tally strong{color:var(--ink);font-weight:500}
+
+/* Reading column */
+.read{max-width:68ch}
+.read .kicker{font-family:var(--display);font-size:19px;color:var(--umber);margin:0 0 2px}
+.read h2{font-family:var(--display);font-weight:600;font-size:40px;line-height:1.08;color:var(--navy);margin:0 0 20px;letter-spacing:-.005em}
+.read h3{font-family:var(--display);font-weight:600;font-size:25px;color:var(--navy);margin:34px 0 8px}
+.read p{margin:0 0 16px}
+.read strong{font-weight:600;color:var(--navy)}
+.read code, pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:36px;padding-top:20px;border-top:1px solid var(--rule)}
+.read .log h2{font-size:27px;margin:36px 0 10px}
+.read .log ul{padding-left:20px}
+.read .log li{margin-bottom:8px}
+.intro{border-left:3px solid var(--umber);padding:2px 0 2px 18px;color:var(--muted);margin:0 0 28px;font-style:italic}
+
+/* Ledger */
+.ledger{background:var(--ivory);border:1px solid var(--rule);padding:22px 20px;position:sticky;top:20px}
+.ledger h4{font-family:var(--display);font-weight:600;font-size:21px;color:var(--navy);margin:0 0 6px}
+.ledger .hint{font-size:14px;color:var(--muted);margin:0 0 16px}
+.ledger .field{margin-bottom:14px}
+.ledger .field label{font-size:14px}
+.ledger .field input{font-size:16px;padding:8px 10px}
+.ledger .actions{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.ledger .stamp{font-size:13.5px;color:var(--muted);margin-top:12px}
+.ledger.done{border-top:3px solid var(--navy)}
+
+/* Search strings */
+.db{background:var(--ivory);border:1px solid var(--rule);margin:0 0 22px}
+.db header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:16px 20px 10px}
+.db header > div{flex:1 1 auto;min-width:0}
+.db header .copy{flex:0 0 auto;margin-top:4px}
+.db h3{margin:0;font-family:var(--display);font-size:24px;color:var(--navy);font-weight:600}
+.db .plat{color:var(--muted);font-size:14.5px}
+.db .note{padding:0 20px;color:var(--muted);font-size:14.5px;margin:0 0 12px}
+.db .note.untested{color:var(--umber)}
+.db pre{margin:0;padding:14px 20px;background:#F7F3EA;border-top:1px solid var(--rule);white-space:pre-wrap;word-break:break-word;max-height:420px;overflow:auto;line-height:1.5}
+.db ol{margin:0;padding:12px 20px 14px 54px;background:#F7F3EA;border-top:1px solid var(--rule);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;max-height:420px;overflow:auto}
+.db ol li{padding:1px 0}
+.copy{background:none;border:1px solid var(--teal);color:var(--teal);padding:5px 12px;border-radius:2px;font-size:14px}
+.copy:hover{background:var(--teal-wash)}
+
+/* Pack */
+.pack{list-style:none;padding:0;margin:0;border-top:1px solid var(--rule)}
+.pack li{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:18px 0;border-bottom:1px solid var(--rule)}
+.pack .name{font-family:var(--display);font-size:22px;color:var(--navy);font-weight:600;line-height:1.2}
+.pack .desc{color:var(--muted);font-size:15px;margin-top:4px}
+.pack .meta{font-size:13px;color:var(--muted);margin-top:6px}
+@media (max-width:560px){.pack li{grid-template-columns:1fr}}
+
+/* Tables from the protocol */
+table{border-collapse:collapse;width:100%;font-size:15px;margin:8px 0 22px;background:var(--ivory)}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-top:1px solid var(--rule)}
+thead th{border-top:2px solid var(--navy);border-bottom:1px solid var(--navy);color:var(--navy);font-weight:600}
+tbody tr:last-child td{border-bottom:2px solid var(--navy)}
+
+/* Footer */
+footer{border-top:1px solid var(--rule);background:var(--ivory)}
+.foot-in{max-width:1240px;margin:0 auto;padding:22px 24px 28px;display:grid;grid-template-columns:1fr auto;gap:24px;font-size:13.5px;color:var(--muted)}
+.foot-in blockquote{margin:0;font-family:var(--display);font-size:18px;font-style:italic;color:var(--umber)}
+.foot-in blockquote cite{display:block;font-style:normal;font-family:var(--body);font-size:13px;color:var(--muted);margin-top:4px}
+@media (max-width:780px){.foot-in{grid-template-columns:1fr}}
+
+dialog{border:1px solid var(--rule);border-top:3px solid var(--umber);background:var(--ivory);color:var(--ink);padding:28px;max-width:440px}
+dialog::backdrop{background:rgba(30,45,74,.35)}
+dialog h3{font-family:var(--display);font-size:26px;color:var(--navy);margin:0 0 8px}
+.roles{display:grid;gap:8px;margin:16px 0 4px}
+.roles button{text-align:left;background:#fff;border:1px solid var(--rule);padding:12px 14px;border-radius:2px}
+.roles button:hover{border-color:var(--teal)}
+
+@media (prefers-reduced-motion:no-preference){
+  .appear{animation:appear .5s ease-out both}
+  @keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+@media print{
+  .top,.rail,.ledger,footer,.pager{display:none!important}
+  body{background:#fff}
+  .shell{display:block;padding:0}
+}
+</style>
+</head>
+<body>
+
+<main id="gate" class="gate" aria-labelledby="gate-title">
+  <form class="gate-card" id="gate-form" autocomplete="off">
+    <p class="wordmark">SYMPOSION</p>
+    <h1 id="gate-title">The pathway to heart transplantation</h1>
+    <p>A guided walkthrough and writing pack for the review team. Enter the passcode you were sent to open it.</p>
+    <div class="field">
+      <label for="pass">Passcode</label>
+      <input id="pass" name="pass" type="password" required spellcheck="false" autocapitalize="off">
+    </div>
+    <button class="btn" type="submit" id="open-btn">Open the walkthrough</button>
+    <div class="err" id="gate-err" role="alert" hidden></div>
+    <p class="gate-foot">The content of this page is encrypted and opens only with the passcode, which never leaves your browser.</p>
+  </form>
+</main>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="top-in">
+      <p class="wordmark">SYMPOSION</p>
+      <p class="ws" id="ws-title"></p>
+      <nav aria-label="Sections">
+        <button data-view="walk" aria-current="page">Walkthrough</button>
+        <button data-view="search">Search strings</button>
+        <button data-view="pack">Writing pack</button>
+        <button data-view="decisions">Decisions</button>
+      </nav>
+      <div class="sync" id="sync" aria-live="polite"><span class="dot"></span><span id="sync-text">Not yet saved</span></div>
+    </div>
+  </header>
+
+  <div class="shell" id="shell">
+    <aside class="rail" id="rail" aria-label="Steps">
+      <div class="route" role="group" aria-label="Route">
+        <button data-route="nested_knowledge" aria-pressed="true">Nested Knowledge</button>
+        <button data-route="conventional" aria-pressed="false">Conventional route</button>
+      </div>
+      <button class="steps-toggle" type="button" id="steps-toggle" aria-expanded="false" aria-controls="steps"><span id="toggle-label">Show all steps</span><span id="toggle-count"></span></button>
+      <ol class="steps" id="steps"></ol>
+      <p class="tally" id="tally"></p>
+    </aside>
+    <article class="read" id="read" tabindex="-1"></article>
+    <aside class="ledger" id="ledger" aria-label="Record for this step"></aside>
+  </div>
+
+  <footer>
+    <div class="foot-in">
+      <div>
+        <p style="margin:0 0 6px">Prepared by Dr Andrew J Hall, University of St Andrews, for the review team. <span id="foot-version"></span></p>
+        <p style="margin:0">Symposion is an Aurora Performance: Labs application under development by Dr Andrew J Hall, for authorised research group use.</p>
+      </div>
+      <blockquote>Life is short, and Art long; the crisis fleeting; experience perilous, and decision difficult.<cite>Hippocrates, Aphorisms I.1, trans. Francis Adams</cite></blockquote>
+    </div>
+  </footer>
+</div>
+
+<dialog id="role-dialog" aria-labelledby="role-title">
+  <h3 id="role-title">Which role are you working in?</h3>
+  <p style="margin:0;color:var(--muted);font-size:15px">This is recorded with each step you complete, so that progress can be read by role. No name is stored.</p>
+  <div class="roles">
+    <button data-role="lead">Lead reviewer</button>
+    <button data-role="second">Second reviewer</button>
+    <button data-role="senior">Senior reviewer and arbitrator</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+const CONFIG = {"workstream": "heart-transplant-pathway", "version": "v0_2", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const STORE_KEY = "symposion." + CONFIG.workstream + ".v1";
+let CONTENT = null, KEY = null;
+let state = { route: "nested_knowledge", view: "walk", stepIndex: { nested_knowledge: 0, conventional: 0 },
+              role: null, client: null, steps: { nested_knowledge: {}, conventional: {} }, queue: [], lastSync: null };
+
+/* ---------- storage, guarded ---------- */
+function load() { try { const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (s) state = Object.assign(state, s); } catch (e) {} }
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+function sessGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+function sessSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+
+/* ---------- crypto ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function deriveKey(pass, saltB64) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(saltB64), iterations: CONFIG.kdf.iterations, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+}
+async function decryptBytes(key, ivB64, data) {
+  return new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(ivB64) }, key, data));
+}
+
+async function unlock(pass) {
+  const res = await fetch(CONFIG.content, { cache: "no-store" });
+  if (!res.ok) throw new Error("fetch");
+  const env = await res.json();
+  const key = await deriveKey(pass, env.salt);
+  let plain;
+  try { plain = await decryptBytes(key, env.iv, b64(env.ct)); }
+  catch (e) { const err = new Error("pass"); throw err; }
+  CONTENT = JSON.parse(new TextDecoder().decode(plain));
+  KEY = key;
+  sessSet(STORE_KEY + ".p", pass);
+}
+
+/* ---------- gate ---------- */
+const gateForm = document.getElementById("gate-form");
+gateForm.addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const btn = document.getElementById("open-btn"), err = document.getElementById("gate-err");
+  err.hidden = true; btn.disabled = true; btn.textContent = "Opening";
+  try { await unlock(document.getElementById("pass").value.trim()); start(); }
+  catch (e) {
+    err.textContent = e.message === "pass"
+      ? "That passcode does not open this workstream. Check it against the message it came in, including capitals and hyphens."
+      : "The walkthrough could not be loaded. Check your connection and try again.";
+    err.hidden = false;
+  }
+  btn.disabled = false; btn.textContent = "Open the walkthrough";
+});
+
+/* ---------- rendering helpers ---------- */
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (html) e.innerHTML = html; return e; };
+const steps = () => CONTENT.routes[state.route].steps;
+const fmtTime = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+function start() {
+  load();
+  if (!state.client) { state.client = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)); save(); }
+  document.getElementById("gate").hidden = true;
+  document.getElementById("app").hidden = false;
+  $("#ws-title").textContent = CONTENT.meta.short_title;
+  $("#foot-version").textContent = "Protocol version " + CONTENT.meta.version + ", built " + CONTENT.meta.built + ".";
+  document.querySelectorAll(".top nav button").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; save(); render(); }));
+  document.querySelectorAll(".route button").forEach(b => b.addEventListener("click", () => { state.route = b.dataset.route; save(); render(); }));
+  $("#steps-toggle").addEventListener("click", () => setRail(!$("#rail").classList.contains("open")));
+  render();
+  updateSync();
+  flush();
+  if (!state.role) askRole();
+}
+
+function setRail(open) {
+  $("#rail").classList.toggle("open", open);
+  $("#steps-toggle").setAttribute("aria-expanded", String(open));
+  $("#toggle-label").textContent = open ? "Hide the steps" : "Show all steps";
+}
+
+function askRole() {
+  const d = document.getElementById("role-dialog");
+  d.querySelectorAll("[data-role]").forEach(b => b.onclick = () => { state.role = b.dataset.role; save(); d.close(); });
+  if (d.showModal) d.showModal();
+}
+
+function render() {
+  document.querySelectorAll(".top nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
+  const shell = $("#shell");
+  const walk = state.view === "walk";
+  shell.classList.toggle("wide", !walk);
+  $("#rail").hidden = !walk; $("#ledger").hidden = !walk;
+  if (walk) renderWalk();
+  else if (state.view === "search") renderSearch();
+  else if (state.view === "pack") renderPack();
+  else renderDecisions();
+}
+
+function renderWalk() {
+  document.querySelectorAll(".route button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.route === state.route)));
+  const list = $("#steps"); list.innerHTML = "";
+  const idx = state.stepIndex[state.route] || 0;
+  let done = 0;
+  steps().forEach((s, i) => {
+    const rec = state.steps[state.route][s.key] || {};
+    if (rec.done) done++;
+    const li = el("li", { class: (rec.done ? "done " : "") + (i === idx ? "current" : "") });
+    const b = el("button", { type: "button", "aria-current": i === idx ? "step" : "false" },
+      `<span class="node" aria-hidden="true">${s.n}</span><span class="t">${s.title}${rec.done ? '<span class="sr"> (complete)</span>' : ""}</span>`);
+    b.onclick = () => { state.stepIndex[state.route] = i; save(); setRail(false); renderWalk(); $("#read").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "smooth" }); };
+    li.appendChild(b); list.appendChild(li);
+  });
+  $("#tally").innerHTML = `<strong>${done} of ${steps().length}</strong> steps complete on this route.`;
+  $("#toggle-count").textContent = `${done} of ${steps().length} complete`;
+  const s = steps()[idx];
+  const read = $("#read");
+  read.innerHTML = "";
+  if (idx === 0 && CONTENT.routes[state.route].intro_text) read.appendChild(el("p", { class: "intro" }, CONTENT.routes[state.route].intro_text));
+  read.appendChild(el("p", { class: "kicker" }, `Step ${s.n} of ${steps().length}`));
+  read.appendChild(el("h2", {}, s.title));
+  const body = el("div", { class: "appear" }, s.html); read.appendChild(body);
+  const pager = el("div", { class: "pager" });
+  if (idx > 0) { const p = el("button", { class: "btn quiet", type: "button" }, "Previous step"); p.onclick = () => { state.stepIndex[state.route] = idx - 1; save(); renderWalk(); }; pager.appendChild(p); } else pager.appendChild(el("span"));
+  if (idx < steps().length - 1) { const n = el("button", { class: "btn quiet", type: "button" }, "Next step"); n.onclick = () => { state.stepIndex[state.route] = idx + 1; save(); renderWalk(); }; pager.appendChild(n); }
+  read.appendChild(pager);
+  renderLedger(s);
+}
+
+function renderLedger(s) {
+  const led = $("#ledger");
+  const rec = state.steps[state.route][s.key] || { values: {} };
+  led.className = "ledger" + (rec.done ? " done" : "");
+  led.innerHTML = `<h4>Record for this step</h4>`;
+  led.appendChild(el("p", { class: "hint" }, s.records.length
+    ? "Enter what this step produced. Values are kept on this device and sent to Symposion when you mark the step complete."
+    : "Nothing to record here beyond marking the step complete."));
+  s.records.forEach(r => {
+    const f = el("div", { class: "field" });
+    const id = "f-" + s.key + "-" + r.key;
+    f.appendChild(el("label", { for: id }, r.label));
+    const inp = el("input", { id, type: r.type === "number" ? "number" : "text", inputmode: r.type === "number" ? "decimal" : "text", step: "any" });
+    inp.value = (rec.values || {})[r.key] ?? "";
+    inp.addEventListener("change", () => {
+      const cur = state.steps[state.route][s.key] || { values: {} };
+      cur.values = cur.values || {}; cur.values[r.key] = inp.value; state.steps[state.route][s.key] = cur; save();
+      queueEvent(s.key, "recorded", { [r.key]: inp.value });
+    });
+    f.appendChild(inp); led.appendChild(f);
+  });
+  const acts = el("div", { class: "actions" });
+  const b = el("button", { class: rec.done ? "btn quiet" : "btn live", type: "button" }, rec.done ? "Reopen this step" : "Mark step complete");
+  b.onclick = () => {
+    const cur = state.steps[state.route][s.key] || { values: {} };
+    cur.done = !cur.done; cur.at = new Date().toISOString(); state.steps[state.route][s.key] = cur; save();
+    queueEvent(s.key, cur.done ? "completed" : "reopened", cur.values || {});
+    if (cur.done && (state.stepIndex[state.route] || 0) < steps().length - 1) state.stepIndex[state.route]++;
+    save(); renderWalk();
+  };
+  acts.appendChild(b); led.appendChild(acts);
+  if (rec.done && rec.at) led.appendChild(el("p", { class: "stamp" }, "Completed " + fmtTime(rec.at) + "."));
+}
+
+function renderSearch() {
+  const read = $("#read"); read.innerHTML = "";
+  read.appendChild(el("p", { class: "kicker" }, "Appendix A"));
+  read.appendChild(el("h2", {}, "Search strings"));
+  read.appendChild(el("p", {}, CONTENT.search_intro));
+  CONTENT.strategies.forEach(d => {
+    const box = el("section", { class: "db" });
+    const head = el("header");
+    head.appendChild(el("div", {}, `<h3>${d.db}</h3><div class="plat">${d.platform}</div>`));
+    const c = el("button", { class: "copy", type: "button" }, "Copy");
+    c.onclick = async () => { try { await navigator.clipboard.writeText(d.lines.join("\n")); c.textContent = "Copied"; setTimeout(() => c.textContent = "Copy", 1800); } catch (e) { c.textContent = "Select and copy manually"; } };
+    head.appendChild(c); box.appendChild(head);
+    box.appendChild(el("p", { class: "note" + (/Not tested/.test(d.note) ? " untested" : "") }, d.note));
+    if (d.lines.length === 1) { const pre = el("pre"); pre.textContent = d.lines[0]; box.appendChild(pre); }
+    else { const ol = el("ol"); d.lines.forEach(l => { const li = el("li"); li.textContent = l; ol.appendChild(li); }); box.appendChild(ol); }
+    read.appendChild(box);
+  });
+  read.appendChild(el("h3", {}, "Test record"));
+  read.appendChild(el("p", {}, CONTENT.test_record));
+}
+
+function renderPack() {
+  const read = $("#read"); read.innerHTML = "";
+  read.appendChild(el("p", { class: "kicker" }, "Writing pack"));
+  read.appendChild(el("h2", {}, "The documents"));
+  read.appendChild(el("p", {}, "Each file opens in Word or Excel. They are generated from a single source, so the protocol, the walkthroughs and the search strings on this page always agree; if you edit a file by hand, send it back rather than editing a later copy."));
+  const ul = el("ul", { class: "pack" });
+  CONTENT.pack.forEach(p => {
+    const li = el("li");
+    li.appendChild(el("div", {}, `<div class="name">${p.label}</div><div class="desc">${p.desc}</div><div class="meta">${p.file} &nbsp; ${p.size}</div>`));
+    const b = el("button", { class: "btn quiet", type: "button" }, "Download");
+    b.onclick = async () => {
+      b.disabled = true; b.textContent = "Preparing";
+      try {
+        const r = await fetch(p.enc, { cache: "no-store" }); const buf = new Uint8Array(await r.arrayBuffer());
+        const plain = await decryptBytes(KEY, p.iv, buf);
+        const url = URL.createObjectURL(new Blob([plain], { type: p.mime }));
+        const a = el("a", { href: url, download: p.file }); document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        b.textContent = "Downloaded";
+      } catch (e) { b.textContent = "Download failed, try again"; }
+      b.disabled = false;
+    };
+    li.appendChild(b); ul.appendChild(li);
+  });
+  read.appendChild(ul);
+  read.appendChild(el("h3", { id: "eligibility", tabindex: "-1" }, "Eligibility criteria"));
+  read.appendChild(el("div", {}, CONTENT.eligibility_html));
+}
+
+function renderDecisions() {
+  const read = $("#read"); read.innerHTML = "";
+  read.appendChild(el("p", { class: "kicker" }, "Decision log"));
+  read.appendChild(el("h2", {}, "What has been decided, and when"));
+  read.appendChild(el("div", { class: "log" }, CONTENT.decisions_html));
+}
+
+/* ---------- progress sync ---------- */
+function queueEvent(step_key, event, recorded) {
+  state.queue.push({ workstream_slug: CONFIG.workstream, route: state.route, step_key, event, role: state.role,
+                     recorded: recorded || {}, client_ref: state.client, page_version: CONFIG.version });
+  save(); updateSync(); flush();
+}
+let flushing = false;
+async function flush() {
+  if (flushing || !state.queue.length) return;
+  flushing = true;
+  while (state.queue.length) {
+    try {
+      const r = await fetch(CONFIG.supabase.url + "/rest/v1/workstream_progress", {
+        method: "POST",
+        headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify(state.queue[0]) });
+      if (!r.ok) break;
+      state.queue.shift(); state.lastSync = new Date().toISOString(); save();
+    } catch (e) { break; }
+  }
+  flushing = false; updateSync();
+  if (state.queue.length) setTimeout(flush, 30000);
+}
+function updateSync() {
+  const box = $("#sync"), t = $("#sync-text");
+  if (state.queue.length) { box.className = "sync pending"; t.textContent = state.queue.length === 1 ? "1 change waiting to save" : state.queue.length + " changes waiting to save"; }
+  else if (state.lastSync) { box.className = "sync ok"; t.textContent = "Saved to Symposion " + fmtTime(state.lastSync); }
+  else { box.className = "sync"; t.textContent = "Nothing to save yet"; }
+}
+window.addEventListener("online", flush);
+
+/* cross-references inside the text move within the walkthrough */
+document.addEventListener("click", ev => {
+  const a = ev.target.closest("a[data-route], a[data-view]");
+  if (!a || !CONTENT) return;
+  ev.preventDefault();
+  if (a.dataset.view) { state.view = a.dataset.view; save(); render();
+    if (a.dataset.anchor) { const t = document.getElementById(a.dataset.anchor); if (t) { t.scrollIntoView({ behavior: "smooth" }); t.focus({ preventScroll: true }); } }
+    else window.scrollTo({ top: 0 });
+    return; }
+  state.view = "walk"; state.route = a.dataset.route;
+  if (a.dataset.step) { const i = CONTENT.routes[state.route].steps.findIndex(s => s.n === Number(a.dataset.step)); if (i >= 0) state.stepIndex[state.route] = i; }
+  save(); render(); window.scrollTo({ top: 0 });
+});
+
+/* reopen within the same tab without re-entering the passcode */
+(async () => { const p = sessGet(STORE_KEY + ".p"); if (p) { try { await unlock(p); start(); } catch (e) {} } })();
+</script>
+</body>
+</html>
