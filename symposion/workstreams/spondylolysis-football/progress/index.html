@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Symposion: progress on the spondylolysis in football review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--parchment:#F2EDE2;--bone:#E7DFCD;--ivory:#FBF8F1;--ink:#26231D;--navy:#1E2D4A;--teal:#2B7A78;--teal-wash:#E3EFEC;--umber:#6E4A2E;--muted:#6A6355;--rule:#D8CFBC;--alert:#8A2F22;--alert-wash:#F6E6E1;
+  --display:'Cormorant Garamond',Georgia,serif;--body:'Spectral',Georgia,'Times New Roman',serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--parchment);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+[hidden]{display:none!important}
+.wordmark{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.42em;color:var(--navy);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 64px}
+h1{font-family:var(--display);font-weight:600;font-size:38px;line-height:1.1;color:var(--navy);margin:18px 0 6px}
+h2{font-family:var(--display);font-weight:600;font-size:26px;color:var(--navy);margin:36px 0 10px}
+.lede{color:var(--muted);margin:0 0 24px;max-width:70ch}
+form{background:var(--ivory);border:1px solid var(--rule);border-top:3px solid var(--umber);padding:24px;max-width:520px}
+label{display:block;font-size:14.5px;margin:0 0 6px}
+input{width:100%;font-family:var(--body);font-size:16px;padding:10px 11px;border:1px solid var(--rule);background:#fff;border-radius:2px;margin-bottom:14px}
+input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-wash)}
+.btn{border:1px solid var(--navy);background:var(--navy);color:var(--ivory);padding:10px 18px;border-radius:2px;font-family:var(--body);font-size:15px;cursor:pointer}
+.btn.quiet{background:transparent;color:var(--navy)}
+.note{font-size:13.5px;color:var(--muted);margin:12px 0 0}
+.err{background:var(--alert-wash);color:var(--alert);border-left:3px solid var(--alert);padding:10px 12px;font-size:14.5px;margin-top:12px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media (max-width:900px){.cols{grid-template-columns:1fr}}
+table{border-collapse:collapse;width:100%;background:var(--ivory);font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-top:1px solid var(--rule)}
+thead th{border-top:2px solid var(--navy);border-bottom:1px solid var(--navy);color:var(--navy);font-weight:600}
+tbody tr:last-child td{border-bottom:2px solid var(--navy)}
+td.n{font-family:var(--display);font-size:18px;color:var(--umber);width:2.4em}
+td.state.done{color:var(--navy);font-weight:600}
+td.state.open{color:var(--muted)}
+.vals{font-size:13.5px;color:var(--muted)}
+.bar{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="wordmark">SYMPOSION</p>
+  <h1>Progress on the spondylolysis in football review</h1>
+  <p class="lede">Each step the review team marks complete, and each value they record, as saved from the walkthrough. Nothing entered here is stored: the key is held only while this page is open.</p>
+
+  <form id="auth" autocomplete="off">
+    <label for="pass">Walkthrough passcode</label>
+    <input id="pass" type="password" required spellcheck="false" autocapitalize="off">
+    <label for="key">Supabase service role key</label>
+    <input id="key" type="password" required spellcheck="false" autocapitalize="off">
+    <button class="btn" type="submit" id="go">Show progress</button>
+    <div class="err" id="err" role="alert" hidden></div>
+    <p class="note">The passcode opens the step titles; the key reads the progress table. Close the tab when you have finished.</p>
+  </form>
+
+  <div id="out" hidden>
+    <div class="bar"><p class="lede" id="stamp" style="margin:0"></p><button class="btn quiet" id="refresh" type="button">Refresh</button></div>
+    <div class="cols">
+      <section><h2>Nested Knowledge route</h2><div id="nested_knowledge"></div></section>
+      <section><h2>Conventional route</h2><div id="conventional"></div></section>
+    </div>
+    <h2>Every event, newest first</h2>
+    <div id="log"></div>
+  </div>
+</div>
+<script>
+"use strict";
+const CONFIG = {"workstream": "spondylolysis-football", "supabase_url": "https://rzokxmobuvrruwavhjzw.supabase.co"};
+let KEY = null, TITLES = null;
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const when = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+const ROLE = { lead: "Lead reviewer", second: "Second reviewer", senior: "Senior reviewer" };
+
+async function titles(pass) {
+  const env = await (await fetch("../content.enc.json", { cache: "no-store" })).json();
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const k = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(env.salt), iterations: env.iterations, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const c = JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(env.iv) }, k, b64(env.ct))));
+  const t = {};
+  for (const r of Object.keys(c.routes)) t[r] = c.routes[r].steps.map(s => ({ key: s.key, n: s.n, title: s.title, records: s.records }));
+  return t;
+}
+
+async function load() {
+  const url = CONFIG.supabase_url + "/rest/v1/workstream_progress?workstream_slug=eq." + encodeURIComponent(CONFIG.workstream) + "&order=created_at.asc&limit=5000";
+  const r = await fetch(url, { headers: { apikey: KEY, Authorization: "Bearer " + KEY } });
+  if (!r.ok) throw new Error(r.status === 401 || r.status === 403 ? "key" : (r.status === 404 ? "table" : "load"));
+  return r.json();
+}
+
+function render(rows) {
+  document.getElementById("stamp").textContent = rows.length
+    ? rows.length + " events, the latest " + when(rows[rows.length - 1].created_at) + "."
+    : "No progress has been saved yet.";
+  for (const route of Object.keys(TITLES)) {
+    const state = {};
+    for (const e of rows.filter(x => x.route === route)) {
+      const s = state[e.step_key] || (state[e.step_key] = { done: false, values: {} });
+      Object.assign(s.values, e.recorded || {});
+      if (e.event === "completed") { s.done = true; s.at = e.created_at; s.role = e.role; }
+      if (e.event === "reopened") { s.done = false; s.at = e.created_at; s.role = e.role; }
+    }
+    const lab = {};
+    TITLES[route].forEach(s => (s.records || []).forEach(r => lab[r.key] = r.label));
+    const body = TITLES[route].map(s => {
+      const st = state[s.key];
+      const vals = st ? Object.entries(st.values).filter(([, v]) => v !== "").map(([k, v]) => esc(lab[k] || k) + ": " + esc(v)).join("<br>") : "";
+      const status = st && st.done ? "Complete" : (st ? "Reopened or in progress" : "Not started");
+      return `<tr><td class="n">${s.n}</td><td>${esc(s.title)}${vals ? `<div class="vals">${vals}</div>` : ""}</td>
+        <td class="state ${st && st.done ? "done" : "open"}">${status}${st && st.at ? `<div class="vals">${when(st.at)}${st.role ? ", " + esc(ROLE[st.role] || st.role) : ""}</div>` : ""}</td></tr>`;
+    }).join("");
+    document.getElementById(route).innerHTML = `<table><thead><tr><th></th><th>Step</th><th>Status</th></tr></thead><tbody>${body}</tbody></table>`;
+  }
+  const verb = { completed: "Completed", reopened: "Reopened", recorded: "Recorded" };
+  const log = rows.slice().reverse().map(e => {
+    const step = (TITLES[e.route] || []).find(s => s.key === e.step_key);
+    return `<tr><td>${when(e.created_at)}</td><td>${e.route === "conventional" ? "Conventional" : "Nested Knowledge"}</td><td>${step ? step.n + ". " + esc(step.title) : esc(e.step_key)}</td>
+      <td>${verb[e.event] || esc(e.event)}</td><td>${esc(ROLE[e.role] || "")}</td><td class="vals">${esc(JSON.stringify(e.recorded || {}))}</td></tr>`;
+  }).join("");
+  document.getElementById("log").innerHTML = `<table><thead><tr><th>When</th><th>Route</th><th>Step</th><th>Event</th><th>Role</th><th>Values</th></tr></thead><tbody>${log}</tbody></table>`;
+}
+
+document.getElementById("auth").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const err = document.getElementById("err"), go = document.getElementById("go");
+  err.hidden = true; go.disabled = true;
+  try {
+    try { TITLES = await titles(document.getElementById("pass").value.trim()); } catch (e) { throw new Error("pass"); }
+    KEY = document.getElementById("key").value.trim();
+    render(await load());
+    document.getElementById("auth").hidden = true; document.getElementById("out").hidden = false;
+  } catch (e) {
+    err.textContent = { pass: "That passcode does not open this workstream.", key: "The key was refused. Use the service role key for the Symposion project.",
+      table: "The progress table does not exist yet. Apply the migration in build/supabase_workstream_progress.sql first." }[e.message] || "Progress could not be loaded. Check your connection and try again.";
+    err.hidden = false; KEY = null;
+  }
+  go.disabled = false;
+});
+document.getElementById("refresh").addEventListener("click", async () => { try { render(await load()); } catch (e) {} });
+</script>
+</body>
+</html>
