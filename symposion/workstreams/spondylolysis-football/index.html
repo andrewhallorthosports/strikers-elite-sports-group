@@ -52,7 +52,28 @@ button{font-family:var(--body);font-size:15px;cursor:pointer}
 .top{background:var(--ivory);border-bottom:1px solid var(--rule)}
 .top-in{max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
 .top .wordmark{flex:0 0 auto}
-.top .ws{font-family:var(--display);font-size:20px;color:var(--ink);margin:0;flex:1 1 260px;line-height:1.2}
+.brand{display:flex;align-items:center;gap:18px;flex:0 0 auto;min-width:0;flex-wrap:wrap}
+.sa-logo{height:44px;width:auto;display:block;mix-blend-mode:multiply}
+.gate-card .brand{flex-direction:column;align-items:flex-start;gap:12px}
+.gate-card .sa-logo{height:52px}
+.top-in > .status{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.brand .sa-logo{border-left:1px solid var(--rule);padding-left:18px}
+.gate-card .brand .sa-logo{border-left:0;padding-left:0}
+.gate-card .gate-foot{margin:22px 0 0}
+.gate-card .gate-foot + .gate-foot{margin-top:12px}
+.titlebar{background:var(--parchment);border-bottom:1px solid var(--rule)}
+.titlebar-in{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px 28px;flex-wrap:wrap}
+.tb-kicker{font-family:var(--display);font-size:15px;color:var(--umber);margin:0}
+.tb-title{font-family:var(--display);font-size:20px;line-height:1.25;color:var(--navy);margin:0;max-width:64ch;font-weight:500}
+.partners{list-style:none;display:flex;align-items:center;gap:24px;margin:0;padding:0;flex-wrap:wrap}
+.partners li{display:flex}
+.partners img{height:42px;width:auto;display:block}
+@media (max-width:780px){.partners img{height:32px}.partners{gap:16px}.sa-logo{height:38px}.top-in > .status{margin-left:0;align-items:flex-start}}
+.dlg-check{display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--muted);margin-top:12px}
+.dlg-check input{width:auto;margin:0}
+.ro .ledger input:disabled,.ro .ledger button:disabled{opacity:.5;cursor:not-allowed;background:#ECE6D9;color:var(--muted);border-color:var(--rule)}
+.ro .ledger{background:#F4F0E6}
+.gate-foot a,.foot-in a{color:inherit}
 .top nav{display:flex;gap:4px;flex-wrap:wrap}
 .top nav button{background:none;border:0;padding:8px 12px;color:var(--muted);border-bottom:2px solid transparent;font-size:15.5px}
 .top nav button[aria-current="page"]{color:var(--navy);border-bottom-color:var(--umber)}
@@ -151,12 +172,36 @@ footer{border-top:1px solid var(--rule);background:var(--ivory)}
 .foot-in blockquote cite{display:block;font-style:normal;font-family:var(--body);font-size:13px;color:var(--muted);margin-top:4px}
 @media (max-width:780px){.foot-in{grid-template-columns:1fr}}
 
-dialog{border:1px solid var(--rule);border-top:3px solid var(--umber);background:var(--ivory);color:var(--ink);padding:28px;max-width:440px}
+dialog{border:1px solid var(--rule);border-top:3px solid var(--umber);background:var(--ivory);color:var(--ink);padding:28px;width:min(480px,calc(100vw - 32px))}
 dialog::backdrop{background:rgba(30,45,74,.35)}
 dialog h3{font-family:var(--display);font-size:26px;color:var(--navy);margin:0 0 8px}
 .roles{display:grid;gap:8px;margin:16px 0 4px}
-.roles button{text-align:left;background:#fff;border:1px solid var(--rule);padding:12px 14px;border-radius:2px}
+.roles button{display:flex;flex-direction:column;gap:2px;text-align:left;background:#fff;border:1px solid var(--rule);padding:11px 14px;border-radius:2px;color:var(--ink)}
 .roles button:hover{border-color:var(--teal)}
+.roles .rt{font-weight:500;color:var(--navy);line-height:1.3}
+.roles .rn{font-size:14.5px;color:var(--muted)}
+.roles button.locked{background:var(--bone)}
+.roles .lock{display:inline-block;vertical-align:-2px;margin-right:6px}
+.dlg-field{margin-top:16px}
+.dlg-field label{display:block;font-size:14.5px;margin-bottom:6px}
+.dlg-field input,.dlg-field select{width:100%;font-family:var(--body);font-size:17px;padding:10px 12px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:2px}
+.dlg-field input:focus,.dlg-field select:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-wash)}
+.dlg-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.dlg-note{font-size:15px;color:var(--muted);margin:6px 0 0}
+dialog .err{margin-top:14px}
+.who{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.who b{color:var(--navy);font-weight:500}
+.who button,.linkish{background:none;border:0;color:var(--teal);text-decoration:underline;text-underline-offset:3px;padding:0;font-size:14px}
+.read .hint{font-size:14.5px;color:var(--muted)}
+.team .scroll{overflow-x:auto;margin:8px 0 22px}
+.team .scroll table{margin:0;min-width:520px}
+.team td .vals{font-size:13px;color:var(--muted);margin-top:2px}
+.team td.open{color:var(--muted)}
+.team td.complete{color:var(--navy);font-weight:500}
+.team .acts{white-space:nowrap}
+.team .acts button{margin-right:10px}
+.team .sub{font-size:13.5px;color:var(--muted)}
+.read.wide-read{max-width:none}
 
 @media (prefers-reduced-motion:no-preference){
   .appear{animation:appear .5s ease-out both}
@@ -173,7 +218,7 @@ dialog h3{font-family:var(--display);font-size:26px;color:var(--navy);margin:0 0
 
 <main id="gate" class="gate" aria-labelledby="gate-title">
   <form class="gate-card" id="gate-form" autocomplete="off">
-    <p class="wordmark">SYMPOSION</p>
+    <div class="brand"><p class="wordmark">SYMPOSION</p><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
     <h1 id="gate-title">Spondylolysis in football</h1>
     <p>A guided walkthrough and writing pack for the review team. Enter the passcode you were sent to open it.</p>
     <div class="field">
@@ -183,23 +228,34 @@ dialog h3{font-family:var(--display);font-size:26px;color:var(--navy);margin:0 0
     <button class="btn" type="submit" id="open-btn">Open the walkthrough</button>
     <div class="err" id="gate-err" role="alert" hidden></div>
     <p class="gate-foot">The content of this page is encrypted and opens only with the passcode, which never leaves your browser.</p>
+    <p class="gate-foot">Symposion is a web-based research application designed and hosted by Dr Andrew J Hall, University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
   </form>
 </main>
 
 <div id="app" hidden>
   <header class="top">
     <div class="top-in">
-      <p class="wordmark">SYMPOSION</p>
-      <p class="ws" id="ws-title"></p>
+      <div class="brand"><p class="wordmark">SYMPOSION</p><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
       <nav aria-label="Sections">
         <button data-view="walk" aria-current="page">Walkthrough</button>
         <button data-view="search">Search strings</button>
         <button data-view="pack">Writing pack</button>
         <button data-view="decisions">Decisions</button>
+        <button data-view="team" id="nav-team" hidden>Team</button>
       </nav>
-      <div class="sync" id="sync" aria-live="polite"><span class="dot"></span><span id="sync-text">Not yet saved</span></div>
+      <div class="status">
+        <div class="who" id="who" hidden><span id="who-label"></span><button type="button" id="who-change">Change</button></div>
+        <div class="sync" id="sync" aria-live="polite"><span class="dot"></span><span id="sync-text">Not yet saved</span></div>
+      </div>
     </div>
   </header>
+
+  <section class="titlebar" aria-label="The review">
+    <div class="titlebar-in">
+      <div class="tb-text"><p class="tb-kicker">Scoping review</p><p class="tb-title" id="tb-title"></p></div>
+      <ul class="partners" id="partners" aria-label="Principal institutions"></ul>
+    </div>
+  </section>
 
   <div class="shell" id="shell">
     <aside class="rail" id="rail" aria-label="Steps">
@@ -212,43 +268,96 @@ dialog h3{font-family:var(--display);font-size:26px;color:var(--navy);margin:0 0
       <p class="tally" id="tally"></p>
     </aside>
     <article class="read" id="read" tabindex="-1"></article>
-    <aside class="ledger" id="ledger" aria-label="Record for this step"></aside>
+    <aside class="ledger" id="ledger" aria-label="Results for this step"></aside>
   </div>
 
   <footer>
     <div class="foot-in">
       <div>
-        <p style="margin:0 0 6px">Prepared by Dr Andrew J Hall, University of St Andrews, for the review team. <span id="foot-version"></span></p>
-        <p style="margin:0">Symposion is an Aurora Performance: Labs application under development by Dr Andrew J Hall, for authorised research group use.</p>
+        <p style="margin:0 0 6px">Symposion is a web-based research application designed and hosted by Dr Andrew J Hall, University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
+        <p style="margin:0">Symposion is an Aurora Performance: Labs application under development, for authorised research group use. <span id="foot-version"></span></p>
       </div>
       <blockquote>Life is short, and Art long; the crisis fleeting; experience perilous, and decision difficult.<cite>Hippocrates, Aphorisms I.1, trans. Francis Adams</cite></blockquote>
     </div>
   </footer>
 </div>
 
-<dialog id="role-dialog" aria-labelledby="role-title">
-  <h3 id="role-title">Which role are you working in?</h3>
-  <p style="margin:0;color:var(--muted);font-size:15px">This is recorded with each step you complete, so that progress can be read by role. No name is stored.</p>
-  <div class="roles">
-    <button data-role="lead">Lead reviewer</button>
-    <button data-role="second">Second reviewer</button>
-    <button data-role="senior">Senior reviewer and arbitrator</button>
-  </div>
-</dialog>
+<dialog id="role-dialog" aria-labelledby="role-title"><div id="role-body"></div></dialog>
+<dialog id="fix-dialog" aria-labelledby="fix-title"><div id="fix-body"></div></dialog>
 
 <script>
 "use strict";
 const CONFIG = {"workstream": "spondylolysis-football", "version": "v0_1", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
-const STORE_KEY = "symposion." + CONFIG.workstream + ".v1";
-let CONTENT = null, KEY = null;
-let state = { route: "nested_knowledge", view: "walk", stepIndex: { nested_knowledge: 0, conventional: 0 },
-              role: null, client: null, steps: { nested_knowledge: {}, conventional: {} }, queue: [], lastSync: null };
+const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
+let CONTENT = null, KEY = null, ENV = null;
+let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
+let cred = null;     // the passcode sent with saves and loads: the person's own, or the administrator's
+let reachable = true;
+const blankState = () => ({ route: "nested_knowledge", view: "walk", stepIndex: { nested_knowledge: 0, conventional: 0 },
+                            steps: { nested_knowledge: {}, conventional: {} }, queue: [], lastSync: null, positioned: false });
+let state = blankState();
+const isAdmin = () => !!person && person.role === "admin" && !!cred;
+const readOnly = () => !!person && person.role === "readonly";
 
-/* ---------- storage, guarded ---------- */
-function load() { try { const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (s) state = Object.assign(state, s); } catch (e) {} }
-function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+/* ---------- storage, guarded: a copy for the person on this device; the saved copy lives at Symposion ---------- */
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function sessGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
 function sessSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+function clientRef() {
+  let c = lsGet(STORE_KEY + ".client");
+  if (!c) { c = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2); lsSet(STORE_KEY + ".client", c); }
+  return c;
+}
+const cacheKey = () => STORE_KEY + ".person." + (person && person.id ? person.id : "none");
+function load() { state = blankState(); if (!person || !person.id) return; try { const s = JSON.parse(lsGet(cacheKey()) || "null"); if (s) Object.assign(state, s); } catch (e) {} }
+function save() { if (person && person.id) lsSet(cacheKey(), JSON.stringify(state)); }
+function readLast() { try { return JSON.parse(lsGet(STORE_KEY + ".last") || "null"); } catch (e) { return null; } }
+
+/* ---------- Symposion functions ---------- */
+const MSG = {
+  offline: "Symposion could not be reached. Check your connection and try again.",
+  server: "Something went wrong at Symposion. Try again in a moment.",
+  admin_denied: "That passcode was not accepted.",
+  admin_locked: "Too many attempts. Wait fifteen minutes and try again.",
+  bad_passcode: "That passcode is not right.",
+  no_passcode: "No passcode has been set for this person yet.",
+  person_locked: "Too many wrong attempts. Wait fifteen minutes, or ask the administrator to set a temporary passcode.",
+  bad_new_passcode: "Choose a passcode of 6 to 64 characters.",
+  already_registered: "That role or name already has a passcode. Go back and enter it.",
+  not_found: "No one is registered under that name in this role.",
+  bad_name: "Enter your name, between 2 and 80 characters.",
+  bad_workstream: "This walkthrough is not set up for saving yet.",
+  name_taken: "Another person in that role already has that name.",
+  bad_person: "That registration cannot be changed.",
+  bad_target: "That registration cannot be merged into the one chosen."
+};
+async function rpc(fn, args) {
+  let r;
+  try {
+    r = await fetch(CONFIG.supabase.url + "/rest/v1/rpc/" + fn, { method: "POST",
+      headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json" },
+      body: JSON.stringify(args) });
+  } catch (e) { reachable = false; throw new Error("offline"); }
+  let body = null; try { body = await r.json(); } catch (e) {}
+  if (!r.ok) { reachable = r.status < 500; throw new Error("server"); }
+  reachable = true;
+  if (body && body.error) throw new Error(body.error);
+  return body;
+}
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const roleDef = k => (CONTENT.roles || []).find(r => r.key === k) || { key: k, title: k };
+const personLabel = p => roleDef(p.role).title + (p.seq ? " " + p.seq : "");
+const personName = p => p.name || roleDef(p.role).name || "";
+const personFull = p => personLabel(p) + (personName(p) ? ": " + personName(p) : "");
+
+function applyEvent(steps, route, key, event, recorded, at) {
+  if (!steps[route]) return;
+  const s = steps[route][key] || (steps[route][key] = { values: {} });
+  Object.assign(s.values, recorded || {});
+  if (event === "completed") { s.done = true; s.at = at; }
+  else if (event === "reopened") { s.done = false; s.at = at; }
+}
 
 /* ---------- crypto ---------- */
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
@@ -270,6 +379,7 @@ async function unlock(pass) {
   try { plain = await decryptBytes(key, env.iv, b64(env.ct)); }
   catch (e) { const err = new Error("pass"); throw err; }
   CONTENT = JSON.parse(new TextDecoder().decode(plain));
+  ENV = env;
   KEY = key;
   sessSet(STORE_KEY + ".p", pass);
 }
@@ -296,20 +406,32 @@ const el = (tag, attrs = {}, html = "") => { const e = document.createElement(ta
 const steps = () => CONTENT.routes[state.route].steps;
 const fmtTime = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
+let started = false;
 function start() {
-  load();
-  if (!state.client) { state.client = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)); save(); }
   document.getElementById("gate").hidden = true;
   document.getElementById("app").hidden = false;
-  $("#ws-title").textContent = CONTENT.meta.short_title;
+  $("#tb-title").textContent = CONTENT.meta.full_title;
+  const ul = $("#partners"); ul.innerHTML = "";
+  (CONTENT.partners || []).forEach(p => { const li = el("li"); const im = el("img", { src: p.src, alt: p.name, title: p.name }); li.appendChild(im); ul.appendChild(li); });
   $("#foot-version").textContent = "Protocol version " + CONTENT.meta.version + ", built " + CONTENT.meta.built + ".";
-  document.querySelectorAll(".top nav button").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; save(); render(); }));
-  document.querySelectorAll(".route button").forEach(b => b.addEventListener("click", () => { state.route = b.dataset.route; save(); render(); }));
-  $("#steps-toggle").addEventListener("click", () => setRail(!$("#rail").classList.contains("open")));
+  if (!started) {
+    started = true;
+    document.querySelectorAll(".top nav button").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; save(); render(); }));
+    document.querySelectorAll(".route button").forEach(b => b.addEventListener("click", () => { state.route = b.dataset.route; save(); render(); }));
+    $("#steps-toggle").addEventListener("click", () => setRail(!$("#rail").classList.contains("open")));
+    $("#who-change").addEventListener("click", () => { save(); showDialog("roles"); });
+    $("#role-dialog").addEventListener("cancel", ev => { if (!person) ev.preventDefault(); });
+  }
   render();
   updateSync();
-  flush();
-  if (!state.role) askRole();
+  const last = readLast();
+  if (last && last.role === "readonly") enterReadOnly();
+  else if (last && last.role === "admin") showDialog("admin");
+  else if (last && last.id) {
+    const saved = sessGet(STORE_KEY + ".c");
+    if (saved) { cred = saved; becomePerson(last); }
+    else showDialog("passcode", { who: last });
+  } else showDialog("roles");
 }
 
 function setRail(open) {
@@ -318,10 +440,255 @@ function setRail(open) {
   $("#toggle-label").textContent = open ? "Hide the steps" : "Show all steps";
 }
 
-function askRole() {
-  const d = document.getElementById("role-dialog");
-  d.querySelectorAll("[data-role]").forEach(b => b.onclick = () => { state.role = b.dataset.role; save(); d.close(); });
-  if (d.showModal) d.showModal();
+/* ---------- who is working: roles, names, personal passcodes, the locked administrator, read only ---------- */
+const LOCK = '<svg class="lock" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+function closeDialog() { const d = $("#role-dialog"); if (d.open) d.close(); }
+function dlgError(box, e) {
+  box.querySelectorAll(".err").forEach(x => x.remove());
+  box.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[e && e.message] || MSG.server)));
+}
+const passField = (id, label) => `<div class="dlg-field"><label for="${id}">${label}</label><input id="${id}" type="password" required spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="64"></div>`;
+const showToggle = f => { const c = f.querySelector("[data-show]"); if (c) c.onchange = () => f.querySelectorAll("input[type=password],input[data-pw]").forEach(i => { i.type = c.checked ? "text" : "password"; i.dataset.pw = "1"; }); };
+const SHOW = `<label class="dlg-check"><input type="checkbox" data-show> Show what I type</label>`;
+
+async function projectPassOk(pass) {
+  try { await decryptBytes(await deriveKey(pass, ENV.salt), ENV.iv, b64(ENV.ct)); return true; } catch (e) { return false; }
+}
+  function focusFirst(f, sel) {
+    setTimeout(() => {
+      const a = document.activeElement;
+      if (a && a !== document.body && f.contains(a)) return;   // the person is already in a field
+      const t = f.querySelector(sel); if (t && t.isConnected) t.focus();
+    }, 30);
+  }
+
+function showDialog(step, ctx = {}) {
+  const d = $("#role-dialog"), box = $("#role-body");
+  box.innerHTML = "";
+  const back = () => showDialog("roles");
+  if (step === "roles") {
+    box.appendChild(el("h3", { id: "role-title" }, "Who is working in the walkthrough?"));
+    if (ctx.note) box.appendChild(el("p", { class: "dlg-note" }, esc(ctx.note)));
+    const wrap = el("div", { class: "roles" });
+    CONTENT.roles.forEach(rd => {
+      const b = el("button", { type: "button", "data-role": rd.key, class: rd.locked ? "locked" : "" });
+      b.appendChild(el("span", { class: "rt" }, esc(rd.title) + (rd.named ? " *" : "")));
+      if (rd.locked) b.appendChild(el("span", { class: "rn" }, LOCK + esc((rd.name ? rd.name + ", " : "") + (rd.sub || "passcode required"))));
+      else if (rd.named) b.appendChild(el("span", { class: "rn" }, "Enter your name"));
+      else if (rd.name) b.appendChild(el("span", { class: "rn" }, esc(rd.name)));
+      b.onclick = async () => {
+        if (rd.key === "admin") return showDialog("admin");
+        if (rd.key === "readonly") return showDialog("readonly");
+        if (rd.named) return showDialog("name", { rd });
+        b.disabled = true;
+        try {
+          const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key });
+          if (r.found) showDialog("passcode", { who: { role: rd.key } });
+          else showDialog("setpass", { rd });
+        } catch (e) { b.disabled = false; dlgError(box, e); }
+      };
+      wrap.appendChild(b);
+    });
+    box.appendChild(wrap);
+    if (CONTENT.roles.some(r => r.named)) box.appendChild(el("p", { class: "dlg-note" }, "* Each person in these roles enters their own name and is numbered in the order they join. Use the same name each time to pick up where you left off."));
+  } else if (step === "name") {
+    const rd = ctx.rd;
+    box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
+    const f = el("form", { autocomplete: "off" });
+    f.innerHTML = `<div class="dlg-field"><label for="nm">Your name</label><input id="nm" maxlength="80" required spellcheck="false" autocomplete="name"></div>
+      <div class="dlg-actions"><button class="btn live" type="submit">Continue</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
+    f.querySelector("#nm").value = ctx.name || "";
+    f.querySelector("[data-back]").onclick = back;
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const name = f.querySelector("#nm").value, btn = f.querySelector(".btn.live");
+      btn.disabled = true;
+      try {
+        const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key, p_name: name });
+        if (r.found) showDialog("passcode", { who: { role: rd.key, seq: r.seq, name: r.name } });
+        else showDialog("confirm", { rd, name, next: r.next_seq });
+      } catch (e) { btn.disabled = false; dlgError(f, e); }
+    };
+    box.appendChild(f);
+    focusFirst(f, "#nm");
+  } else if (step === "confirm") {
+    const { rd, name, next } = ctx;
+    box.appendChild(el("h3", { id: "role-title" }, "New registration"));
+    box.appendChild(el("p", {}, `No one is registered as <strong>${esc(name)}</strong> in this role yet. You will be <strong>${esc(rd.title)} ${next}</strong>.`));
+    box.appendChild(el("p", { class: "dlg-note" }, "If you have worked here before, go back and check the spelling of your name."));
+    const a = el("div", { class: "dlg-actions" });
+    const ok = el("button", { class: "btn live", type: "button" }, "Continue");
+    ok.onclick = () => showDialog("setpass", { rd, name, next });
+    const bk = el("button", { class: "btn quiet", type: "button" }, "Change the name");
+    bk.onclick = () => showDialog("name", { rd, name });
+    a.appendChild(ok); a.appendChild(bk); box.appendChild(a);
+  } else if (step === "setpass") {
+    const { rd, name, next } = ctx;
+    box.appendChild(el("h3", { id: "role-title" }, "Choose your passcode"));
+    box.appendChild(el("p", { class: "dlg-note" }, esc(rd.named ? `${rd.title} ${next}: ${name}` : (rd.title + (rd.name ? ", " + rd.name : "")))));
+    box.appendChild(el("p", { class: "dlg-note" }, "Your passcode opens your own saved progress each time you return, on any device. Keep it safe: if you forget it, the administrator can set a temporary one."));
+    const f = el("form", { autocomplete: "off" });
+    f.innerHTML = passField("pc1", "Passcode, 6 to 64 characters") + passField("pc2", "Repeat the passcode") + SHOW +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Save passcode and open</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
+    showToggle(f);
+    f.querySelector("[data-back]").onclick = back;
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const a = f.querySelector("#pc1").value, b2 = f.querySelector("#pc2").value, btn = f.querySelector(".btn.live");
+      if (a.length < 6) return dlgError(f, new Error("bad_new_passcode"));
+      if (a !== b2) { f.querySelectorAll(".err").forEach(x => x.remove()); return f.appendChild(el("div", { class: "err", role: "alert" }, "The two passcodes are not the same.")); }
+      btn.disabled = true;
+      try {
+        const r = await rpc("symposion_register", { p_slug: CONFIG.workstream, p_role: rd.key, p_name: rd.named ? name : null, p_pass: a });
+        cred = a; await becomePerson(r);
+      } catch (e) { btn.disabled = false; dlgError(f, e); }
+    };
+    box.appendChild(f);
+    focusFirst(f, "#pc1");
+  } else if (step === "passcode") {
+    const w = ctx.who;
+    box.appendChild(el("h3", { id: "role-title" }, "Enter your passcode"));
+    box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
+    if (ctx.error) box.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[ctx.error] || MSG.server)));
+    const f = el("form", { autocomplete: "off" });
+    f.innerHTML = passField("pc", "Your passcode") + SHOW +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>
+       <p class="dlg-note">Forgotten it? Ask the administrator to set a temporary passcode.</p>`;
+    showToggle(f);
+    f.querySelector("[data-back]").onclick = back;
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const pass = f.querySelector("#pc").value, btn = f.querySelector(".btn.live");
+      btn.disabled = true;
+      try {
+        const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_pass: pass });
+        cred = pass;
+        if (r.must_change) showDialog("change", { r, old: pass }); else await becomePerson(r);
+      } catch (e) { btn.disabled = false; f.querySelector("#pc").value = ""; dlgError(f, e); }
+    };
+    box.appendChild(f);
+    focusFirst(f, "#pc");
+  } else if (step === "change") {
+    const { r, old } = ctx;
+    box.appendChild(el("h3", { id: "role-title" }, "Choose a new passcode"));
+    box.appendChild(el("p", { class: "dlg-note" }, "The administrator set a temporary passcode for you. Choose your own now; it replaces the temporary one."));
+    const f = el("form", { autocomplete: "off" });
+    f.innerHTML = passField("pc1", "New passcode, 6 to 64 characters") + passField("pc2", "Repeat the new passcode") + SHOW +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Save and open</button></div>`;
+    showToggle(f);
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const a = f.querySelector("#pc1").value, b2 = f.querySelector("#pc2").value, btn = f.querySelector(".btn.live");
+      if (a.length < 6) return dlgError(f, new Error("bad_new_passcode"));
+      if (a !== b2) { f.querySelectorAll(".err").forEach(x => x.remove()); return f.appendChild(el("div", { class: "err", role: "alert" }, "The two passcodes are not the same.")); }
+      btn.disabled = true;
+      try { await rpc("symposion_set_passcode", { p_slug: CONFIG.workstream, p_person: r.id, p_old: old, p_new: a }); cred = a; await becomePerson(r); }
+      catch (e) { btn.disabled = false; dlgError(f, e); }
+    };
+    box.appendChild(f);
+    focusFirst(f, "#pc1");
+  } else if (step === "admin") {
+    const rd = CONTENT.roles.find(r => r.key === "admin");
+    box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
+    box.appendChild(el("p", { class: "dlg-note" }, "This role is locked. Enter the administrator passcode."));
+    const f = el("form", { autocomplete: "off" });
+    f.innerHTML = passField("ap", "Administrator passcode") +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Unlock</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>`;
+    f.querySelector("[data-back]").onclick = back;
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const secret = f.querySelector("#ap").value, btn = f.querySelector(".btn.live");
+      btn.disabled = true;
+      try {
+        const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: "admin", p_pass: secret });
+        cred = secret;
+        await becomePerson(r);
+      } catch (e) { btn.disabled = false; f.querySelector("#ap").value = ""; dlgError(f, e); }
+    };
+    box.appendChild(f);
+    focusFirst(f, "#ap");
+  } else if (step === "readonly") {
+    const rd = CONTENT.roles.find(r => r.key === "readonly");
+    box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
+    box.appendChild(el("p", { class: "dlg-note" }, "You can read every part of the walkthrough, with the entry boxes and buttons greyed out. Enter the project passcode."));
+    const f = el("form", { autocomplete: "off" });
+    f.innerHTML = passField("rp", "Project passcode") +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Open to read</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>`;
+    f.querySelector("[data-back]").onclick = back;
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const btn = f.querySelector(".btn.live"); btn.disabled = true;
+      if (await projectPassOk(f.querySelector("#rp").value.trim())) enterReadOnly();
+      else { btn.disabled = false; f.querySelector("#rp").value = ""; dlgError(f, new Error("admin_denied")); }
+    };
+    box.appendChild(f);
+    focusFirst(f, "#rp");
+  }
+  if (!d.open && d.showModal) d.showModal();
+}
+
+function enterReadOnly() {
+  person = { role: "readonly" }; cred = null;
+  lsSet(STORE_KEY + ".last", JSON.stringify({ role: "readonly" }));
+  state = blankState(); state.positioned = true;
+  closeDialog(); updateWho(); render(); updateSync();
+}
+
+/* The person is known and has proved who they are: load their saved progress from Symposion, then show the walkthrough. */
+async function becomePerson(p) {
+  person = { id: p.id, role: p.role, seq: p.seq ?? null, name: p.name ?? null };
+  sessSet(STORE_KEY + ".c", p.role === "admin" ? "" : (cred || ""));
+  lsSet(STORE_KEY + ".last", JSON.stringify(person));
+  load();
+  closeDialog();
+  await pullServer();
+  if (!person) return;
+  if (state.view === "team" && !isAdmin()) state.view = "walk";
+  save(); updateWho(); render(); updateSync(); flush();
+}
+
+async function pullServer() {
+  try {
+    const res = await rpc("symposion_load", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred });
+    const steps = { nested_knowledge: {}, conventional: {} };
+    (res.events || []).forEach(e => applyEvent(steps, e.route, e.step_key, e.event, e.recorded, e.created_at));
+    state.queue.forEach(q => applyEvent(steps, q.route, q.step_key, q.event, q.recorded, q.local_at));
+    state.steps = steps;
+    if (!state.positioned) {
+      for (const route of Object.keys(CONTENT.routes)) {
+        const list = CONTENT.routes[route].steps;
+        const i = list.findIndex(s => !(steps[route][s.key] || {}).done);
+        state.stepIndex[route] = i < 0 ? list.length - 1 : i;
+      }
+      state.positioned = true;
+    }
+    if (!state.queue.length) state.lastSync = new Date().toISOString();
+  } catch (e) {
+    if (e.message === "person_gone") { personGone(); return; }
+    if (["bad_passcode", "no_passcode", "person_locked", "admin_denied", "admin_locked"].includes(e.message)) {
+      const who = { id: person.id, role: person.role, seq: person.seq, name: person.name };
+      cred = null; sessSet(STORE_KEY + ".c", ""); person = null; state = blankState();
+      updateWho(); render(); updateSync();
+      showDialog(who.role === "admin" ? "admin" : "passcode", { who, error: e.message });
+      return;
+    }
+    /* otherwise carry on from the copy kept on this device */
+  }
+}
+
+function personGone() {
+  lsSet(STORE_KEY + ".last", ""); sessSet(STORE_KEY + ".c", "");
+  person = null; cred = null; state = blankState();
+  updateWho(); render(); updateSync();
+  showDialog("roles", { note: "Your earlier registration is no longer active. Choose your role again." });
+}
+
+function updateWho() {
+  const w = $("#who");
+  w.hidden = !person;
+  if (person) $("#who-label").textContent = readOnly() ? "Read only" : personFull(person);
+  $("#nav-team").hidden = !isAdmin();
+  document.body.classList.toggle("ro", readOnly());
 }
 
 function render() {
@@ -330,9 +697,11 @@ function render() {
   const walk = state.view === "walk";
   shell.classList.toggle("wide", !walk);
   $("#rail").hidden = !walk; $("#ledger").hidden = !walk;
+  $("#read").classList.toggle("wide-read", state.view === "team");
   if (walk) renderWalk();
   else if (state.view === "search") renderSearch();
   else if (state.view === "pack") renderPack();
+  else if (state.view === "team" && isAdmin()) renderTeam();
   else renderDecisions();
 }
 
@@ -370,16 +739,17 @@ function renderLedger(s) {
   const led = $("#ledger");
   const rec = state.steps[state.route][s.key] || { values: {} };
   led.className = "ledger" + (rec.done ? " done" : "");
-  led.innerHTML = `<h4>Record for this step</h4>`;
-  led.appendChild(el("p", { class: "hint" }, s.records.length
-    ? "Enter what this step produced. Values are kept on this device and sent to Symposion when you mark the step complete."
-    : "Nothing to record here beyond marking the step complete."));
+  led.innerHTML = `<h4>Results for this step</h4>`;
+  const ro = readOnly();
+  led.appendChild(el("p", { class: "hint" }, ro ? "Read only: you can read every step, but nothing can be entered or saved."
+    : s.records.length ? "Enter what this step produced." : "Nothing to enter here beyond marking the step complete."));
   s.records.forEach(r => {
     const f = el("div", { class: "field" });
     const id = "f-" + s.key + "-" + r.key;
     f.appendChild(el("label", { for: id }, r.label));
-    const inp = el("input", { id, type: r.type === "number" ? "number" : "text", inputmode: r.type === "number" ? "decimal" : "text", step: "any" });
+    const inp = el("input", { id, type: r.type === "number" ? "number" : "text", inputmode: r.type === "number" ? "decimal" : "text", step: "any", maxlength: "200" });
     inp.value = (rec.values || {})[r.key] ?? "";
+    if (ro) inp.disabled = true;
     inp.addEventListener("change", () => {
       const cur = state.steps[state.route][s.key] || { values: {} };
       cur.values = cur.values || {}; cur.values[r.key] = inp.value; state.steps[state.route][s.key] = cur; save();
@@ -396,6 +766,7 @@ function renderLedger(s) {
     if (cur.done && (state.stepIndex[state.route] || 0) < steps().length - 1) state.stepIndex[state.route]++;
     save(); renderWalk();
   };
+  if (ro) b.disabled = true;
   acts.appendChild(b); led.appendChild(acts);
   if (rec.done && rec.at) led.appendChild(el("p", { class: "stamp" }, "Completed " + fmtTime(rec.at) + "."));
 }
@@ -457,36 +828,168 @@ function renderDecisions() {
   read.appendChild(el("div", { class: "log" }, CONTENT.decisions_html));
 }
 
-/* ---------- progress sync ---------- */
+/* ---------- progress: saved at Symposion against the person, with a copy kept on this device ---------- */
 function queueEvent(step_key, event, recorded) {
-  state.queue.push({ workstream_slug: CONFIG.workstream, route: state.route, step_key, event, role: state.role,
-                     recorded: recorded || {}, client_ref: state.client, page_version: CONFIG.version });
+  if (!person || !person.id || readOnly()) return;
+  state.queue.push({ route: state.route, step_key, event, recorded: recorded || {}, local_at: new Date().toISOString() });
   save(); updateSync(); flush();
 }
 let flushing = false;
 async function flush() {
-  if (flushing || !state.queue.length) return;
+  if (flushing || !person || !person.id || !cred || !state.queue.length) return;
   flushing = true;
-  while (state.queue.length) {
-    try {
-      const r = await fetch(CONFIG.supabase.url + "/rest/v1/workstream_progress", {
-        method: "POST",
-        headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json", Prefer: "return=minimal" },
-        body: JSON.stringify(state.queue[0]) });
-      if (!r.ok) break;
+  const who = person.id;
+  try {
+    while (state.queue.length && person && person.id === who) {
+      const q = state.queue[0];
+      try {
+        await rpc("symposion_save", { p_slug: CONFIG.workstream, p_person: who, p_route: q.route, p_step_key: q.step_key, p_event: q.event,
+          p_recorded: q.recorded, p_client_ref: clientRef(), p_page_version: CONFIG.version, p_pass: cred });
+      } catch (e) {
+        if (!person || person.id !== who) break;
+        if (e.message === "bad_event") { state.queue.shift(); save(); continue; }
+        if (e.message === "person_gone") { personGone(); return; }
+        break;
+      }
+      if (!person || person.id !== who) break;
       state.queue.shift(); state.lastSync = new Date().toISOString(); save();
-    } catch (e) { break; }
-  }
-  flushing = false; updateSync();
-  if (state.queue.length) setTimeout(flush, 30000);
+    }
+  } finally { flushing = false; updateSync(); }
+  if (state.queue.length && person) setTimeout(flush, 30000);
 }
 function updateSync() {
   const box = $("#sync"), t = $("#sync-text");
+  if (!person || readOnly()) { box.className = "sync"; t.textContent = readOnly() ? "Nothing is saved in read only" : ""; return; }
   if (state.queue.length) { box.className = "sync pending"; t.textContent = state.queue.length === 1 ? "1 change waiting to save" : state.queue.length + " changes waiting to save"; }
-  else if (state.lastSync) { box.className = "sync ok"; t.textContent = "Saved to Symposion " + fmtTime(state.lastSync); }
+  else if (state.lastSync) { box.className = "sync ok"; t.textContent = "Progress saved " + fmtTime(state.lastSync); }
   else { box.className = "sync"; t.textContent = "Nothing to save yet"; }
 }
 window.addEventListener("online", flush);
+
+/* ---------- administrator: team progress, passcode resets and registrations ---------- */
+function foldPerson(events) {
+  const steps = { nested_knowledge: {}, conventional: {} };
+  events.slice().sort((a, b) => a.created_at < b.created_at ? -1 : 1).forEach(e => applyEvent(steps, e.route, e.step_key, e.event, e.recorded, e.created_at));
+  return steps;
+}
+const fmtDay = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short" });
+
+async function renderTeam() {
+  const read = $("#read"); read.innerHTML = "";
+  read.classList.add("team");
+  read.appendChild(el("p", { class: "kicker" }, "Administrator"));
+  read.appendChild(el("h2", {}, "Team progress"));
+  const status = el("p", { class: "hint" }, "Loading"); read.appendChild(status);
+  let data;
+  try { data = await rpc("symposion_admin_overview", { p_slug: CONFIG.workstream, p_pass: cred }); }
+  catch (e) { status.textContent = MSG[e.message] || MSG.server; return; }
+  if (state.view !== "team") return;
+  const refresh = el("button", { class: "btn quiet", type: "button" }, "Refresh");
+  refresh.onclick = () => renderTeam();
+  status.replaceWith(refresh);
+
+  const live = data.people.filter(p => !p.removed_at), gone = data.people.filter(p => p.removed_at);
+  const by = {};
+  data.events.forEach(e => (by[e.person_id] = by[e.person_id] || []).push(e));
+  const folded = {}; live.forEach(p => folded[p.id] = foldPerson(by[p.id] || []));
+  const total = r => CONTENT.routes[r].steps.length;
+  const count = (p, r) => Object.values(folded[p.id][r]).filter(s => s.done).length;
+  const lastAt = p => (by[p.id] || []).reduce((m, e) => e.created_at > m ? e.created_at : m, "");
+  const lab = p => roleDef(p.role).title + (p.seq ? " " + p.seq : "");
+
+  read.appendChild(el("h3", {}, "People"));
+  const rows = [];
+  CONTENT.roles.filter(rd => rd.key !== "readonly").forEach(rd => {
+    const mine = live.filter(p => p.role === rd.key);
+    if (!mine.length && !rd.named) rows.push({ rd, p: null });
+    mine.forEach(p => rows.push({ rd, p }));
+  });
+  const pstate = p => p.role === "admin" ? "Administrator passcode" : p.locked ? "Locked after wrong attempts" : !p.has_passcode ? "Not set" : p.must_change ? "Temporary, awaiting change" : "Set by the person";
+  let html = "<div class='scroll'><table><thead><tr><th>Role</th><th>Name</th><th>Passcode</th><th>Nested Knowledge</th><th>Conventional</th><th>Last activity</th><th></th></tr></thead><tbody>";
+  rows.forEach(({ rd, p }) => {
+    if (!p) { html += `<tr><td>${esc(rd.title)}</td><td>${esc(rd.name || "")}</td><td class="open" colspan="5">Has not opened the walkthrough</td></tr>`; return; }
+    let acts = "";
+    if (p.role !== "admin") acts += `<button class="linkish" data-act="reset" data-id="${esc(p.id)}">Reset passcode</button>`;
+    if (rd.named) acts += `<button class="linkish" data-act="rename" data-id="${esc(p.id)}">Rename</button><button class="linkish" data-act="merge" data-id="${esc(p.id)}">Merge</button><button class="linkish" data-act="remove" data-id="${esc(p.id)}">Remove</button>`;
+    html += `<tr><td>${esc(lab(p))}</td><td>${esc(p.name || rd.name || "")}</td><td>${esc(pstate(p))}</td><td>${count(p, "nested_knowledge")} of ${total("nested_knowledge")}</td><td>${count(p, "conventional")} of ${total("conventional")}</td><td>${lastAt(p) ? esc(fmtTime(lastAt(p))) : "None yet"}</td><td class="acts">${acts}</td></tr>`;
+  });
+  html += "</tbody></table></div>";
+  const people = el("div", {}, html); read.appendChild(people);
+  people.querySelectorAll("[data-act]").forEach(b => b.onclick = () => fixDialog(b.dataset.act, live.find(p => p.id === b.dataset.id), live));
+
+  Object.keys(CONTENT.routes).forEach(route => {
+    const cols = live.filter(p => (by[p.id] || []).some(e => e.route === route));
+    read.appendChild(el("h3", {}, route === "conventional" ? "Conventional route, step by step" : "Nested Knowledge route, step by step"));
+    if (!cols.length) { read.appendChild(el("p", { class: "hint" }, "No one has started this route.")); return; }
+    let t = "<div class='scroll'><table><thead><tr><th>Step</th>" + cols.map(p => `<th>${esc(lab(p))}</th>`).join("") + "</tr></thead><tbody>";
+    CONTENT.routes[route].steps.forEach(s => {
+      t += `<tr><td>${s.n}. ${esc(s.title)}</td>` + cols.map(p => {
+        const st = folded[p.id][route][s.key];
+        const vals = st ? Object.entries(st.values).filter(([, v]) => v !== "").map(([k, v]) => { const r = (s.records || []).find(x => x.key === k); return esc((r ? r.label : k) + ": " + v); }).join("<br>") : "";
+        if (st && st.done) return `<td class="complete">Complete${st.at ? " " + esc(fmtDay(st.at)) : ""}${vals ? `<div class="vals">${vals}</div>` : ""}</td>`;
+        return `<td class="open">${st ? "In progress" : "Not started"}${vals ? `<div class="vals">${vals}</div>` : ""}</td>`;
+      }).join("") + "</tr>";
+    });
+    read.appendChild(el("div", {}, t + "</tbody></table></div>"));
+  });
+
+  read.appendChild(el("h3", {}, "Latest activity"));
+  const nameOf = id => { const p = data.people.find(x => x.id === id); return p ? lab(p) + (p.name ? ", " + p.name : "") : "Not attributed"; };
+  const verb = { completed: "Completed", reopened: "Reopened", recorded: "Entered values for" };
+  let a = "<div class='scroll'><table><thead><tr><th>When</th><th>Person</th><th>Route</th><th>Step</th></tr></thead><tbody>";
+  data.events.slice(0, 40).forEach(e => {
+    const st = (CONTENT.routes[e.route] || { steps: [] }).steps.find(s => s.key === e.step_key);
+    a += `<tr><td>${esc(fmtTime(e.created_at))}</td><td>${esc(nameOf(e.person_id))}</td><td>${e.route === "conventional" ? "Conventional" : "Nested Knowledge"}</td><td>${esc(verb[e.event] || e.event)} ${st ? esc(st.n + ". " + st.title) : esc(e.step_key)}</td></tr>`;
+  });
+  read.appendChild(el("div", {}, data.events.length ? a + "</tbody></table></div>" : "<p class='hint'>No progress has been saved yet.</p>"));
+  if (data.unattributed) read.appendChild(el("p", { class: "sub" }, `${data.unattributed} earlier ${data.unattributed === 1 ? "event was" : "events were"} saved before people were named and cannot be attributed.`));
+  if (gone.length) read.appendChild(el("p", { class: "sub" }, "Retired registrations: " + gone.map(p => esc(lab(p) + (p.name ? ", " + p.name : "") + (p.merged_into ? " (merged)" : " (removed)"))).join("; ") + ". Numbers are not reused."));
+}
+
+function tempCode() {
+  const alphabet = "abcdefghjkmnpqrstuvwxyz23456789", bytes = new Uint8Array(8); crypto.getRandomValues(bytes);
+  const s = Array.from(bytes, b => alphabet[b % alphabet.length]).join("");
+  return s.slice(0, 4) + "-" + s.slice(4);
+}
+
+function fixDialog(act, p, live) {
+  const d = $("#fix-dialog"), box = $("#fix-body");
+  const lab = x => roleDef(x.role).title + (x.seq ? " " + x.seq : "") + (x.name ? ", " + x.name : "");
+  box.innerHTML = "";
+  box.appendChild(el("h3", { id: "fix-title" }, { rename: "Rename", merge: "Merge", remove: "Remove", reset: "Reset passcode" }[act]));
+  box.appendChild(el("p", { class: "dlg-note" }, esc(lab(p) + (!p.name && roleDef(p.role).name ? ", " + roleDef(p.role).name : ""))));
+  const f = el("form", { autocomplete: "off" });
+  let body = "", go = "";
+  if (act === "rename") { body = `<div class="dlg-field"><label for="fx">Corrected name</label><input id="fx" maxlength="80" required></div>`; go = "Save the name"; }
+  else if (act === "reset") {
+    body = `<p class="dlg-note">Give them this temporary passcode yourself. When they next enter they are asked to choose their own, and wrong-attempt locks are cleared. Their saved progress is untouched.</p>
+      <div class="dlg-field"><label for="fx">Temporary passcode, 6 to 64 characters</label><input id="fx" maxlength="64" required spellcheck="false" autocomplete="off"></div>
+      <div class="dlg-actions" style="margin-top:8px"><button class="btn quiet" type="button" data-gen>Suggest one</button></div>`;
+    go = "Set temporary passcode";
+  } else if (act === "merge") {
+    const others = live.filter(x => x.role === p.role && x.id !== p.id);
+    body = others.length
+      ? `<p class="dlg-note">Their saved progress moves to the registration chosen, and this one is retired.</p><div class="dlg-field"><label for="fx">Merge into</label><select id="fx">${others.map(x => `<option value="${esc(x.id)}">${esc(lab(x))}</option>`).join("")}</select></div>`
+      : `<p class="dlg-note">There is no other registration in this role to merge into.</p>`;
+    go = others.length ? "Merge" : "";
+  } else { body = `<p class="dlg-note">The registration is retired and its number is not reused. Saved events are kept in the log.</p>`; go = "Remove"; }
+  f.innerHTML = body + `<div class="dlg-actions">${go ? `<button class="btn live" type="submit">${go}</button>` : ""}<button class="btn quiet" type="button" data-close>Cancel</button></div>`;
+  if (act === "rename") f.querySelector("#fx").value = p.name || "";
+  if (act === "reset") { f.querySelector("#fx").value = tempCode(); f.querySelector("[data-gen]").onclick = () => { f.querySelector("#fx").value = tempCode(); }; }
+  f.querySelector("[data-close]").onclick = () => d.close();
+  f.onsubmit = async ev => {
+    ev.preventDefault();
+    const btn = f.querySelector(".btn.live"); btn.disabled = true;
+    const x = f.querySelector("#fx");
+    try {
+      await rpc("symposion_admin_fix", { p_slug: CONFIG.workstream, p_pass: cred, p_action: act === "reset" ? "reset_passcode" : act, p_person: p.id,
+        p_name: act === "rename" ? x.value : null, p_target: act === "merge" ? x.value : null, p_new_pass: act === "reset" ? x.value : null });
+      d.close(); renderTeam();
+    } catch (e) { btn.disabled = false; box.querySelectorAll(".err").forEach(n => n.remove()); box.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[e.message] || MSG.server))); }
+  };
+  box.appendChild(f);
+  if (d.showModal) d.showModal();
+}
 
 /* cross-references inside the text move within the walkthrough */
 document.addEventListener("click", ev => {
