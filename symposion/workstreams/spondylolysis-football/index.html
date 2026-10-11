@@ -26,14 +26,14 @@ button{font-family:var(--body);font-size:15px;cursor:pointer}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [hidden]{display:none!important}
 
-/* Gate */
-.gate{min-height:100vh;display:grid;place-items:center;padding:24px 16px;
-  background:
-    linear-gradient(90deg, transparent calc(50% - 0.5px), var(--rule) calc(50% - 0.5px), var(--rule) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 0 0/100% 100% no-repeat,
-    var(--parchment)}
-.gate-card{width:min(440px,100%);background:var(--ivory);border:1px solid var(--rule);border-top:3px solid var(--umber);padding:36px 32px 30px;position:relative}
-.wordmark{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.42em;color:var(--navy);margin:0}
-.gate-card h1{font-family:var(--display);font-weight:600;font-size:34px;line-height:1.08;color:var(--navy);margin:22px 0 10px}
+/* Gate: the project leads; Symposion is credited beneath as the host */
+.gate{min-height:100vh;display:grid;place-items:center;padding:28px 16px;background:var(--parchment)}
+.gate-wrap{width:min(560px,100%)}
+.gate-card{background:var(--ivory);border:1px solid var(--rule);border-top:3px solid var(--navy);padding:34px 36px 28px}
+.gate-card .gate-partners{gap:28px;padding:0 0 22px;border-bottom:1px solid var(--rule);margin:0 0 22px}
+.gate-card .gate-partners img{height:64px}
+.gate-kicker{font-family:var(--display);font-size:17px;color:var(--umber);margin:0 0 4px!important}
+.gate-card h1{font-family:var(--display);font-weight:600;font-size:38px;line-height:1.08;color:var(--navy);margin:0 0 14px}
 .gate-card p{color:var(--muted);font-size:15.5px;margin:0 0 22px}
 .field label{display:block;font-size:14.5px;margin-bottom:6px;color:var(--ink)}
 .field input{width:100%;font-family:var(--body);font-size:17px;padding:11px 12px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:2px}
@@ -46,38 +46,57 @@ button{font-family:var(--body);font-size:15px;cursor:pointer}
 .btn.live:hover{background:#226563}
 .gate-card .btn{margin-top:16px;width:100%;justify-content:center;padding:12px}
 .err{margin-top:14px;background:var(--alert-wash);color:var(--alert);border-left:3px solid var(--alert);padding:10px 12px;font-size:14.5px}
-.gate-foot{margin-top:24px;font-size:13px;color:var(--muted)}
+.gate-card .gate-foot{margin:20px 0 0;font-size:13px;color:var(--muted)}
+.hosted{margin:18px 4px 0;font-size:12.5px;line-height:1.5;color:var(--muted)}
+.hosted p{margin:8px 0 0}
+.hosted a,.platform a,.foot-in a{color:inherit}
+.hosted-brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hosted-label{font-size:12px;letter-spacing:.04em;color:var(--muted)}
+.wordmark{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.38em;color:var(--muted);margin:0}
+.sa-logo{height:26px;width:auto;display:block;mix-blend-mode:multiply;opacity:.9}
 
-/* App frame */
+/* App frame: a quiet platform strip, then the project masthead and the navigation in research order */
+.platform{background:var(--parchment);border-bottom:1px solid var(--rule)}
+.platform-in{max-width:1240px;margin:0 auto;padding:5px 24px;display:flex;align-items:center;justify-content:space-between;gap:6px 20px;flex-wrap:wrap}
+.platform .status{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
 .top{background:var(--ivory);border-bottom:1px solid var(--rule)}
-.top-in{max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-.top .wordmark{flex:0 0 auto}
-.brand{display:flex;align-items:center;gap:18px;flex:0 0 auto;min-width:0;flex-wrap:wrap}
-.sa-logo{height:44px;width:auto;display:block;mix-blend-mode:multiply}
-.gate-card .brand{flex-direction:column;align-items:flex-start;gap:12px}
-.gate-card .sa-logo{height:52px}
-.top-in > .status{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.brand .sa-logo{border-left:1px solid var(--rule);padding-left:18px}
-.gate-card .brand .sa-logo{border-left:0;padding-left:0}
-.gate-card .gate-foot{margin:22px 0 0}
-.gate-card .gate-foot + .gate-foot{margin-top:12px}
-.titlebar{background:var(--parchment);border-bottom:1px solid var(--rule)}
-.titlebar-in{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px 28px;flex-wrap:wrap}
-.tb-kicker{font-family:var(--display);font-size:15px;color:var(--umber);margin:0}
-.tb-title{font-family:var(--display);font-size:20px;line-height:1.25;color:var(--navy);margin:0;max-width:64ch;font-weight:500}
+.top-in{max-width:1240px;margin:0 auto;padding:18px 24px 14px;display:flex;align-items:center;gap:14px 30px;flex-wrap:wrap}
+.tb-text{min-width:0;flex:1 1 320px}
+.tb-kicker{font-family:var(--display);font-size:16px;color:var(--umber);margin:0}
+.tb-title{font-family:var(--display);font-size:30px;line-height:1.12;color:var(--navy);margin:0;font-weight:600}
 .partners{list-style:none;display:flex;align-items:center;gap:24px;margin:0;padding:0;flex-wrap:wrap}
 .partners li{display:flex}
-.partners img{height:42px;width:auto;display:block}
-@media (max-width:780px){.partners img{height:32px}.partners{gap:16px}.sa-logo{height:38px}.top-in > .status{margin-left:0;align-items:flex-start}}
+.partners img{height:52px;width:auto;display:block}
+.top-in .partners{padding-right:30px;border-right:1px solid var(--rule)}
+.mainnav{border-top:1px solid var(--rule)}
+.mainnav-in{position:relative}
+.mainnav-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:stretch;gap:4px 12px;flex-wrap:wrap}
+.mainnav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font-size:15px;padding:10px 3px 9px;line-height:1.2}
+.mainnav button:hover{color:var(--navy)}
+.mainnav button[aria-current="page"],.mainnav button[aria-current="step"]{color:var(--navy);border-bottom-color:var(--umber)}
+.nav-map{font-weight:500}
+.phases{list-style:none;margin:0;padding:0 0 0 12px;display:flex;gap:2px 9px;flex-wrap:wrap;border-left:1px solid var(--rule)}
+.phases li{position:relative}
+.phases button{display:flex;align-items:center;gap:7px}
+.phases .pn{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--umber);color:var(--umber);font-family:var(--display);font-weight:600;font-size:13.5px;font-variant-numeric:lining-nums}
+.phases li.done .pn{background:var(--navy);border-color:var(--navy);color:var(--ivory)}
+.phases .pc{font-size:12.5px;color:var(--muted)}
+.ref{margin-left:auto;display:flex;gap:2px 12px;flex-wrap:wrap;padding-left:12px;border-left:1px solid var(--rule)}
+@media (max-width:980px){.ref{margin-left:0;border-left:0;padding-left:0}.phases{border-left:0;padding-left:0}}
+@media (max-width:780px){
+  .partners img{height:38px}.partners{gap:16px}
+  .top-in{padding:14px 16px 12px}.top-in .partners{border-right:0;padding-right:0}
+  .tb-title{font-size:23px}
+  .platform-in,.mainnav-in{padding-left:16px;padding-right:16px}
+  .mainnav-in{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+  .phases,.ref{flex-wrap:nowrap}
+  .mainnav button{white-space:nowrap}
+  .gate-card{padding:26px 22px 22px}.gate-card .gate-partners img{height:46px}.gate-card .gate-partners{gap:18px}.gate-card h1{font-size:30px}
+}
 .dlg-check{display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--muted);margin-top:12px}
 .dlg-check input{width:auto;margin:0}
 .ro .ledger input:disabled,.ro .ledger button:disabled{opacity:.5;cursor:not-allowed;background:#ECE6D9;color:var(--muted);border-color:var(--rule)}
 .ro .ledger{background:#F4F0E6}
-.gate-foot a,.foot-in a{color:inherit}
-.top nav{display:flex;gap:4px;flex-wrap:wrap}
-.top nav button{background:none;border:0;padding:8px 12px;color:var(--muted);border-bottom:2px solid transparent;font-size:15.5px}
-.top nav button[aria-current="page"]{color:var(--navy);border-bottom-color:var(--umber)}
-.top nav button:hover{color:var(--navy)}
 .sync{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
 .sync .dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
 .sync.ok .dot{background:var(--teal)}
@@ -203,12 +222,59 @@ dialog .err{margin-top:14px}
 .team .sub{font-size:13.5px;color:var(--muted)}
 .read.wide-read{max-width:none}
 
+/* Route map */
+.map{max-width:940px}
+.map h2{margin-bottom:10px}
+.map .lede{font-size:18px;color:var(--ink);max-width:66ch}
+.map .fulltitle{font-family:var(--display);font-size:21px;line-height:1.3;color:var(--navy);margin:0 0 18px;max-width:60ch}
+.yourpart{background:var(--teal-wash);border-left:3px solid var(--teal);padding:14px 18px;margin:22px 0 28px;max-width:72ch}
+.yourpart h3{margin:0 0 4px!important;font-size:20px!important}
+.yourpart p{margin:0}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:0 0 34px;padding:0;list-style:none;counter-reset:how}
+.howto li{background:var(--ivory);border:1px solid var(--rule);padding:14px 16px;font-size:15px;counter-increment:how}
+.howto li::before{content:counter(how);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:var(--ivory);font-family:var(--display);font-weight:600;font-size:14px;margin-bottom:6px;font-variant-numeric:lining-nums}
+.howto b{display:block;color:var(--navy);font-weight:600;margin-bottom:2px}
+.routepick{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:0 0 22px;font-size:15px;color:var(--muted)}
+.routepick .route{margin:0;min-width:300px}
+.journey{list-style:none;margin:0 0 36px;padding:0;position:relative}
+.journey::before{content:"";position:absolute;left:21px;top:20px;bottom:20px;width:1px;background:var(--umber);opacity:.5}
+.journey > li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:18px;padding:0 0 26px;position:relative}
+.journey .jn{width:44px;height:44px;border-radius:50%;background:var(--parchment);border:1px solid var(--umber);display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:21px;color:var(--umber);font-variant-numeric:lining-nums;position:relative}
+.journey li.done .jn{background:var(--navy);border-color:var(--navy);color:var(--ivory)}
+.journey .card{background:var(--ivory);border:1px solid var(--rule);padding:16px 20px 12px}
+.journey h3{margin:0 0 2px!important;font-size:25px!important}
+.journey .jd{color:var(--muted);margin:0 0 10px;font-size:15.5px}
+.journey .jsteps{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.journey .jsteps li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.journey .jsteps li:last-child{border-bottom:0}
+.journey .jsteps a{font-weight:500}
+.journey .jsteps .jw{grid-column:1/-1;font-size:13.5px;color:var(--muted)}
+.journey .jsteps .js{font-size:13px;color:var(--muted);white-space:nowrap}
+.journey .jsteps li.done .js{color:var(--navy);font-weight:500}
+.journey .mine{display:inline-block;font-size:12px;color:var(--teal);border:1px solid var(--teal);border-radius:2px;padding:0 6px;margin-left:8px;vertical-align:1px}
+.teamtable td:first-child{white-space:nowrap;color:var(--navy);font-weight:500}
+/* Steps: phase headings in the rail, and a plain summary at the top of each step */
+.steps li.ph{padding:14px 0 4px 44px;font-family:var(--display);font-size:16px;color:var(--umber);font-weight:600}
+.steps li.ph:first-child{padding-top:0}
+.glance{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 16px;background:var(--ivory);border:1px solid var(--rule);border-left:3px solid var(--navy);padding:14px 18px;margin:0 0 26px;font-size:15px}
+.glance dt{color:var(--muted)}
+.glance dd{margin:0}
+.glance dd.aim{font-size:16.5px;color:var(--ink)}
+@media (max-width:560px){.glance{grid-template-columns:1fr}.glance dt{margin-top:6px}}
+.ledger .help{font-size:13.5px;color:var(--muted);margin:5px 0 0;line-height:1.45}
+.roles-other{margin-top:16px;padding-top:12px;border-top:1px solid var(--rule)}
+.roles-other p{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.roles-other .roles{grid-template-columns:1fr 1fr;margin:0}
+.roles-other .roles button{padding:8px 12px;background:var(--parchment)}
+.roles-other .rt{font-size:14.5px}
+.roles-other .rn{font-size:12.5px}
+@media (max-width:480px){.roles-other .roles{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:no-preference){
   .appear{animation:appear .5s ease-out both}
   @keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 }
 @media print{
-  .top,.rail,.ledger,footer,.pager{display:none!important}
+  .platform,.mainnav,.rail,.ledger,footer,.pager{display:none!important}
   body{background:#fff}
   .shell{display:block;padding:0}
 }
@@ -217,45 +283,56 @@ dialog .err{margin-top:14px}
 <body>
 
 <main id="gate" class="gate" aria-labelledby="gate-title">
-  <form class="gate-card" id="gate-form" autocomplete="off">
-    <div class="brand"><p class="wordmark">SYMPOSION</p><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
-    <h1 id="gate-title">Spondylolysis in football</h1>
-    <p>A guided walkthrough and writing pack for the review team. Enter the passcode you were sent to open it.</p>
-    <div class="field">
-      <label for="pass">Passcode</label>
-      <input id="pass" name="pass" type="password" required spellcheck="false" autocapitalize="off">
+  <div class="gate-wrap">
+    <form class="gate-card" id="gate-form" autocomplete="off">
+      <ul class="partners gate-partners" aria-label="Principal institutions"><li><img src="assets/partner_ucd.png" alt="University College Dublin" title="University College Dublin"></li><li><img src="assets/partner_mater.png" alt="The Mater Hospital" title="The Mater Hospital"></li><li><img src="assets/partner_fai.png" alt="Football Association of Ireland" title="Football Association of Ireland"></li></ul>
+      <p class="gate-kicker">Scoping review</p>
+      <h1 id="gate-title">Spondylolysis and pars stress injury in players of all football codes</h1>
+      <p>A guided walkthrough and writing pack for the review team. Enter the passcode you were sent to open it.</p>
+      <div class="field">
+        <label for="pass">Passcode</label>
+        <input id="pass" name="pass" type="password" required spellcheck="false" autocapitalize="off">
+      </div>
+      <button class="btn" type="submit" id="open-btn">Open the walkthrough</button>
+      <div class="err" id="gate-err" role="alert" hidden></div>
+      <p class="gate-foot">The content of this page is encrypted and opens only with the passcode, which never leaves your browser.</p>
+    </form>
+    <div class="hosted">
+      <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
+      <p>Symposion is a web-based research application designed and hosted by Dr Andrew J Hall, University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
     </div>
-    <button class="btn" type="submit" id="open-btn">Open the walkthrough</button>
-    <div class="err" id="gate-err" role="alert" hidden></div>
-    <p class="gate-foot">The content of this page is encrypted and opens only with the passcode, which never leaves your browser.</p>
-    <p class="gate-foot">Symposion is a web-based research application designed and hosted by Dr Andrew J Hall, University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
-  </form>
+  </div>
 </main>
 
 <div id="app" hidden>
-  <header class="top">
-    <div class="top-in">
-      <div class="brand"><p class="wordmark">SYMPOSION</p><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
-      <nav aria-label="Sections">
-        <button data-view="walk" aria-current="page">Walkthrough</button>
-        <button data-view="search">Search strings</button>
-        <button data-view="pack">Writing pack</button>
-        <button data-view="decisions">Decisions</button>
-        <button data-view="team" id="nav-team" hidden>Team</button>
-      </nav>
+  <div class="platform" aria-label="Hosting platform">
+    <div class="platform-in">
+      <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
       <div class="status">
         <div class="who" id="who" hidden><span id="who-label"></span><button type="button" id="who-change">Change</button></div>
         <div class="sync" id="sync" aria-live="polite"><span class="dot"></span><span id="sync-text">Not yet saved</span></div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <section class="titlebar" aria-label="The review">
-    <div class="titlebar-in">
-      <div class="tb-text"><p class="tb-kicker">Scoping review</p><p class="tb-title" id="tb-title"></p></div>
-      <ul class="partners" id="partners" aria-label="Principal institutions"></ul>
+  <header class="top">
+    <div class="top-in">
+      <ul class="partners" id="partners" aria-label="Principal institutions"><li><img src="assets/partner_ucd.png" alt="University College Dublin" title="University College Dublin"></li><li><img src="assets/partner_mater.png" alt="The Mater Hospital" title="The Mater Hospital"></li><li><img src="assets/partner_fai.png" alt="Football Association of Ireland" title="Football Association of Ireland"></li></ul>
+      <div class="tb-text"><p class="tb-kicker">Scoping review</p><p class="tb-title" id="tb-title">Spondylolysis and pars stress injury in players of all football codes</p></div>
     </div>
-  </section>
+    <nav class="mainnav" aria-label="The review, in the order the work is done">
+      <div class="mainnav-in">
+        <button data-view="map" class="nav-map">Route map</button>
+        <ol class="phases" id="phases"></ol>
+        <div class="ref" role="group" aria-label="Reference">
+          <button data-view="search">Search strings</button>
+          <button data-view="pack">Writing pack</button>
+          <button data-view="decisions">Decisions</button>
+          <button data-view="team" id="nav-team" hidden>Team</button>
+        </div>
+      </div>
+    </nav>
+  </header>
 
   <div class="shell" id="shell">
     <aside class="rail" id="rail" aria-label="Steps">
@@ -293,7 +370,7 @@ let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
 let cred = null;     // the passcode sent with saves and loads: the person's own, or the administrator's
 let reachable = true;
-const blankState = () => ({ route: "nested_knowledge", view: "walk", stepIndex: { nested_knowledge: 0, conventional: 0 },
+const blankState = () => ({ route: "nested_knowledge", view: "map", stepIndex: { nested_knowledge: 0, conventional: 0 },
                             steps: { nested_knowledge: {}, conventional: {} }, queue: [], lastSync: null, positioned: false });
 let state = blankState();
 const isAdmin = () => !!person && person.role === "admin" && !!cred;
@@ -410,13 +487,10 @@ let started = false;
 function start() {
   document.getElementById("gate").hidden = true;
   document.getElementById("app").hidden = false;
-  $("#tb-title").textContent = CONTENT.meta.full_title;
-  const ul = $("#partners"); ul.innerHTML = "";
-  (CONTENT.partners || []).forEach(p => { const li = el("li"); const im = el("img", { src: p.src, alt: p.name, title: p.name }); li.appendChild(im); ul.appendChild(li); });
   $("#foot-version").textContent = "Protocol version " + CONTENT.meta.version + ", built " + CONTENT.meta.built + ".";
   if (!started) {
     started = true;
-    document.querySelectorAll(".top nav button").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; save(); render(); }));
+    document.querySelectorAll(".mainnav button[data-view]").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; save(); render(); window.scrollTo({ top: 0 }); }));
     document.querySelectorAll(".route button").forEach(b => b.addEventListener("click", () => { state.route = b.dataset.route; save(); render(); }));
     $("#steps-toggle").addEventListener("click", () => setRail(!$("#rail").classList.contains("open")));
     $("#who-change").addEventListener("click", () => { save(); showDialog("roles"); });
@@ -470,7 +544,8 @@ function showDialog(step, ctx = {}) {
     box.appendChild(el("h3", { id: "role-title" }, "Who is working in the walkthrough?"));
     if (ctx.note) box.appendChild(el("p", { class: "dlg-note" }, esc(ctx.note)));
     const wrap = el("div", { class: "roles" });
-    CONTENT.roles.forEach(rd => {
+    const other = el("div", { class: "roles" });
+    CONTENT.roles.filter(rd => !rd.locked).concat(CONTENT.roles.filter(rd => rd.locked)).forEach(rd => {
       const b = el("button", { type: "button", "data-role": rd.key, class: rd.locked ? "locked" : "" });
       b.appendChild(el("span", { class: "rt" }, esc(rd.title) + (rd.named ? " *" : "")));
       if (rd.locked) b.appendChild(el("span", { class: "rn" }, LOCK + esc((rd.name ? rd.name + ", " : "") + (rd.sub || "passcode required"))));
@@ -487,10 +562,15 @@ function showDialog(step, ctx = {}) {
           else showDialog("setpass", { rd });
         } catch (e) { b.disabled = false; dlgError(box, e); }
       };
-      wrap.appendChild(b);
+      (rd.locked ? other : wrap).appendChild(b);
     });
     box.appendChild(wrap);
     if (CONTENT.roles.some(r => r.named)) box.appendChild(el("p", { class: "dlg-note" }, "* Each person in these roles enters their own name and is numbered in the order they join. Use the same name each time to pick up where you left off."));
+    if (other.children.length) {
+      const o = el("div", { class: "roles-other" });
+      o.appendChild(el("p", {}, "Other access"));
+      o.appendChild(other); box.appendChild(o);
+    }
   } else if (step === "name") {
     const rd = ctx.rd;
     box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
@@ -660,6 +740,8 @@ async function pullServer() {
         const i = list.findIndex(s => !(steps[route][s.key] || {}).done);
         state.stepIndex[route] = i < 0 ? list.length - 1 : i;
       }
+      const anyDone = Object.values(steps).some(r => Object.values(r).some(x => x.done));
+      state.view = anyDone ? "walk" : "map";
       state.positioned = true;
     }
     if (!state.queue.length) state.lastSync = new Date().toISOString();
@@ -692,13 +774,15 @@ function updateWho() {
 }
 
 function render() {
-  document.querySelectorAll(".top nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
+  document.querySelectorAll(".mainnav > .mainnav-in > button[data-view], .ref button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
+  renderPhases();
   const shell = $("#shell");
   const walk = state.view === "walk";
   shell.classList.toggle("wide", !walk);
   $("#rail").hidden = !walk; $("#ledger").hidden = !walk;
-  $("#read").classList.toggle("wide-read", state.view === "team");
+  $("#read").classList.toggle("wide-read", state.view === "team" || state.view === "map");
   if (walk) renderWalk();
+  else if (state.view === "map") renderMap();
   else if (state.view === "search") renderSearch();
   else if (state.view === "pack") renderPack();
   else if (state.view === "team" && isAdmin()) renderTeam();
@@ -713,8 +797,10 @@ function renderWalk() {
   steps().forEach((s, i) => {
     const rec = state.steps[state.route][s.key] || {};
     if (rec.done) done++;
-    const li = el("li", { class: (rec.done ? "done " : "") + (i === idx ? "current" : "") });
-    const b = el("button", { type: "button", "aria-current": i === idx ? "step" : "false" },
+    const ph = phases().findIndex(p => p.steps[0] === s.n);
+    if (ph >= 0) list.appendChild(el("li", { class: "ph", "aria-hidden": "true" }, `${ph + 1}. ${esc(phases()[ph].title)}`));
+    const li = el("li", { class: "step " + (rec.done ? "done " : "") + (i === idx ? "current" : "") });
+    const b = el("button", { type: "button", "data-n": String(s.n), "aria-current": i === idx ? "step" : "false" },
       `<span class="node" aria-hidden="true">${s.n}</span><span class="t">${s.title}${rec.done ? '<span class="sr"> (complete)</span>' : ""}</span>`);
     b.onclick = () => { state.stepIndex[state.route] = i; save(); setRail(false); renderWalk(); $("#read").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "smooth" }); };
     li.appendChild(b); list.appendChild(li);
@@ -725,14 +811,120 @@ function renderWalk() {
   const read = $("#read");
   read.innerHTML = "";
   if (idx === 0 && CONTENT.routes[state.route].intro_text) read.appendChild(el("p", { class: "intro" }, CONTENT.routes[state.route].intro_text));
-  read.appendChild(el("p", { class: "kicker" }, `Step ${s.n} of ${steps().length}`));
+  const pi = phaseIndexOf(s.n);
+  read.appendChild(el("p", { class: "kicker" }, `Step ${s.n} of ${steps().length}` + (pi >= 0 ? ` <span class="sr">in </span>· Phase ${pi + 1}, ${esc(phases()[pi].title)}` : "")));
   read.appendChild(el("h2", {}, s.title));
+  if (s.aim) {
+    const g = el("dl", { class: "glance", "aria-label": "This step at a glance" });
+    g.innerHTML = `<dt>What it is for</dt><dd class="aim">${esc(s.aim)}</dd><dt>Who</dt><dd>${esc(s.who || "")}</dd><dt>Where</dt><dd>${esc(s.where || "")}</dd>` +
+      `<dt>To enter here</dt><dd>${s.records.length ? esc(s.records.map(r => r.label).join("; ")) + ". Use the box headed Results for this step." : "Nothing beyond marking the step complete."}</dd>`;
+    read.appendChild(g);
+  }
   const body = el("div", { class: "appear" }, s.html); read.appendChild(body);
   const pager = el("div", { class: "pager" });
   if (idx > 0) { const p = el("button", { class: "btn quiet", type: "button" }, "Previous step"); p.onclick = () => { state.stepIndex[state.route] = idx - 1; save(); renderWalk(); }; pager.appendChild(p); } else pager.appendChild(el("span"));
   if (idx < steps().length - 1) { const n = el("button", { class: "btn quiet", type: "button" }, "Next step"); n.onclick = () => { state.stepIndex[state.route] = idx + 1; save(); renderWalk(); }; pager.appendChild(n); }
   read.appendChild(pager);
   renderLedger(s);
+}
+
+/* ---------- the order of the research: phases, the navigation strip and the route map ---------- */
+const phases = () => (CONTENT.phases || {})[state.route] || [];
+const phaseIndexOf = n => phases().findIndex(p => p.steps.includes(n));
+const stepDone = (route, key) => !!((state.steps[route] || {})[key] || {}).done;
+const ROLE_WORDS = { lead: /lead reviewer/i, second: /second reviewer/i, senior: /senior reviewer/i };
+const isMine = s => !!person && !!ROLE_WORDS[person.role] && ROLE_WORDS[person.role].test(s.who || "");
+function goStep(n) {
+  const i = steps().findIndex(s => s.n === n);
+  if (i >= 0) state.stepIndex[state.route] = i;
+  state.view = "walk"; save(); render(); window.scrollTo({ top: 0 });
+}
+function renderPhases() {
+  const ol = $("#phases"); ol.innerHTML = "";
+  const cur = state.view === "walk" ? phaseIndexOf((steps()[state.stepIndex[state.route] || 0] || {}).n) : -1;
+  phases().forEach((p, i) => {
+    const total = p.steps.length, done = p.steps.filter(n => { const s = steps().find(x => x.n === n); return s && stepDone(state.route, s.key); }).length;
+    const li = el("li", { class: done === total ? "done" : "" });
+    const b = el("button", { type: "button", "data-view": "walk", "data-phase": String(i), "aria-current": i === cur ? "step" : "false",
+      title: p.desc }, `<span class="pn" aria-hidden="true">${i + 1}</span><span class="pt">${esc(p.title)}</span><span class="pc">${done}/${total}</span><span class="sr">, ${done} of ${total} steps complete</span>`);
+    b.onclick = () => goStep(p.steps[0]);
+    li.appendChild(b); ol.appendChild(li);
+  });
+}
+function routeSwitch() {
+  const r = el("div", { class: "route", role: "group", "aria-label": "Route" });
+  [["nested_knowledge", "Nested Knowledge"], ["conventional", "Conventional route"]].forEach(([k, t]) => {
+    const b = el("button", { type: "button", "data-route": k, "aria-pressed": String(state.route === k) }, t);
+    b.onclick = () => { state.route = k; save(); render(); };
+    r.appendChild(b);
+  });
+  return r;
+}
+function renderMap() {
+  const read = $("#read"); read.innerHTML = "";
+  const m = el("div", { class: "map appear" });
+  m.appendChild(el("p", { class: "kicker" }, "Route map"));
+  m.appendChild(el("h2", {}, "The review from start to finish"));
+  m.appendChild(el("p", { class: "fulltitle" }, esc(CONTENT.meta.full_title)));
+  m.appendChild(el("p", { class: "lede" }, "This page sets out the whole review in the order the work is done. Each phase below opens into its steps; each step says what it is for, who does it, where, and what to record. Nothing needs to be known in advance beyond the protocol."));
+  const guide = person ? (CONTENT.role_guide || {})[person.role] : "";
+  if (guide) {
+    const y = el("section", { class: "yourpart", "aria-label": "Your part" });
+    y.innerHTML = `<h3>Your part${person.role === "readonly" ? "" : ", as " + esc(personFull(person))}</h3><p>${esc(guide)}</p>`;
+    m.appendChild(y);
+  }
+  m.appendChild(el("h3", {}, "How this walkthrough works"));
+  const how = el("ol", { class: "howto" });
+  how.innerHTML = `<li><b>Read first</b>The cover note and the protocol are in the writing pack. The eligibility table and the decision log are referred to throughout.</li>
+    <li><b>Follow the phases in order</b>Use the numbered phases in the bar above, or the steps below. The order matters more than the pace: some settings cannot be changed once screening has begun.</li>
+    <li><b>Record as you go</b>Where a step produces a number or a date, enter it in the box headed Results for this step, then mark the step complete. It is saved to your own record and the lead author and administrator can see where the review has reached.</li>
+    <li><b>Copy, do not retype</b>Every search string is under Search strings, ready to copy into each database exactly as written.</li>`;
+  m.appendChild(how);
+  m.appendChild(el("h3", {}, "Choose the route"));
+  const rp = el("div", { class: "routepick" });
+  rp.appendChild(routeSwitch());
+  rp.appendChild(el("span", {}, state.route === "nested_knowledge"
+    ? "Nested Knowledge is the intended route: searching, deduplication and both stages of screening in one platform."
+    : "The conventional route is the fallback if Nested Knowledge is not available: each database on its own platform, screening in Rayyan."));
+  m.appendChild(rp);
+  const j = el("ol", { class: "journey" });
+  phases().forEach((p, i) => {
+    const list = p.steps.map(n => steps().find(x => x.n === n)).filter(Boolean);
+    const done = list.filter(s => stepDone(state.route, s.key)).length;
+    const li = el("li", { class: done === list.length ? "done" : "" });
+    li.appendChild(el("span", { class: "jn", "aria-hidden": "true" }, String(i + 1)));
+    const c = el("div", { class: "card" });
+    c.appendChild(el("h3", {}, `<span class="sr">Phase ${i + 1}: </span>${esc(p.title)}`));
+    c.appendChild(el("p", { class: "jd" }, esc(p.desc)));
+    const ul = el("ul", { class: "jsteps" });
+    list.forEach(s => {
+      const sd = stepDone(state.route, s.key);
+      const row = el("li", { class: sd ? "done" : "" });
+      const a = el("a", { href: "#" }, `Step ${s.n}. ${esc(s.title)}`);
+      a.onclick = ev => { ev.preventDefault(); goStep(s.n); };
+      const left = el("span"); left.appendChild(a);
+      if (isMine(s)) left.appendChild(el("span", { class: "mine" }, "Your step"));
+      row.appendChild(left);
+      row.appendChild(el("span", { class: "js" }, person && person.role !== "readonly" ? (sd ? "Complete" : "Not yet complete") : ""));
+      row.appendChild(el("span", { class: "jw" }, esc(s.who || "")));
+      ul.appendChild(row);
+    });
+    c.appendChild(ul); li.appendChild(c); j.appendChild(li);
+  });
+  m.appendChild(j);
+  if ((CONTENT.team || []).length) {
+    m.appendChild(el("h3", {}, "Who is who"));
+    const t = el("table", { class: "teamtable" });
+    t.innerHTML = "<thead><tr><th>Part in the review</th><th>Person</th><th>Role to choose here</th></tr></thead><tbody>" +
+      CONTENT.team.map(r => `<tr><td>${esc(r.part)}</td><td>${esc(r.who)}</td><td>${esc(r.site_role || "")}</td></tr>`).join("") + "</tbody>";
+    const w = el("div", { class: "scroll" }); w.style.overflowX = "auto"; w.appendChild(t); m.appendChild(w);
+  }
+  const go = el("div", { class: "pager" });
+  const firstOpen = steps().find(s => !stepDone(state.route, s.key)) || steps()[0];
+  const b = el("button", { class: "btn live", type: "button" }, readOnly() ? "Start reading at Step 1" : `Go to Step ${firstOpen.n}: ${esc(firstOpen.title)}`);
+  b.onclick = () => goStep(readOnly() ? 1 : firstOpen.n);
+  go.appendChild(b); m.appendChild(go);
+  read.appendChild(m);
 }
 
 function renderLedger(s) {
@@ -742,7 +934,7 @@ function renderLedger(s) {
   led.innerHTML = `<h4>Results for this step</h4>`;
   const ro = readOnly();
   led.appendChild(el("p", { class: "hint" }, ro ? "Read only: you can read every step, but nothing can be entered or saved."
-    : s.records.length ? "Enter what this step produced." : "Nothing to enter here beyond marking the step complete."));
+    : s.records.length ? "Enter what this step produced, once you have it. Each entry saves to your own record as you leave the box." : "Nothing to enter here beyond marking the step complete."));
   s.records.forEach(r => {
     const f = el("div", { class: "field" });
     const id = "f-" + s.key + "-" + r.key;
@@ -755,7 +947,9 @@ function renderLedger(s) {
       cur.values = cur.values || {}; cur.values[r.key] = inp.value; state.steps[state.route][s.key] = cur; save();
       queueEvent(s.key, "recorded", { [r.key]: inp.value });
     });
-    f.appendChild(inp); led.appendChild(f);
+    f.appendChild(inp);
+    if (r.help) { const h = el("p", { class: "help", id: id + "-h" }, esc(r.help)); inp.setAttribute("aria-describedby", id + "-h"); f.appendChild(h); }
+    led.appendChild(f);
   });
   const acts = el("div", { class: "actions" });
   const b = el("button", { class: rec.done ? "btn quiet" : "btn live", type: "button" }, rec.done ? "Reopen this step" : "Mark step complete");
