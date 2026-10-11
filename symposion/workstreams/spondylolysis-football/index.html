@@ -70,18 +70,18 @@ button{font-family:var(--body);font-size:15px;cursor:pointer}
 .top-in .partners{padding-right:30px;border-right:1px solid var(--rule)}
 .mainnav{border-top:1px solid var(--rule)}
 .mainnav-in{position:relative}
-.mainnav-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:stretch;gap:4px 12px;flex-wrap:wrap}
-.mainnav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font-size:15px;padding:10px 3px 9px;line-height:1.2}
+.mainnav-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:stretch;gap:4px 10px;flex-wrap:wrap}
+.mainnav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font-size:14.5px;padding:10px 2px 9px;line-height:1.2}
 .mainnav button:hover{color:var(--navy)}
 .mainnav button[aria-current="page"],.mainnav button[aria-current="step"]{color:var(--navy);border-bottom-color:var(--umber)}
 .nav-map{font-weight:500}
-.phases{list-style:none;margin:0;padding:0 0 0 12px;display:flex;gap:2px 9px;flex-wrap:wrap;border-left:1px solid var(--rule)}
+.phases{list-style:none;margin:0;padding:0 0 0 10px;display:flex;gap:2px 6px;flex-wrap:wrap;border-left:1px solid var(--rule)}
 .phases li{position:relative}
 .phases button{display:flex;align-items:center;gap:7px}
 .phases .pn{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--umber);color:var(--umber);font-family:var(--display);font-weight:600;font-size:13.5px;font-variant-numeric:lining-nums}
 .phases li.done .pn{background:var(--navy);border-color:var(--navy);color:var(--ivory)}
 .phases .pc{font-size:12.5px;color:var(--muted)}
-.ref{margin-left:auto;display:flex;gap:2px 12px;flex-wrap:wrap;padding-left:12px;border-left:1px solid var(--rule)}
+.ref{margin-left:auto;display:flex;gap:2px 8px;flex-wrap:wrap;padding-left:10px;border-left:1px solid var(--rule)}
 @media (max-width:980px){.ref{margin-left:0;border-left:0;padding-left:0}.phases{border-left:0;padding-left:0}}
 @media (max-width:780px){
   .partners img{height:38px}.partners{gap:16px}
@@ -269,6 +269,54 @@ dialog .err{margin-top:14px}
 .roles-other .rt{font-size:14.5px}
 .roles-other .rn{font-size:12.5px}
 @media (max-width:480px){.roles-other .roles{grid-template-columns:1fr}}
+/* Author board */
+.nav-board{font-weight:500}
+.badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;margin-left:7px;border-radius:10px;background:var(--alert);color:#fff;font-size:12px;font-weight:600;font-variant-numeric:lining-nums;vertical-align:1px}
+.board{max-width:940px}
+.board .lede{max-width:70ch}
+.integrity{font-size:14px;color:var(--muted);margin:0 0 22px;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.integrity .okk{color:var(--teal);font-weight:500}
+.integrity .bad{color:var(--alert);font-weight:600}
+.composer{background:var(--ivory);border:1px solid var(--rule);border-top:3px solid var(--teal);padding:18px 20px;margin:0 0 30px}
+.composer h3{margin:0 0 10px!important;font-size:22px!important}
+.composer .row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px 16px}
+@media (max-width:640px){.composer .row{grid-template-columns:1fr}}
+.composer label{display:block;font-size:14px;margin:0 0 5px}
+.composer select,.composer input,.composer textarea{width:100%;font-family:var(--body);font-size:16px;padding:9px 11px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:2px}
+.composer textarea{min-height:130px;resize:vertical;line-height:1.5}
+.composer select:focus,.composer input:focus,.composer textarea:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-wash)}
+.composer .meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin:6px 0 12px}
+.composer .replying{background:var(--teal-wash);padding:6px 10px;font-size:14px;margin:0 0 12px;display:flex;justify-content:space-between;gap:10px}
+.board-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:0 0 14px;font-size:14.5px}
+.board-tools select{font-family:var(--body);font-size:15px;padding:6px 8px;border:1px solid var(--rule);background:#fff;border-radius:2px}
+.board-tools .spacer{flex:1 1 auto}
+.comments{list-style:none;margin:0;padding:0}
+.cmt{background:var(--ivory);border:1px solid var(--rule);padding:14px 18px 12px;margin:0 0 14px}
+.cmt.new{border-left:3px solid var(--alert)}
+.cmt .ch{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:14px;color:var(--muted)}
+.cmt .cn{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);font-variant-numeric:lining-nums}
+.cmt .ca{color:var(--ink);font-weight:500}
+.cmt .newtag{color:var(--alert);font-weight:600;font-size:12.5px;letter-spacing:.04em}
+.cmt .cref{font-size:14px;margin:6px 0 8px;color:var(--navy)}
+.cmt .cref span{color:var(--muted)}
+.cmt .cb{white-space:pre-wrap;word-break:break-word;margin:0 0 10px}
+.cmt .cst{font-size:13.5px;border-top:1px solid var(--rule);padding-top:8px;margin-top:8px;color:var(--muted)}
+.cmt .cst b{color:var(--navy);font-weight:600}
+.cmt .cst li{margin:2px 0}
+.cmt .cst ul{margin:4px 0 0;padding-left:18px}
+.pill{display:inline-block;font-size:12.5px;padding:1px 8px;border-radius:10px;border:1px solid var(--rule);color:var(--muted);background:var(--parchment)}
+.pill.addressed{border-color:var(--teal);color:var(--teal)}
+.pill.acknowledged{border-color:var(--navy);color:var(--navy)}
+.pill.not_adopted{border-color:var(--umber);color:var(--umber)}
+.cmt .cact{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px}
+.cmt .respond{display:grid;grid-template-columns:200px minmax(0,1fr) auto;gap:8px;margin-top:10px;align-items:start}
+@media (max-width:640px){.cmt .respond{grid-template-columns:1fr}}
+.cmt .respond select,.cmt .respond input{font-family:var(--body);font-size:15px;padding:7px 9px;border:1px solid var(--rule);background:#fff;border-radius:2px;width:100%}
+.alertbar{background:var(--alert-wash);border-left:3px solid var(--alert);padding:10px 16px;margin:0 0 22px;display:flex;justify-content:space-between;align-items:center;gap:10px 18px;flex-wrap:wrap;font-size:15px}
+.alertbar b{color:var(--alert)}
+.comment-on{margin:0 0 22px}
+.small-btn{background:none;border:1px solid var(--teal);color:var(--teal);padding:4px 11px;border-radius:2px;font-size:14px}
+.small-btn:hover{background:var(--teal-wash)}
 @media (prefers-reduced-motion:no-preference){
   .appear{animation:appear .5s ease-out both}
   @keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -323,6 +371,7 @@ dialog .err{margin-top:14px}
     <nav class="mainnav" aria-label="The review, in the order the work is done">
       <div class="mainnav-in">
         <button data-view="map" class="nav-map">Route map</button>
+        <button data-view="board" class="nav-board" id="nav-board">Author board<span class="badge" id="board-badge" hidden></span></button>
         <ol class="phases" id="phases"></ol>
         <div class="ref" role="group" aria-label="Reference">
           <button data-view="search">Search strings</button>
@@ -708,7 +757,7 @@ function showDialog(step, ctx = {}) {
 }
 
 function enterReadOnly() {
-  person = { role: "readonly" }; cred = null;
+  person = { role: "readonly" }; cred = null; resetBoard();
   lsSet(STORE_KEY + ".last", JSON.stringify({ role: "readonly" }));
   state = blankState(); state.positioned = true;
   closeDialog(); updateWho(); render(); updateSync();
@@ -716,6 +765,7 @@ function enterReadOnly() {
 
 /* The person is known and has proved who they are: load their saved progress from Symposion, then show the walkthrough. */
 async function becomePerson(p) {
+  resetBoard();
   person = { id: p.id, role: p.role, seq: p.seq ?? null, name: p.name ?? null };
   sessSet(STORE_KEY + ".c", p.role === "admin" ? "" : (cred || ""));
   lsSet(STORE_KEY + ".last", JSON.stringify(person));
@@ -725,6 +775,7 @@ async function becomePerson(p) {
   if (!person) return;
   if (state.view === "team" && !isAdmin()) state.view = "walk";
   save(); updateWho(); render(); updateSync(); flush();
+  if (await fetchBoard(false) && (state.view === "map" || state.view === "walk")) render();
 }
 
 async function pullServer() {
@@ -759,7 +810,7 @@ async function pullServer() {
 }
 
 function personGone() {
-  lsSet(STORE_KEY + ".last", ""); sessSet(STORE_KEY + ".c", "");
+  lsSet(STORE_KEY + ".last", ""); sessSet(STORE_KEY + ".c", ""); resetBoard();
   person = null; cred = null; state = blankState();
   updateWho(); render(); updateSync();
   showDialog("roles", { note: "Your earlier registration is no longer active. Choose your role again." });
@@ -774,15 +825,16 @@ function updateWho() {
 }
 
 function render() {
-  document.querySelectorAll(".mainnav > .mainnav-in > button[data-view], .ref button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
+  document.querySelectorAll(".mainnav-in > button[data-view], .ref button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
   renderPhases();
   const shell = $("#shell");
   const walk = state.view === "walk";
   shell.classList.toggle("wide", !walk);
   $("#rail").hidden = !walk; $("#ledger").hidden = !walk;
-  $("#read").classList.toggle("wide-read", state.view === "team" || state.view === "map");
+  $("#read").classList.toggle("wide-read", state.view === "team" || state.view === "map" || state.view === "board");
   if (walk) renderWalk();
   else if (state.view === "map") renderMap();
+  else if (state.view === "board") renderBoard();
   else if (state.view === "search") renderSearch();
   else if (state.view === "pack") renderPack();
   else if (state.view === "team" && isAdmin()) renderTeam();
@@ -810,6 +862,7 @@ function renderWalk() {
   const s = steps()[idx];
   const read = $("#read");
   read.innerHTML = "";
+  const ab = alertBar(); if (ab) read.appendChild(ab);
   if (idx === 0 && CONTENT.routes[state.route].intro_text) read.appendChild(el("p", { class: "intro" }, CONTENT.routes[state.route].intro_text));
   const pi = phaseIndexOf(s.n);
   read.appendChild(el("p", { class: "kicker" }, `Step ${s.n} of ${steps().length}` + (pi >= 0 ? ` <span class="sr">in </span>· Phase ${pi + 1}, ${esc(phases()[pi].title)}` : "")));
@@ -820,6 +873,7 @@ function renderWalk() {
       `<dt>To enter here</dt><dd>${s.records.length ? esc(s.records.map(r => r.label).join("; ")) + ". Use the box headed Results for this step." : "Nothing beyond marking the step complete."}</dd>`;
     read.appendChild(g);
   }
+  if (canPost()) { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn(`${state.route === "nested_knowledge" ? "Nested Knowledge" : "Conventional route"}, Step ${s.n}: ${s.title}`)); read.appendChild(co); }
   const body = el("div", { class: "appear" }, s.html); read.appendChild(body);
   const pager = el("div", { class: "pager" });
   if (idx > 0) { const p = el("button", { class: "btn quiet", type: "button" }, "Previous step"); p.onclick = () => { state.stepIndex[state.route] = idx - 1; save(); renderWalk(); }; pager.appendChild(p); } else pager.appendChild(el("span"));
@@ -863,6 +917,7 @@ function routeSwitch() {
 function renderMap() {
   const read = $("#read"); read.innerHTML = "";
   const m = el("div", { class: "map appear" });
+  const ab = alertBar(); if (ab) m.appendChild(ab);
   m.appendChild(el("p", { class: "kicker" }, "Route map"));
   m.appendChild(el("h2", {}, "The review from start to finish"));
   m.appendChild(el("p", { class: "fulltitle" }, esc(CONTENT.meta.full_title)));
@@ -878,7 +933,8 @@ function renderMap() {
   how.innerHTML = `<li><b>Read first</b>The cover note and the protocol are in the writing pack. The eligibility table and the decision log are referred to throughout.</li>
     <li><b>Follow the phases in order</b>Use the numbered phases in the bar above, or the steps below. The order matters more than the pace: some settings cannot be changed once screening has begun.</li>
     <li><b>Record as you go</b>Where a step produces a number or a date, enter it in the box headed Results for this step, then mark the step complete. It is saved to your own record and the lead author and administrator can see where the review has reached.</li>
-    <li><b>Copy, do not retype</b>Every search string is under Search strings, ready to copy into each database exactly as written.</li>`;
+    <li><b>Copy, do not retype</b>Every search string is under Search strings, ready to copy into each database exactly as written.</li>
+    <li><b>Comment on the author board</b>Any author can comment on any section, step or document. Each comment is numbered, signed, timed and kept, and goes to the lead author and the administrator.</li>`;
   m.appendChild(how);
   m.appendChild(el("h3", {}, "Choose the route"));
   const rp = el("div", { class: "routepick" });
@@ -926,6 +982,178 @@ function renderMap() {
   go.appendChild(b); m.appendChild(go);
   read.appendChild(m);
 }
+
+/* ---------- the author board: shared, numbered, immutable comments, with alerts for the lead author and administrator ---------- */
+let BOARD = { loaded: false, comments: [], statuses: [], last_seen: 0, unread: 0, intact: true, checked_at: null, can_mark: false, error: null };
+const STATUS_LABEL = { acknowledged: "Acknowledged", addressed: "Addressed", not_adopted: "Not adopted", reopened: "Reopened" };
+const canPost = () => !!person && !!person.id && !readOnly() && !!cred;
+const ukTime = iso => new Date(iso).toLocaleString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+const draftKey = () => STORE_KEY + ".draft." + (person && person.id ? person.id : "none");
+function readDraft() { try { return JSON.parse(lsGet(draftKey()) || "null") || { section: "General", item: "", body: "", reply: null }; } catch (e) { return { section: "General", item: "", body: "", reply: null }; } }
+function writeDraft(d) { lsSet(draftKey(), JSON.stringify(d)); }
+function resetBoard() { BOARD = { loaded: false, comments: [], statuses: [], last_seen: 0, unread: 0, intact: true, checked_at: null, can_mark: false, error: null }; updateBadge(); }
+function updateBadge() {
+  const b = $("#board-badge"); if (!b) return;
+  b.hidden = !(BOARD.unread > 0); b.textContent = BOARD.unread > 0 ? String(BOARD.unread) : "";
+  b.setAttribute("aria-label", BOARD.unread + " new");
+}
+async function fetchBoard(markSeen) {
+  if (!canPost()) return false;
+  try {
+    const r = await rpc("symposion_board_list", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_mark_seen: !!markSeen });
+    const changed = !BOARD.loaded || r.comments.length !== BOARD.comments.length || r.statuses.length !== BOARD.statuses.length;
+    BOARD = { loaded: true, ...r, error: null };
+    if (markSeen) BOARD.unread_shown = r.unread, BOARD.unread = 0;
+    updateBadge();
+    return changed;
+  } catch (e) { BOARD.error = e.message; return false; }
+}
+function notifyQueued() {
+  fetch(CONFIG.supabase.url + "/functions/v1/symposion-notify", { method: "POST",
+    headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json" }, body: "{}" }).catch(() => {});
+}
+function sectionOptions() {
+  const o = [["General", ["General", "Route map", "Decisions", "Eligibility criteria (Table 1)"]]];
+  [["nested_knowledge", "Nested Knowledge"], ["conventional", "Conventional route"]].forEach(([k, t]) =>
+    o.push([t + " walkthrough", CONTENT.routes[k].steps.map(x => `${t}, Step ${x.n}: ${x.title}`)]));
+  o.push(["Search strings", CONTENT.strategies.map(d => "Search strings: " + d.db)]);
+  o.push(["Writing pack", CONTENT.pack.map(p => "Writing pack: " + p.label)]);
+  return o;
+}
+function openBoard(prefill) {
+  if (prefill && canPost()) { const d = readDraft(); Object.assign(d, prefill); writeDraft(d); }
+  state.view = "board"; save(); render(); window.scrollTo({ top: 0 });
+  setTimeout(() => { const t = document.getElementById("cm-body"); if (t && prefill) t.focus(); }, 60);
+}
+function commentOn(section) {
+  const b = el("button", { class: "small-btn", type: "button" }, "Comment on this");
+  b.onclick = () => openBoard({ section, reply: null });
+  return b;
+}
+function alertBar() {
+  if (!person || !["lead", "admin"].includes(person.role) || !(BOARD.unread > 0)) return null;
+  const a = el("div", { class: "alertbar", role: "status" });
+  a.appendChild(el("span", {}, `<b>${BOARD.unread} new ${BOARD.unread === 1 ? "comment" : "comments"}</b> on the author board since your last visit.`));
+  const b = el("button", { class: "small-btn", type: "button" }, "Open the board"); b.onclick = () => openBoard(null);
+  a.appendChild(b); return a;
+}
+function currentStatus(seq) { const l = BOARD.statuses.filter(x => x.seq === seq); return l.length ? l[l.length - 1].status : null; }
+let boardFilter = "all";
+async function renderBoard(fresh = true) {
+  const read = $("#read"); read.innerHTML = "";
+  const m = el("div", { class: "board" });
+  m.appendChild(el("p", { class: "kicker" }, "Author board"));
+  m.appendChild(el("h2", {}, "Comments from the authors"));
+  m.appendChild(el("p", { class: "lede" }, "Every author can comment here on any part of the review. Each comment is numbered, signed with the author's role and name, stamped with the time it reached Symposion, and tied to the section and item it concerns. Comments cannot be edited or withdrawn: a correction is a new comment that replies to the earlier one. New comments are sent to the lead author and the administrator, who record a response against each."));
+  if (readOnly()) { m.appendChild(el("p", { class: "hint" }, "The author board is open to signed-in authors. Read only access does not include it.")); read.appendChild(m); return; }
+  if (!canPost()) { m.appendChild(el("p", { class: "hint" }, "Choose your role and enter your passcode to read and post comments.")); read.appendChild(m); return; }
+  const info = el("p", { class: "integrity" }); m.appendChild(info);
+  const comp = el("section", { class: "composer", "aria-label": "New comment" });
+  const d = readDraft();
+  comp.innerHTML = `<h3>New comment</h3>
+    <div id="cm-reply"></div>
+    <div class="row"><div><label for="cm-section">Section or document</label><select id="cm-section"></select></div>
+    <div><label for="cm-item">Item, paragraph, line or table</label><input id="cm-item" maxlength="300" placeholder="For example: Methods, para 3; Table 1, row 4"></div></div>
+    <div style="margin-top:12px"><label for="cm-body">Comment</label><textarea id="cm-body" maxlength="4000"></textarea></div>
+    <div class="meta"><span>Posted as ${esc(personFull(person))}. Once posted, a comment cannot be changed.</span><span id="cm-count"></span></div>
+    <button class="btn live" type="button" id="cm-post">Post comment</button>`;
+  const sel = comp.querySelector("#cm-section");
+  let found = false;
+  sectionOptions().forEach(([g, items]) => { const og = el("optgroup", { label: g }); items.forEach(it => { const op = el("option", { value: it }); op.textContent = it; if (it === d.section) { op.selected = true; found = true; } og.appendChild(op); }); sel.appendChild(og); });
+  if (!found && d.section) { const op = el("option", { value: d.section }); op.textContent = d.section; op.selected = true; sel.prepend(op); }
+  const item = comp.querySelector("#cm-item"), body = comp.querySelector("#cm-body"), count = comp.querySelector("#cm-count");
+  item.value = d.item || ""; body.value = d.body || "";
+  const keep = () => { writeDraft({ section: sel.value, item: item.value, body: body.value, reply: readDraft().reply }); count.textContent = body.value.length + " of 4000"; };
+  [sel, item, body].forEach(x => x.addEventListener("input", keep)); count.textContent = body.value.length + " of 4000";
+  const rep = comp.querySelector("#cm-reply");
+  if (d.reply) { rep.className = "replying"; rep.innerHTML = `<span>Replying to comment ${d.reply}</span>`; const x = el("button", { class: "linkish", type: "button" }, "Not a reply"); x.onclick = () => { const dd = readDraft(); dd.reply = null; writeDraft(dd); renderBoard(false); }; rep.appendChild(x); }
+  comp.querySelector("#cm-post").onclick = async ev => {
+    const btn = ev.currentTarget; comp.querySelectorAll(".err").forEach(x => x.remove());
+    if (!body.value.trim()) { comp.appendChild(el("div", { class: "err", role: "alert" }, "Write the comment first.")); return; }
+    btn.disabled = true; btn.textContent = "Posting";
+    try {
+      await rpc("symposion_board_post", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_section: sel.value, p_item: item.value, p_body: body.value, p_reply_to: readDraft().reply });
+      writeDraft({ section: sel.value, item: "", body: "", reply: null });
+      notifyQueued();
+      await fetchBoard(true); renderBoard(false);
+    } catch (e) {
+      btn.disabled = false; btn.textContent = "Post comment";
+      const msg = { bad_comment: "The comment needs a section and some text, up to 4000 characters.", too_many: "Too many comments in a short time. Wait a few minutes and post again.", bad_reply: "The comment being replied to was not found." }[e.message] || MSG[e.message] || MSG.server;
+      comp.appendChild(el("div", { class: "err", role: "alert" }, esc(msg + " Your text has been kept.")));
+    }
+  };
+  m.appendChild(comp);
+  const tools = el("div", { class: "board-tools" });
+  const f = el("select", { "aria-label": "Show" });
+  [["all", "All comments"], ["open", "Awaiting response"], ["acknowledged", "Acknowledged"], ["addressed", "Addressed"], ["not_adopted", "Not adopted"]].forEach(([k, t]) => { const op = el("option", { value: k }); op.textContent = t; if (k === boardFilter) op.selected = true; f.appendChild(op); });
+  f.onchange = () => { boardFilter = f.value; renderBoard(false); };
+  tools.appendChild(f); tools.appendChild(el("span", { class: "spacer" }));
+  const rf = el("button", { class: "small-btn", type: "button" }, "Refresh"); rf.onclick = async () => { await fetchBoard(true); renderBoard(false); };
+  tools.appendChild(rf);
+  if (BOARD.can_mark) { const ex = el("button", { class: "small-btn", type: "button" }, "Download the record (CSV)"); ex.onclick = exportBoard; tools.appendChild(ex); }
+  m.appendChild(tools);
+  const list = el("ol", { class: "comments", reversed: "" }); m.appendChild(list);
+  read.appendChild(m);
+  if (fresh) { list.appendChild(el("li", { class: "hint" }, "Loading the board.")); await fetchBoard(true); if (state.view !== "board") return; list.innerHTML = ""; if (BOARD.can_mark) notifyQueued(); }
+  info.innerHTML = BOARD.error ? `<span class="bad">The board could not be reached. ${esc(MSG[BOARD.error] || MSG.offline)}</span>`
+    : (BOARD.intact ? `<span class="okk">Record intact</span><span>Every comment's SHA-512 hash was checked against the one before it at ${esc(fmtTime(BOARD.checked_at))}.</span>`
+                    : `<span class="bad">The record failed its integrity check. Tell the administrator at once.</span>`) + `<span>${BOARD.comments.length} ${BOARD.comments.length === 1 ? "comment" : "comments"}.</span>`;
+  const seenBefore = BOARD.last_seen || 0;
+  const shown = BOARD.comments.slice().reverse().filter(c => boardFilter === "all" ? true : boardFilter === "open" ? (!currentStatus(c.seq) || currentStatus(c.seq) === "reopened") : currentStatus(c.seq) === boardFilter);
+  if (!shown.length) list.appendChild(el("li", { class: "hint" }, BOARD.comments.length ? "No comments match this filter." : "No comments yet. The first comment will be number 1."));
+  shown.forEach(c => {
+    const li = el("li", { class: "cmt" + (c.seq > seenBefore && c.person_id !== person.id ? " new" : ""), id: "comment-" + c.seq });
+    const st = currentStatus(c.seq);
+    li.appendChild(el("div", { class: "ch" }, `<span class="cn">${c.seq}</span><span class="ca">${esc(c.author)}</span><span>${esc(ukTime(c.at))} UK time</span>` +
+      (c.seq > seenBefore && c.person_id !== person.id ? `<span class="newtag">NEW</span>` : "") + `<span class="pill ${st || ""}">${esc(st ? STATUS_LABEL[st] : "Awaiting response")}</span>`));
+    li.appendChild(el("p", { class: "cref" }, `<span>Section:</span> ${esc(c.section)}` + (c.item ? ` &nbsp;<span>Item:</span> ${esc(c.item)}` : "") + (c.reply_to ? ` &nbsp;<span>In reply to</span> <a href="#comment-${c.reply_to}">comment ${c.reply_to}</a>` : "")));
+    const b = el("p", { class: "cb" }); b.textContent = c.body; li.appendChild(b);
+    const hist = BOARD.statuses.filter(x => x.seq === c.seq);
+    if (hist.length) { const h = el("div", { class: "cst" }); h.innerHTML = "<ul>" + hist.map(x => `<li><b>${esc(STATUS_LABEL[x.status])}</b> by ${esc(x.by)}, ${esc(ukTime(x.at))}${x.note ? ": " + esc(x.note) : ""}</li>`).join("") + "</ul>"; li.appendChild(h); }
+    const acts = el("div", { class: "cact" });
+    const r = el("button", { class: "linkish", type: "button" }, "Reply");
+    r.onclick = () => { const dd = readDraft(); dd.reply = c.seq; dd.section = c.section; dd.item = c.item; writeDraft(dd); renderBoard(false); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => { const t = document.getElementById("cm-body"); if (t) t.focus(); }, 300); };
+    acts.appendChild(r);
+    if (BOARD.can_mark) {
+      const rr = el("button", { class: "linkish", type: "button" }, "Record a response");
+      rr.onclick = () => {
+        if (li.querySelector(".respond")) return;
+        const fm = el("div", { class: "respond" });
+        fm.innerHTML = `<select aria-label="Response"><option value="acknowledged">Acknowledged</option><option value="addressed">Addressed</option><option value="not_adopted">Not adopted</option><option value="reopened">Reopened</option></select><input maxlength="1000" aria-label="Note" placeholder="Note, for example what was changed and where"><button class="btn live" type="button">Save</button>`;
+        fm.querySelector("button").onclick = async ev => {
+          ev.currentTarget.disabled = true;
+          try { await rpc("symposion_board_status", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_seq: c.seq, p_status: fm.querySelector("select").value, p_note: fm.querySelector("input").value }); await fetchBoard(true); renderBoard(false); }
+          catch (e) { ev.currentTarget.disabled = false; fm.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[e.message] || MSG.server))); }
+        };
+        li.appendChild(fm);
+      };
+      acts.appendChild(rr);
+    }
+    li.appendChild(acts); list.appendChild(li);
+  });
+}
+function exportBoard() {
+  const q = v => '"' + String(v ?? "").replace(/"/g, '""') + '"';
+  const head = ["comment", "entered_utc", "author", "role", "person_id", "section", "item", "reply_to", "comment_text", "current_response", "response_history", "previous_hash", "sha512_hash"];
+  const rows = BOARD.comments.map(c => [c.seq, c.at_utc, c.author, c.role, c.person_id, c.section, c.item, c.reply_to ?? "", c.body, currentStatus(c.seq) ? STATUS_LABEL[currentStatus(c.seq)] : "Awaiting response",
+    BOARD.statuses.filter(x => x.seq === c.seq).map(x => `${STATUS_LABEL[x.status]} by ${x.by} at ${x.at}${x.note ? ": " + x.note : ""}`).join(" | "), c.prev_hash, c.hash].map(q).join(","));
+  const csv = "﻿" + head.join(",") + "\n" + rows.join("\n") + "\n";
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  const d = new Date(); const stamp = d.toISOString().slice(0, 10);
+  const a = el("a", { href: url, download: `${CONFIG.workstream}_author_board_${stamp}.csv` }); document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+setInterval(async () => {
+  if (document.hidden || !canPost()) return;
+  const onBoard = state.view === "board";
+  const changed = await fetchBoard(onBoard);
+  if (onBoard && changed) renderBoard(false);
+  else if (!onBoard && (state.view === "map" || state.view === "walk")) {
+    const old = document.querySelector("#read .alertbar"); if (old) old.remove();
+    const ab = alertBar(); if (ab) $("#read").prepend(ab);
+  }
+}, 60000);
+document.addEventListener("visibilitychange", async () => { if (!document.hidden && canPost()) { const onBoard = state.view === "board"; const ch = await fetchBoard(onBoard); if (onBoard && ch) renderBoard(false); } });
 
 function renderLedger(s) {
   const led = $("#ledger");
@@ -976,7 +1204,9 @@ function renderSearch() {
     head.appendChild(el("div", {}, `<h3>${d.db}</h3><div class="plat">${d.platform}</div>`));
     const c = el("button", { class: "copy", type: "button" }, "Copy");
     c.onclick = async () => { try { await navigator.clipboard.writeText(d.lines.join("\n")); c.textContent = "Copied"; setTimeout(() => c.textContent = "Copy", 1800); } catch (e) { c.textContent = "Select and copy manually"; } };
-    head.appendChild(c); box.appendChild(head);
+    const hb = el("div", { style: "display:flex;gap:8px;flex-wrap:wrap;flex:0 0 auto" }); hb.appendChild(c);
+    if (canPost()) hb.appendChild(commentOn("Search strings: " + d.db));
+    head.appendChild(hb); box.appendChild(head);
     box.appendChild(el("p", { class: "note" + (/Not tested/.test(d.note) ? " untested" : "") }, d.note));
     if (d.lines.length === 1) { const pre = el("pre"); pre.textContent = d.lines[0]; box.appendChild(pre); }
     else { const ol = el("ol"); d.lines.forEach(l => { const li = el("li"); li.textContent = l; ol.appendChild(li); }); box.appendChild(ol); }
@@ -1008,7 +1238,9 @@ function renderPack() {
       } catch (e) { b.textContent = "Download failed, try again"; }
       b.disabled = false;
     };
-    li.appendChild(b); ul.appendChild(li);
+    const bw = el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;align-items:center" }); bw.appendChild(b);
+    if (canPost()) bw.appendChild(commentOn("Writing pack: " + p.label));
+    li.appendChild(bw); ul.appendChild(li);
   });
   read.appendChild(ul);
   read.appendChild(el("h3", { id: "eligibility", tabindex: "-1" }, "Eligibility criteria"));
