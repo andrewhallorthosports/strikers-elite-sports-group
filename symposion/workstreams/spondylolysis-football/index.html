@@ -253,6 +253,7 @@ dialog .err{margin-top:14px}
 .journey .jsteps li.done .js{color:var(--navy);font-weight:500}
 .journey .mine{display:inline-block;font-size:12px;color:var(--teal);border:1px solid var(--teal);border-radius:2px;padding:0 6px;margin-left:8px;vertical-align:1px}
 .teamtable td:first-child{white-space:nowrap;color:var(--navy);font-weight:500}
+@media (max-width:640px){.teamtable thead{display:none}.teamtable,.teamtable tbody,.teamtable tr,.teamtable td{display:block;width:100%}.teamtable tr{padding:12px 0;border-bottom:1px solid var(--rule)}.teamtable td,.teamtable tbody tr:last-child td{padding:2px 12px;border:0}.teamtable tbody tr:last-child{border-bottom:2px solid var(--navy)}.teamtable{border-top:2px solid var(--navy)}.teamtable td:first-child{white-space:normal}.teamtable td[data-label]:not(:first-child)::before{content:attr(data-label) ": ";color:var(--muted);font-size:.9em}.teamtable td:empty{display:none}}
 /* Steps: phase headings in the rail, and a plain summary at the top of each step */
 .steps li.ph{padding:14px 0 4px 44px;font-family:var(--display);font-size:16px;color:var(--umber);font-weight:600}
 .steps li.ph:first-child{padding-top:0}
@@ -972,7 +973,7 @@ function renderMap() {
     m.appendChild(el("h3", {}, "Who is who"));
     const t = el("table", { class: "teamtable" });
     t.innerHTML = "<thead><tr><th>Part in the review</th><th>Person</th><th>Role to choose here</th></tr></thead><tbody>" +
-      CONTENT.team.map(r => `<tr><td>${esc(r.part)}</td><td>${esc(r.who)}</td><td>${esc(r.site_role || "")}</td></tr>`).join("") + "</tbody>";
+      CONTENT.team.map(r => `<tr><td data-label="Part in the review">${esc(r.part)}</td><td data-label="Person">${esc(r.who)}</td><td data-label="Role to choose here">${esc(r.site_role || "")}</td></tr>`).join("") + "</tbody>";
     const w = el("div", { class: "scroll" }); w.style.overflowX = "auto"; w.appendChild(t); m.appendChild(w);
   }
   const go = el("div", { class: "pager" });
