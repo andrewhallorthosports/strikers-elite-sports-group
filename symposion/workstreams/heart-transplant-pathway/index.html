@@ -315,7 +315,28 @@ dialog .err{margin-top:14px}
 .cmt .respond select,.cmt .respond input{font-family:var(--body);font-size:15px;padding:7px 9px;border:1px solid var(--rule);background:#fff;border-radius:2px;width:100%}
 .alertbar{background:var(--alert-wash);border-left:3px solid var(--alert);padding:10px 16px;margin:0 0 22px;display:flex;justify-content:space-between;align-items:center;gap:10px 18px;flex-wrap:wrap;font-size:15px}
 .alertbar b{color:var(--alert)}
-.comment-on{margin:0 0 22px}
+.comment-on{margin:0 0 22px;display:flex;gap:10px;flex-wrap:wrap}
+.suggest-btn{background:none;border:1px solid var(--teal);color:var(--teal);padding:3px 12px;border-radius:2px;font-size:14px}
+.suggest-btn:hover{background:var(--teal-wash)}
+#change-dialog{width:min(640px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto}
+.chgform{display:grid;gap:14px;margin-top:12px}
+.chgform label{display:block;font-size:14px;margin:0 0 5px}
+.chgform select,.chgform input[type=text],.chgform textarea{width:100%;font-family:var(--body);font-size:16px;padding:9px 11px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:2px}
+.chgform textarea{min-height:110px;resize:vertical;line-height:1.5}
+.chgform select:focus,.chgform input:focus,.chgform textarea:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-wash)}
+.chgform .kind{border:0;padding:0;margin:0;display:grid;gap:6px}
+.chgform .kind label{display:flex;gap:8px;align-items:flex-start;font-size:15.5px;margin:0}
+.chgform .meta{font-size:13.5px;color:var(--muted)}
+.chgform .actions{display:flex;gap:12px;flex-wrap:wrap}
+.chgdone{border-left:3px solid var(--teal);background:var(--teal-wash);padding:12px 16px;margin:12px 0}
+.suggest-note{background:var(--parchment);border-left:3px solid var(--teal);padding:10px 16px;margin:0 0 22px;display:flex;justify-content:space-between;align-items:center;gap:10px 18px;flex-wrap:wrap;font-size:15px}
+.pill.applied{border-color:var(--teal);color:var(--teal)}
+.pill.not_applied{border-color:var(--umber);color:var(--umber)}
+.pill.needs_discussion{border-color:var(--alert);color:var(--alert)}
+.pill.withdrawn{color:var(--muted)}
+.pill.kindtag{border-color:var(--navy);color:var(--navy)}
+.cmt .respond.cr{grid-template-columns:190px 170px minmax(0,1fr) auto}
+@media (max-width:760px){.cmt .respond.cr{grid-template-columns:1fr}}
 .small-btn{background:none;border:1px solid var(--teal);color:var(--teal);padding:4px 11px;border-radius:2px;font-size:14px}
 .small-btn:hover{background:var(--teal-wash)}
 @media (prefers-reduced-motion:no-preference){
@@ -358,6 +379,7 @@ dialog .err{margin-top:14px}
     <div class="platform-in">
       <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
       <div class="status">
+        <button type="button" class="suggest-btn" id="suggest-btn" hidden>Suggest a change</button>
         <div class="who" id="who" hidden><span id="who-label"></span><button type="button" id="who-change">Change</button></div>
         <div class="sync" id="sync" aria-live="polite"><span class="dot"></span><span id="sync-text">Not yet saved</span></div>
       </div>
@@ -378,6 +400,7 @@ dialog .err{margin-top:14px}
           <button data-view="search">Search strings</button>
           <button data-view="pack">Writing pack</button>
           <button data-view="decisions">Decisions</button>
+          <button data-view="changes" id="nav-changes" hidden>Changes<span class="badge" id="changes-badge" hidden></span></button>
           <button data-view="team" id="nav-team" hidden>Team</button>
         </div>
       </div>
@@ -411,6 +434,7 @@ dialog .err{margin-top:14px}
 
 <dialog id="role-dialog" aria-labelledby="role-title"><div id="role-body"></div></dialog>
 <dialog id="fix-dialog" aria-labelledby="fix-title"><div id="fix-body"></div></dialog>
+<dialog id="change-dialog" aria-labelledby="chg-title"><div id="change-body"></div></dialog>
 
 <script>
 "use strict";
@@ -776,6 +800,7 @@ async function becomePerson(p) {
   if (!person) return;
   if (state.view === "team" && !isAdmin()) state.view = "walk";
   save(); updateWho(); render(); updateSync(); flush();
+  fetchChanges();
   if (await fetchBoard(false) && (state.view === "map" || state.view === "walk")) render();
 }
 
@@ -832,10 +857,12 @@ function render() {
   const walk = state.view === "walk";
   shell.classList.toggle("wide", !walk);
   $("#rail").hidden = !walk; $("#ledger").hidden = !walk;
-  $("#read").classList.toggle("wide-read", state.view === "team" || state.view === "map" || state.view === "board");
+  updateChangeUi();
+  $("#read").classList.toggle("wide-read", state.view === "team" || state.view === "map" || state.view === "board" || state.view === "changes");
   if (walk) renderWalk();
   else if (state.view === "map") renderMap();
   else if (state.view === "board") renderBoard();
+  else if (state.view === "changes") renderChanges();
   else if (state.view === "search") renderSearch();
   else if (state.view === "pack") renderPack();
   else if (state.view === "team" && isAdmin()) renderTeam();
@@ -874,7 +901,7 @@ function renderWalk() {
       `<dt>To enter here</dt><dd>${s.records.length ? esc(s.records.map(r => r.label).join("; ")) + ". Use the box headed Results for this step." : "Nothing beyond marking the step complete."}</dd>`;
     read.appendChild(g);
   }
-  if (canPost()) { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn(`${state.route === "nested_knowledge" ? "Nested Knowledge" : "Conventional route"}, Step ${s.n}: ${s.title}`)); read.appendChild(co); }
+  if (canPost()) { const co = el("div", { class: "comment-on" }); const area = `${state.route === "nested_knowledge" ? "Nested Knowledge" : "Conventional route"}, Step ${s.n}: ${s.title}`; co.appendChild(commentOn(area)); co.appendChild(suggestOn(area)); read.appendChild(co); }
   const body = el("div", { class: "appear" }, s.html); read.appendChild(body);
   const pager = el("div", { class: "pager" });
   if (idx > 0) { const p = el("button", { class: "btn quiet", type: "button" }, "Previous step"); p.onclick = () => { state.stepIndex[state.route] = idx - 1; save(); renderWalk(); }; pager.appendChild(p); } else pager.appendChild(el("span"));
@@ -929,13 +956,18 @@ function renderMap() {
     y.innerHTML = `<h3>Your part${person.role === "readonly" ? "" : ", as " + esc(personFull(person))}</h3><p>${esc(guide)}</p>`;
     m.appendChild(y);
   }
+  if (canPost()) {
+    const sn = el("div", { class: "suggest-note" }, "<span>The review is yours to shape. If you want to change any part of it, ask for the change here and the administrator will make it and record it.</span>");
+    sn.appendChild(suggestOn("General")); m.appendChild(sn);
+  }
   m.appendChild(el("h3", {}, "How this walkthrough works"));
   const how = el("ol", { class: "howto" });
   how.innerHTML = `<li><b>Read first</b>The cover note and the protocol are in the writing pack. The eligibility table and the decision log are referred to throughout.</li>
     <li><b>Follow the phases in order</b>Use the numbered phases in the bar above, or the steps below. The order matters more than the pace: some settings cannot be changed once screening has begun.</li>
     <li><b>Record as you go</b>Where a step produces a number or a date, enter it in the box headed Results for this step, then mark the step complete. It is saved to your own record and the lead author and administrator can see where the review has reached.</li>
     <li><b>Copy, do not retype</b>Every search string is under Search strings, ready to copy into each database exactly as written.</li>
-    <li><b>Comment on the author board</b>Any author can comment on any section, step or document. Each comment is numbered, signed, timed and kept, and goes to the lead author and the administrator.</li>`;
+    <li><b>Comment on the author board</b>Any author can comment on any section, step or document. Each comment is numbered, signed, timed and kept, and goes to the lead author and the administrator.</li>
+    <li><b>Change what you need to</b>The review is yours to shape. Use Suggest a change, here or against any step, search string or document, to ask for a change to the protocol, search, methods, walkthroughs or portal. It reaches the administrator, who makes and logs it; follow its progress under Changes.</li>`;
   m.appendChild(how);
   m.appendChild(el("h3", {}, "Choose the route"));
   const rp = el("div", { class: "routepick" });
@@ -992,7 +1024,7 @@ const ukTime = iso => new Date(iso).toLocaleString("en-GB", { timeZone: "Europe/
 const draftKey = () => STORE_KEY + ".draft." + (person && person.id ? person.id : "none");
 function readDraft() { try { return JSON.parse(lsGet(draftKey()) || "null") || { section: "General", item: "", body: "", reply: null }; } catch (e) { return { section: "General", item: "", body: "", reply: null }; } }
 function writeDraft(d) { lsSet(draftKey(), JSON.stringify(d)); }
-function resetBoard() { BOARD = { loaded: false, comments: [], statuses: [], last_seen: 0, unread: 0, intact: true, checked_at: null, can_mark: false, error: null }; updateBadge(); }
+function resetBoard() { if (typeof resetChanges === "function") resetChanges(); BOARD = { loaded: false, comments: [], statuses: [], last_seen: 0, unread: 0, intact: true, checked_at: null, can_mark: false, error: null }; updateBadge(); }
 function updateBadge() {
   const b = $("#board-badge"); if (!b) return;
   b.hidden = !(BOARD.unread > 0); b.textContent = BOARD.unread > 0 ? String(BOARD.unread) : "";
@@ -1156,6 +1188,193 @@ setInterval(async () => {
 }, 60000);
 document.addEventListener("visibilitychange", async () => { if (!document.hidden && canPost()) { const onBoard = state.view === "board"; const ch = await fetchBoard(onBoard); if (onBoard && ch) renderBoard(false); } });
 
+/* ---------- Suggest a change: numbered requests from the research team to the Symposion administrator ---------- */
+let CHG = { loaded: false, requests: [], statuses: [], awaiting: 0, intact: true, checked_at: null, can_mark: false, error: null };
+const CHG_STATUS = { acknowledged: "Acknowledged", applied: "Applied", not_applied: "Not applied", needs_discussion: "Needs discussion", withdrawn: "Withdrawn" };
+const CHG_SCALE = { minor: "Minor change", wholesale: "Wholesale change", none: "" };
+const CHG_MSG = {
+  bad_request: "The request needs a part concerned and some text, up to 4000 characters, with the reason no longer than 2000.",
+  too_many: "Too many requests in a short time. Wait a few minutes and send again.",
+  not_allowed: "That action is not open to your role."
+};
+function resetChanges() { CHG = { loaded: false, requests: [], statuses: [], awaiting: 0, intact: true, checked_at: null, can_mark: false, error: null }; updateChgBadge(); }
+function updateChgBadge() {
+  const b = $("#changes-badge"); if (!b) return;
+  const n = CHG.can_mark ? CHG.awaiting : 0;
+  b.hidden = !(n > 0); b.textContent = n > 0 ? String(n) : ""; b.setAttribute("aria-label", n + " awaiting action");
+}
+function updateChangeUi() {
+  const on = canPost();
+  const sb = $("#suggest-btn"), nc = $("#nav-changes");
+  if (sb) sb.hidden = !on;
+  if (nc) nc.hidden = !on;
+}
+async function fetchChanges() {
+  if (!canPost()) return false;
+  try {
+    const r = await rpc("symposion_change_list", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred });
+    const changed = !CHG.loaded || r.requests.length !== CHG.requests.length || r.statuses.length !== CHG.statuses.length;
+    CHG = { loaded: true, ...r, error: null };
+    updateChgBadge();
+    return changed;
+  } catch (e) { CHG.error = e.message; return false; }
+}
+const chgCurrent = seq => { const l = CHG.statuses.filter(x => x.seq === seq); return l.length ? l[l.length - 1] : null; };
+function suggestOn(area, item) {
+  const b = el("button", { class: "small-btn", type: "button" }, "Suggest a change");
+  b.onclick = () => openChange({ area, item: item || "" });
+  return b;
+}
+function areaOptions() {
+  const o = sectionOptions();
+  o.push(["The portal itself", ["The portal itself (layout, wording or a fault)"]]);
+  return o;
+}
+function openChange(pre = {}) {
+  if (!canPost()) return;
+  const dlg = $("#change-dialog"), box = $("#change-body");
+  box.innerHTML = `<h3 id="chg-title">Suggest a change</h3>
+    <p class="dlg-note">The review is yours to shape. Say what you would like changed in the protocol, the search, the methods, a walkthrough or the portal, and the administrator will make the change and record it in the decision log. Each request is numbered, signed and time-stamped, reaches the administrator by email with the lead author copied, and you can follow what becomes of it under Changes.</p>
+    <form class="chgform" novalidate>
+      <fieldset class="kind"><legend class="sr">Type of request</legend>
+        <label><input type="radio" name="kind" value="change" checked> A change to the review or its documents</label>
+        <label><input type="radio" name="kind" value="query"> A question or a fault in the portal</label></fieldset>
+      <div><label for="chg-area">Part concerned</label><select id="chg-area"></select></div>
+      <div><label for="chg-item">Item, paragraph, line or table (optional)</label><input type="text" id="chg-item" maxlength="300" placeholder="For example: Methods, para 3; Table 1, row 4"></div>
+      <div id="chg-scale-row"><label for="chg-scale">Size of the change</label><select id="chg-scale"><option value="minor">Minor: a wording, a correction or a single detail</option><option value="wholesale">Wholesale: the question, eligibility, search or method</option></select></div>
+      <div><label for="chg-body" id="chg-body-label">What should change</label><textarea id="chg-body" maxlength="4000"></textarea></div>
+      <div><label for="chg-reason">Why (optional)</label><textarea id="chg-reason" maxlength="2000" style="min-height:70px"></textarea></div>
+      <p class="meta">Sent as ${esc(personFull(person))}. Once sent, a request cannot be changed; a correction is a new request.</p>
+      <div class="actions"><button class="btn live" type="submit">Send the request</button><button class="btn quiet" type="button" data-cancel>Cancel</button></div>
+    </form>`;
+  const sel = box.querySelector("#chg-area");
+  let found = false;
+  areaOptions().forEach(([g, items]) => { const og = el("optgroup", { label: g }); items.forEach(it => { const op = el("option", { value: it }); op.textContent = it; if (it === pre.area) { op.selected = true; found = true; } og.appendChild(op); }); sel.appendChild(og); });
+  if (pre.area && !found) { const op = el("option", { value: pre.area }); op.textContent = pre.area; op.selected = true; sel.prepend(op); }
+  box.querySelector("#chg-item").value = pre.item || "";
+  const form = box.querySelector("form");
+  const kindOf = () => form.querySelector("input[name=kind]:checked").value;
+  const syncKind = () => {
+    const q = kindOf() === "query";
+    box.querySelector("#chg-scale-row").hidden = q;
+    box.querySelector("#chg-body-label").textContent = q ? "Your question or the fault" : "What should change";
+  };
+  form.querySelectorAll("input[name=kind]").forEach(r => r.addEventListener("change", syncKind));
+  box.querySelector("[data-cancel]").onclick = () => dlg.close();
+  form.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    form.querySelectorAll(".err").forEach(x => x.remove());
+    const body = box.querySelector("#chg-body").value;
+    if (!body.trim()) { form.appendChild(el("div", { class: "err", role: "alert" }, "Write what should change first.")); return; }
+    const btn = form.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Sending";
+    try {
+      const r = await rpc("symposion_change_post", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_kind: kindOf(),
+        p_scale: kindOf() === "query" ? "none" : box.querySelector("#chg-scale").value, p_area: sel.value, p_item: box.querySelector("#chg-item").value,
+        p_body: body, p_reason: box.querySelector("#chg-reason").value });
+      notifyQueued();
+      fetchChanges().then(() => { if (state.view === "changes") renderChanges(false); });
+      const q = r.request;
+      box.innerHTML = `<h3 id="chg-title">Request ${q.seq} recorded</h3>
+        <div class="chgdone"><p style="margin:0">${q.kind === "query" ? "Your question" : "Your change request"} was recorded at ${esc(ukTime(q.at))} UK time and signed ${esc(q.author)}. The administrator is told by email, with the lead author copied. What becomes of it will appear under Changes.</p></div>
+        <div class="actions"><button class="btn live" type="button" data-see>See all changes</button><button class="btn quiet" type="button" data-close>Close</button></div>`;
+      box.querySelector("[data-close]").onclick = () => dlg.close();
+      box.querySelector("[data-see]").onclick = () => { dlg.close(); state.view = "changes"; save(); render(); window.scrollTo({ top: 0 }); };
+    } catch (e) {
+      btn.disabled = false; btn.textContent = "Send the request";
+      form.appendChild(el("div", { class: "err", role: "alert" }, esc((CHG_MSG[e.message] || MSG[e.message] || MSG.server) + " Your text has been kept.")));
+    }
+  });
+  syncKind();
+  if (!dlg.open) dlg.showModal();
+  setTimeout(() => { const t = box.querySelector("#chg-body"); if (t) t.focus(); }, 60);
+}
+let chgFilter = "all";
+async function renderChanges(fresh = true) {
+  const read = $("#read"); read.innerHTML = "";
+  const m = el("div", { class: "board" });
+  m.appendChild(el("p", { class: "kicker" }, "Changes"));
+  m.appendChild(el("h2", {}, "Changes the team have asked for"));
+  m.appendChild(el("p", { class: "lede" }, "The review belongs to the research team, and any part of it can be changed. A request made here is numbered, signed, stamped with the time it reached Symposion and kept; it goes to the administrator by email with the lead author copied. The administrator makes the change in the protocol, the walkthroughs and the portal, records it in the decision log, and notes here what was done. If you disagree with a request, say so on the author board."));
+  if (readOnly()) { m.appendChild(el("p", { class: "hint" }, "Change requests are open to signed-in authors. Read only access does not include them.")); read.appendChild(m); return; }
+  if (!canPost()) { m.appendChild(el("p", { class: "hint" }, "Choose your role and enter your passcode to make and follow change requests.")); read.appendChild(m); return; }
+  const newBtn = el("button", { class: "btn live", type: "button" }, "Suggest a change"); newBtn.onclick = () => openChange({ area: "General" });
+  m.appendChild(el("p", {})); m.lastChild.appendChild(newBtn);
+  const info = el("p", { class: "integrity" }); m.appendChild(info);
+  const tools = el("div", { class: "board-tools" });
+  const f = el("select", { "aria-label": "Show" });
+  [["all", "All requests"], ["open", "Awaiting action"], ["applied", "Applied"], ["not_applied", "Not applied"], ["needs_discussion", "Needs discussion"], ["withdrawn", "Withdrawn"]].forEach(([k, t]) => { const op = el("option", { value: k }); op.textContent = t; if (k === chgFilter) op.selected = true; f.appendChild(op); });
+  f.onchange = () => { chgFilter = f.value; renderChanges(false); };
+  tools.appendChild(f); tools.appendChild(el("span", { class: "spacer" }));
+  const rf = el("button", { class: "small-btn", type: "button" }, "Refresh"); rf.onclick = async () => { await fetchChanges(); renderChanges(false); };
+  tools.appendChild(rf);
+  if (CHG.can_mark) { const ex = el("button", { class: "small-btn", type: "button" }, "Download the record (CSV)"); ex.onclick = exportChanges; tools.appendChild(ex); }
+  m.appendChild(tools);
+  const list = el("ol", { class: "comments", reversed: "" }); m.appendChild(list);
+  read.appendChild(m);
+  if (fresh) { list.appendChild(el("li", { class: "hint" }, "Loading.")); await fetchChanges(); if (state.view !== "changes") return; list.innerHTML = ""; if (CHG.can_mark) notifyQueued(); }
+  info.innerHTML = CHG.error ? `<span class="bad">The requests could not be loaded. ${esc(MSG[CHG.error] || MSG.offline)}</span>`
+    : (CHG.intact ? `<span class="okk">Record intact</span><span>Every request's SHA-512 hash was checked against the one before it at ${esc(fmtTime(CHG.checked_at))}.</span>`
+                  : `<span class="bad">The record failed its integrity check. Tell the administrator at once.</span>`) + `<span>${CHG.requests.length} ${CHG.requests.length === 1 ? "request" : "requests"}.</span>`;
+  const cur = c => { const s = chgCurrent(c.seq); return s ? s.status : null; };
+  const shown = CHG.requests.slice().reverse().filter(c => chgFilter === "all" ? true : chgFilter === "open" ? !cur(c) : cur(c) === chgFilter);
+  if (!shown.length) list.appendChild(el("li", { class: "hint" }, CHG.requests.length ? "No requests match this filter." : "No requests yet. The first request will be number 1."));
+  shown.forEach(c => {
+    const li = el("li", { class: "cmt", id: "change-" + c.seq });
+    const st = cur(c);
+    li.appendChild(el("div", { class: "ch" }, `<span class="cn">${c.seq}</span><span class="ca">${esc(c.author)}</span><span>${esc(ukTime(c.at))} UK time</span>` +
+      `<span class="pill kindtag">${c.kind === "query" ? "Question" : esc(CHG_SCALE[c.scale] || "Change")}</span><span class="pill ${st || ""}">${esc(st ? CHG_STATUS[st] : "Awaiting action")}</span>`));
+    li.appendChild(el("p", { class: "cref" }, `<span>Part concerned:</span> ${esc(c.area)}` + (c.item ? ` &nbsp;<span>Item:</span> ${esc(c.item)}` : "")));
+    const b = el("p", { class: "cb" }); b.textContent = c.body; li.appendChild(b);
+    if (c.reason) { const r = el("p", { class: "cb" }); r.innerHTML = "<b>Why:</b> "; r.appendChild(document.createTextNode(c.reason)); li.appendChild(r); }
+    const hist = CHG.statuses.filter(x => x.seq === c.seq);
+    if (hist.length) { const h = el("div", { class: "cst" }); h.innerHTML = "<ul>" + hist.map(x => `<li><b>${esc(CHG_STATUS[x.status])}</b>${x.decision_ref ? " (decision log " + esc(x.decision_ref) + ")" : ""} by ${esc(x.by)}, ${esc(ukTime(x.at))}${x.note ? ": " + esc(x.note) : ""}</li>`).join("") + "</ul>"; li.appendChild(h); }
+    const acts = el("div", { class: "cact" });
+    if (c.person_id === person.id && st !== "withdrawn") {
+      const w = el("button", { class: "linkish", type: "button" }, "Withdraw this request");
+      w.onclick = async () => { w.disabled = true; try { await rpc("symposion_change_status", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_seq: c.seq, p_status: "withdrawn", p_note: "", p_ref: "" }); await fetchChanges(); renderChanges(false); } catch (e) { w.disabled = false; li.appendChild(el("div", { class: "err", role: "alert" }, esc(CHG_MSG[e.message] || MSG[e.message] || MSG.server))); } };
+      acts.appendChild(w);
+    }
+    if (CHG.can_mark) {
+      const rr = el("button", { class: "linkish", type: "button" }, "Record what was done");
+      rr.onclick = () => {
+        if (li.querySelector(".respond")) return;
+        const fm = el("div", { class: "respond cr" });
+        fm.innerHTML = `<select aria-label="Outcome"><option value="acknowledged">Acknowledged</option><option value="applied">Applied</option><option value="not_applied">Not applied</option><option value="needs_discussion">Needs discussion</option></select><input maxlength="40" aria-label="Decision log entry" placeholder="Decision log entry, e.g. D51"><input maxlength="1000" aria-label="Note" placeholder="Note: what was changed and where, or why not"><button class="btn live" type="button">Save</button>`;
+        const inputs = fm.querySelectorAll("input");
+        fm.querySelector("button").onclick = async ev => {
+          ev.currentTarget.disabled = true;
+          try { await rpc("symposion_change_status", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_seq: c.seq, p_status: fm.querySelector("select").value, p_note: inputs[1].value, p_ref: inputs[0].value }); await fetchChanges(); renderChanges(false); }
+          catch (e) { ev.currentTarget.disabled = false; fm.appendChild(el("div", { class: "err", role: "alert" }, esc(CHG_MSG[e.message] || MSG[e.message] || MSG.server))); }
+        };
+        li.appendChild(fm);
+      };
+      acts.appendChild(rr);
+    }
+    li.appendChild(acts); list.appendChild(li);
+  });
+}
+function exportChanges() {
+  const q = v => '"' + String(v ?? "").replace(/"/g, '""') + '"';
+  const head = ["request", "entered_utc", "author", "role", "person_id", "type", "size", "part_concerned", "item", "request_text", "reason", "current_outcome", "outcome_history", "previous_hash", "sha512_hash"];
+  const rows = CHG.requests.map(c => { const s = chgCurrent(c.seq); return [c.seq, c.at_utc, c.author, c.role, c.person_id, c.kind, c.scale, c.area, c.item, c.body, c.reason, s ? CHG_STATUS[s.status] : "Awaiting action",
+    CHG.statuses.filter(x => x.seq === c.seq).map(x => `${CHG_STATUS[x.status]}${x.decision_ref ? " (" + x.decision_ref + ")" : ""} by ${x.by} at ${x.at}${x.note ? ": " + x.note : ""}`).join(" | "), c.prev_hash, c.hash].map(q).join(","); });
+  const csv = "﻿" + head.join(",") + "\n" + rows.join("\n") + "\n";
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  const stamp = new Date().toISOString().slice(0, 10);
+  const a = el("a", { href: url, download: `${CONFIG.workstream}_change_requests_${stamp}.csv` }); document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+setInterval(async () => {
+  if (document.hidden || !canPost()) return;
+  const on = state.view === "changes";
+  const ch = await fetchChanges();
+  if (on && ch) renderChanges(false);
+}, 90000);
+$("#suggest-btn").addEventListener("click", () => {
+  const w = state.view === "walk" && CONTENT ? steps()[state.stepIndex[state.route]] : null;
+  openChange({ area: w ? `${state.route === "nested_knowledge" ? "Nested Knowledge" : "Conventional route"}, Step ${w.n}: ${w.title}` : "General" });
+});
+
 function renderLedger(s) {
   const led = $("#ledger");
   const rec = state.steps[state.route][s.key] || { values: {} };
@@ -1206,7 +1425,7 @@ function renderSearch() {
     const c = el("button", { class: "copy", type: "button" }, "Copy");
     c.onclick = async () => { try { await navigator.clipboard.writeText(d.lines.join("\n")); c.textContent = "Copied"; setTimeout(() => c.textContent = "Copy", 1800); } catch (e) { c.textContent = "Select and copy manually"; } };
     const hb = el("div", { style: "display:flex;gap:8px;flex-wrap:wrap;flex:0 0 auto" }); hb.appendChild(c);
-    if (canPost()) hb.appendChild(commentOn("Search strings: " + d.db));
+    if (canPost()) { hb.appendChild(commentOn("Search strings: " + d.db)); hb.appendChild(suggestOn("Search strings: " + d.db)); }
     head.appendChild(hb); box.appendChild(head);
     box.appendChild(el("p", { class: "note" + (/Not tested/.test(d.note) ? " untested" : "") }, d.note));
     if (d.lines.length === 1) { const pre = el("pre"); pre.textContent = d.lines[0]; box.appendChild(pre); }
@@ -1240,7 +1459,7 @@ function renderPack() {
       b.disabled = false;
     };
     const bw = el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;align-items:center" }); bw.appendChild(b);
-    if (canPost()) bw.appendChild(commentOn("Writing pack: " + p.label));
+    if (canPost()) { bw.appendChild(commentOn("Writing pack: " + p.label)); bw.appendChild(suggestOn("Writing pack: " + p.label)); }
     li.appendChild(bw); ul.appendChild(li);
   });
   read.appendChild(ul);
@@ -1252,6 +1471,7 @@ function renderDecisions() {
   const read = $("#read"); read.innerHTML = "";
   read.appendChild(el("p", { class: "kicker" }, "Decision log"));
   read.appendChild(el("h2", {}, "What has been decided, and when"));
+  if (canPost()) { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn("Decisions")); co.appendChild(suggestOn("Decisions")); read.appendChild(co); }
   read.appendChild(el("div", { class: "log" }, CONTENT.decisions_html));
 }
 
