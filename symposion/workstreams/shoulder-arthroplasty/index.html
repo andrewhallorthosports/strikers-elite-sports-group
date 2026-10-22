@@ -25,6 +25,31 @@ a:hover{color:var(--teal)}
 button{font-family:var(--body);font-size:15px;cursor:pointer}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [hidden]{display:none!important}
+/* page view: the Word pages as laid out, with a selectable text layer and paragraph notes in the margin */
+.shell:has(.pv-doc){max-width:1520px;grid-template-columns:230px minmax(0,1fr) 260px;gap:32px}
+body:has(.pv-doc) .top-in,body:has(.pv-doc) .mainnav-in,body:has(.pv-doc) .platform-in,body:has(.pv-doc) .foot-in{max-width:1520px}
+@media (max-width:1100px){.shell:has(.pv-doc){grid-template-columns:220px minmax(0,1fr)}}
+@media (max-width:780px){.shell:has(.pv-doc){grid-template-columns:minmax(0,1fr)}}
+.read:has(.pv-doc),.read:has(.pv-preview){max-width:none}
+.pv-switch{display:flex;gap:0;justify-content:flex-end;margin:0 0 12px}
+.pv-switch button{background:none;border:1px solid var(--rule);padding:3px 12px;font-size:13.5px;color:var(--muted)}
+.pv-switch button+button{border-left:0}
+.pv-switch button[aria-pressed="true"]{border-color:var(--navy);color:var(--navy);background:var(--bone)}
+@media (max-width:759px){.pv-switch,.pv-prevbtn{display:none!important}}
+.pv-doc,.pv-preview{display:grid;gap:18px;padding:18px;background:#E9E6DF;border:1px solid var(--rule)}
+.pv-preview{grid-column:1/-1;margin-top:4px}
+.pv-page{position:relative;background:#fff;box-shadow:0 1px 3px rgba(20,30,50,.18);container-type:inline-size;overflow:hidden}
+.pv-page img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-select:none}
+.pv-page .pv-wait{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
+.pv-dim{position:absolute;left:0;right:0;background:rgba(233,230,223,.78);pointer-events:none}
+.pv-text{position:absolute;inset:0;line-height:1;font-family:"Times New Roman",Times,"Liberation Serif",serif}
+.pv-text span{position:absolute;white-space:pre;color:transparent;transform-origin:0 0;cursor:text}
+.pv-text span::selection{background:rgba(31,111,120,.28);color:transparent}
+.pv-para{position:absolute;pointer-events:none;border-left:2px solid transparent;transition:background .12s}
+.pv-para.hot{background:rgba(31,111,120,.06);border-left-color:var(--teal)}
+.pv-note{position:absolute;right:.6%;transform:translateY(-1px);background:#fff;border:1px solid var(--navy);color:var(--navy);font-size:11.5px;line-height:1.3;padding:1px 6px;border-radius:2px;opacity:0;z-index:2}
+.pv-note.on,.pv-note:focus-visible{opacity:1}
+.pv-note.noted{opacity:.85;border-color:var(--teal);color:var(--teal)}
 /* manuscript review: numbered paragraphs, open queries and task cards */
 .ms .sub{font-family:var(--display);font-size:21px;color:var(--navy);margin:26px 0 8px}
 .para{display:grid;grid-template-columns:34px 1fr auto;gap:0 10px;align-items:start;padding:6px 0;border-top:1px solid transparent}
@@ -472,7 +497,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_2", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_3", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -1447,6 +1472,106 @@ function updateTally() {
   const all = Object.values(TASKS()), n = all.filter(taskStatus).length;
   const t = $("#tally"); if (t) t.innerHTML = `<strong>${n} of ${all.length}</strong> tasks answered.`;
 }
+/* ---------- page view: the section on the Word pages, decrypted page by page as they come into view ---------- */
+const PV = () => (CONTENT && CONTENT.pageview) || null;
+const PV_WIDE = window.matchMedia("(min-width: 760px)");
+const pvMode = () => state.open.pv || "page";
+const pageViewOn = s => s.kind === "section" && !!PV() && !!PV().sections[s.section_key] && PV_WIDE.matches && pvMode() === "page";
+PV_WIDE.addEventListener("change", () => { if (CONTENT && state.view === "walk") renderWalk(); });
+function viewSwitch() {
+  const bar = el("div", { class: "pv-switch", role: "group", "aria-label": "Show the section as" });
+  [["page", "Word pages"], ["text", "Text"]].forEach(([k, lab]) => {
+    const b = el("button", { type: "button", "aria-pressed": String(pvMode() === k) }, lab);
+    b.onclick = () => { state.open.pv = k; save(); renderWalk(); };
+    bar.appendChild(b);
+  });
+  return bar;
+}
+const pageCache = new Map();
+function pageURL(pg) {
+  if (!pageCache.has(pg.enc)) pageCache.set(pg.enc, (async () => {
+    const r = await fetch(pg.enc, { cache: "force-cache" });
+    if (!r.ok) throw new Error("page");
+    const plain = await decryptBytes(KEY, pg.iv, new Uint8Array(await r.arrayBuffer()));
+    return URL.createObjectURL(new Blob([plain], { type: "image/webp" }));
+  })().catch(e => { pageCache.delete(pg.enc); throw e; }));
+  return pageCache.get(pg.enc);
+}
+const pageObserver = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return; pageObserver.unobserve(e.target); e.target._show();
+}), { rootMargin: "900px 0px" }) : null;
+function pageBox(pg, n, withText) {
+  const box = el("div", { class: "pv-page", style: `aspect-ratio:${pg.w} / ${pg.h}`, "data-page": String(n) });
+  const wait = el("div", { class: "pv-wait" }, "Page " + n);
+  const img = el("img", { alt: "Page " + n, decoding: "async", draggable: "false" });
+  box.appendChild(wait); box.appendChild(img);
+  let tl = null;
+  if (withText && pg.lines) {
+    tl = el("div", { class: "pv-text" });
+    pg.lines.forEach(([x, y, w, h, t, sz]) => {
+      const sp = el("span"); sp.textContent = t;
+      sp.style.cssText = `left:${x / pg.w * 100}%;top:${y / pg.h * 100}%;font-size:${sz / pg.w * 100}cqw;height:${h / pg.h * 100}%`;
+      sp.dataset.w = w / pg.w; tl.appendChild(sp);
+    });
+    box.appendChild(tl);
+  }
+  box._show = () => {
+    pageURL(pg).then(u => { img.src = u; img.onload = () => wait.remove(); }).catch(() => { wait.textContent = "This page could not be loaded. Reload to try again."; });
+    if (tl) requestAnimationFrame(() => {
+      const W = box.clientWidth; if (!W) return;
+      tl.querySelectorAll("span").forEach(sp => { const nat = sp.getBoundingClientRect().width; if (nat > 0) sp.style.transform = `scaleX(${(+sp.dataset.w * W) / nat})`; });
+    });
+  };
+  if (pageObserver) pageObserver.observe(box); else box._show();
+  return box;
+}
+function pageView(s) {
+  const V = PV(), sec = V.sections[s.section_key], [c0, c1] = V.column;
+  const doc = el("div", { class: "pv-doc", role: "region", "aria-label": s.title + ", as laid out in the Word file" });
+  const anchors = Object.keys(V.para).filter(a => a.slice(0, a.lastIndexOf("-")) === s.section_key);
+  const noted = new Set((BOARD.comments || []).filter(c => c.section === s.title).map(c => String(c.item || "").replace(/\D/g, "")));
+  for (let pn = sec.from[0]; pn <= sec.to[0]; pn++) {
+    const pg = V.pages[pn], box = pageBox(pg, pn + 1, true);
+    const top = pn === sec.from[0] ? sec.from[1] : 0, bot = pn === sec.to[0] ? sec.to[1] : pg.h;
+    if (top > pg.h * 0.07) box.appendChild(el("div", { class: "pv-dim", style: `top:0;height:${top / pg.h * 100}%` }));
+    if (bot < pg.h * 0.93) box.appendChild(el("div", { class: "pv-dim", style: `top:${bot / pg.h * 100}%;bottom:0` }));
+    const here = [];
+    anchors.forEach(a => V.para[a].forEach((b, k) => {
+      if (b.page !== pn) return;
+      const n = a.slice(a.lastIndexOf("-") + 1);
+      const r = el("div", { class: "pv-para", style: `left:${(c0 - 7) / pg.w * 100}%;width:${(c1 - c0 + 9) / pg.w * 100}%;top:${(b.y0 - 2) / pg.h * 100}%;height:${(b.y1 - b.y0 + 4) / pg.h * 100}%` });
+      box.appendChild(r);
+      let btn = null;
+      if (canPost() && V.para[a][0].page === pn && k === 0) {
+        btn = el("button", { class: "pv-note" + (noted.has(n) ? " noted" : ""), type: "button", "aria-label": "Annotate paragraph " + n, title: "Paragraph " + n,
+                             style: `top:${b.y0 / pg.h * 100}%` }, "Annotate");
+        btn.onclick = () => openBoard({ section: s.title, item: "Paragraph " + n, reply: null });
+        btn.onfocus = () => r.classList.add("hot"); btn.onblur = () => r.classList.remove("hot");
+        box.appendChild(btn);
+      }
+      here.push({ b, r, btn, a });
+    }));
+    let cur = null;
+    const pick = y => here.find(h => y >= h.b.y0 - 4 && y <= h.b.y1 + 4) || null;
+    box.addEventListener("mousemove", e => {
+      const rect = box.getBoundingClientRect(), y = (e.clientY - rect.top) / rect.height * pg.h;
+      const h = pick(y);
+      if (h === cur) return;
+      if (cur) { cur.r.classList.remove("hot"); here.filter(x => x.a === cur.a).forEach(x => x.r.classList.remove("hot")); const fb = here.find(x => x.a === cur.a && x.btn); if (fb) fb.btn.classList.remove("on"); }
+      cur = h;
+      if (h) { here.filter(x => x.a === h.a).forEach(x => x.r.classList.add("hot")); const fb = here.find(x => x.a === h.a && x.btn); if (fb) fb.btn.classList.add("on"); }
+    });
+    box.addEventListener("mouseleave", () => { here.forEach(x => { x.r.classList.remove("hot"); if (x.btn) x.btn.classList.remove("on"); }); cur = null; });
+    doc.appendChild(box);
+  }
+  return doc;
+}
+function previewPanel(p) {
+  const pages = p.preview === "ms" ? (PV() ? PV().pages : []) : (p.preview || []);
+  const panel = el("div", { class: "pv-preview", role: "region", "aria-label": "Preview of " + p.file });
+  pages.forEach((pg, i) => panel.appendChild(pageBox(pg, i + 1, false)));
+  return panel;
+}
 function renderBody(s) {
   const wrap = el("div", { class: "appear ms" });
   if (s.kind === "tasks") {
@@ -1477,6 +1602,8 @@ function renderBody(s) {
     wrap.appendChild(q);
     wrap.appendChild(el("h3", { class: "sub" }, "The section"));
   }
+  if (PV() && PV().sections[s.section_key]) wrap.appendChild(viewSwitch());
+  if (pageViewOn(s)) { wrap.appendChild(pageView(s)); return wrap; }
   wrap.insertAdjacentHTML("beforeend", s.html);
   const noted = new Set((BOARD.comments || []).filter(c => c.section === s.title).map(c => String(c.item || "").replace(/\D/g, "")));
   wrap.querySelectorAll(".para").forEach(p => {
@@ -1498,7 +1625,7 @@ function renderLedger(s) {
     const list = s.task_ids.map(id => TASKS()[id]).filter(Boolean), n = list.filter(taskStatus).length;
     led.appendChild(el("p", { class: "hint" }, `${n} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`));
   } else {
-    led.appendChild(el("p", { class: "hint" }, ro ? "Read only: nothing can be entered or saved." : "Each answer saves to your own record as you give it. To comment on a single paragraph, use Annotate beside it."));
+    led.appendChild(el("p", { class: "hint" }, ro ? "Read only: nothing can be entered or saved." : "Each answer saves to your own record as you give it. To comment on a single paragraph, use Annotate beside it (on the Word pages, it appears in the margin as you point at the paragraph)."));
     (s.task_ids || []).filter(id => TASKS()[id] && TASKS()[id].kind === "review").forEach(id => led.appendChild(taskCard(TASKS()[id], { bare: true })));
   }
   const acts = el("div", { class: "actions" });
@@ -1597,6 +1724,15 @@ function packItem(p) {
     b.disabled = false;
   };
   const bw = el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;align-items:center" }); bw.appendChild(b);
+  if (p.preview && (p.preview !== "ms" || PV())) {
+    const pb = el("button", { class: "btn quiet pv-prevbtn", type: "button", "aria-expanded": "false" }, "Preview");
+    let panel = null;
+    pb.onclick = () => {
+      if (panel) { panel.remove(); panel = null; pb.textContent = "Preview"; pb.setAttribute("aria-expanded", "false"); return; }
+      panel = previewPanel(p); li.appendChild(panel); pb.textContent = "Close preview"; pb.setAttribute("aria-expanded", "true");
+    };
+    bw.appendChild(pb);
+  }
   li.appendChild(bw);
   return li;
 }
