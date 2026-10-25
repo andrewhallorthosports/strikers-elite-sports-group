@@ -101,6 +101,8 @@ button{font-family:var(--body);font-size:15px;cursor:pointer}
 .sync .dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
 .sync.ok .dot{background:var(--teal)}
 .sync.pending .dot{background:var(--umber)}
+.sync.warn{color:#8a2d1c;white-space:normal}
+.sync.warn .dot{background:#b3412a}
 
 .shell{max-width:1240px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:270px minmax(0,1fr) 290px;gap:40px;align-items:start}
 .shell.wide{grid-template-columns:minmax(0,1fr)}
@@ -1382,7 +1384,7 @@ function renderLedger(s) {
   led.innerHTML = `<h4>Results for this step</h4>`;
   const ro = readOnly();
   led.appendChild(el("p", { class: "hint" }, ro ? "Read only: you can read every step, but nothing can be entered or saved."
-    : s.records.length ? "Enter what this step produced, once you have it. Each entry saves to your own record as you leave the box." : "Nothing to enter here beyond marking the step complete."));
+    : s.records.length ? "Enter what this step produced, once you have it. Each entry saves to your own record as you type." : "Nothing to enter here beyond marking the step complete."));
   s.records.forEach(r => {
     const f = el("div", { class: "field" });
     const id = "f-" + s.key + "-" + r.key;
@@ -1390,11 +1392,16 @@ function renderLedger(s) {
     const inp = el("input", { id, type: r.type === "number" ? "number" : "text", inputmode: r.type === "number" ? "decimal" : "text", step: "any", maxlength: "200" });
     inp.value = (rec.values || {})[r.key] ?? "";
     if (ro) inp.disabled = true;
-    inp.addEventListener("change", () => {
+    const keep = () => {
       const cur = state.steps[state.route][s.key] || { values: {} };
-      cur.values = cur.values || {}; cur.values[r.key] = inp.value; state.steps[state.route][s.key] = cur; save();
+      cur.values = cur.values || {};
+      if (cur.values[r.key] === inp.value) return;
+      cur.values[r.key] = inp.value; state.steps[state.route][s.key] = cur; save();
       queueEvent(s.key, "recorded", { [r.key]: inp.value });
-    });
+    };
+    inp.addEventListener("change", keep);
+    let typing = null;
+    inp.addEventListener("input", () => { clearTimeout(typing); typing = setTimeout(keep, 1200); });
     f.appendChild(inp);
     if (r.help) { const h = el("p", { class: "help", id: id + "-h" }, esc(r.help)); inp.setAttribute("aria-describedby", id + "-h"); f.appendChild(h); }
     led.appendChild(f);
@@ -1494,7 +1501,7 @@ async function flush() {
           p_recorded: q.recorded, p_client_ref: clientRef(), p_page_version: CONFIG.version, p_pass: cred });
       } catch (e) {
         if (!person || person.id !== who) break;
-        if (e.message === "bad_event") { state.queue.shift(); save(); continue; }
+        if (e.message === "bad_event") { state.refused = (state.refused || []).concat([q]); state.queue.shift(); save(); continue; }
         if (e.message === "person_gone") { personGone(); return; }
         break;
       }
@@ -1507,11 +1514,16 @@ async function flush() {
 function updateSync() {
   const box = $("#sync"), t = $("#sync-text");
   if (!person || readOnly()) { box.className = "sync"; t.textContent = readOnly() ? "Nothing is saved in read only" : ""; return; }
-  if (state.queue.length) { box.className = "sync pending"; t.textContent = state.queue.length === 1 ? "1 change waiting to save" : state.queue.length + " changes waiting to save"; }
+  const oldest = state.queue.length ? Date.now() - new Date(state.queue[0].local_at).getTime() : 0;
+  if ((state.refused || []).length) { box.className = "sync warn"; t.textContent = `${state.refused.length} ${state.refused.length === 1 ? "change was" : "changes were"} refused by Symposion and kept on this device: please tell the administrator`; }
+  else if (state.queue.length && oldest > 60000) { box.className = "sync warn"; t.textContent = `${state.queue.length} ${state.queue.length === 1 ? "change has" : "changes have"} not reached Symposion yet; kept on this device and retried`; }
+  else if (state.queue.length) { box.className = "sync pending"; t.textContent = state.queue.length === 1 ? "1 change waiting to save" : state.queue.length + " changes waiting to save"; }
   else if (state.lastSync) { box.className = "sync ok"; t.textContent = "Progress saved " + fmtTime(state.lastSync); }
   else { box.className = "sync"; t.textContent = "Nothing to save yet"; }
 }
 window.addEventListener("online", flush);
+document.addEventListener("visibilitychange", () => { if (document.hidden) { document.querySelectorAll("#read textarea, #read input[type=text], #read input[type=number], #read input[type=date], #ledger input[type=text], #ledger input[type=number], #ledger textarea").forEach(i => i.dispatchEvent(new Event("change"))); flush(); } });
+setInterval(() => { updateSync(); if (state.queue.length) flush(); }, 20000);
 
 /* ---------- administrator: team progress, passcode resets and registrations ---------- */
 function foldPerson(events) {

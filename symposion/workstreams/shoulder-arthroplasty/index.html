@@ -164,6 +164,8 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .sync .dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
 .sync.ok .dot{background:var(--teal)}
 .sync.pending .dot{background:var(--umber)}
+.sync.warn{color:#8a2d1c;white-space:normal}
+.sync.warn .dot{background:#b3412a}
 
 .shell{max-width:1240px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:270px minmax(0,1fr) 290px;gap:40px;align-items:start}
 .shell.wide{grid-template-columns:minmax(0,1fr)}
@@ -497,7 +499,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_3", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_4", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -1033,10 +1035,10 @@ function renderMap() {
   if (person && person.id && !readOnly()) {
     const all = Object.values(TASKS()), n = all.filter(taskStatus).length;
     const x = el("div", { class: "exportbox" });
-    x.appendChild(el("p", {}, `${all.length ? `<b>${n} of ${all.length}</b> tasks answered. ` : ""}Export your answers, annotations and suggested changes as a single JSON file and send it to ${esc(CONTENT.meta.return_to)}. Everything is also saved at Symposion as you go, so the file is a signed copy rather than the only record.`));
-    const b = el("button", { class: "btn live", type: "button" }, "Export my review (JSON)");
+    x.appendChild(el("p", {}, `${all.length ? `<b>${n} of ${all.length}</b> tasks answered. ` : ""}Everything you enter here, your answers, annotations and suggested changes, is saved at Symposion as you go and is seen by ${esc(CONTENT.meta.return_to)}, so there is nothing to send. If you would like a signed copy for your own records, you can export one.`));
+    const b = el("button", { class: "btn quiet", type: "button" }, "Export a copy (JSON)");
     b.onclick = () => exportReview(); x.appendChild(b);
-    if (state.queue.length) x.appendChild(el("p", { class: "hint" }, "Some answers are still waiting to save. They are included in the file, and will reach Symposion when the connection returns."));
+    if (state.queue.length) x.appendChild(el("p", { class: "hint" }, "Some answers have not reached Symposion yet. They are kept on this device and will be sent when the connection returns."));
     m.appendChild(x);
   }
   const go = el("div", { class: "pager" });
@@ -1421,7 +1423,9 @@ function taskStatus(t) {
 function setValue(t, key, value) {
   const all = state.steps[ROUTE];
   const cur = all[t.id] || { values: {} };
-  cur.values = cur.values || {}; cur.values[key] = value; all[t.id] = cur; save();
+  cur.values = cur.values || {};
+  if (cur.values[key] === value) return;
+  cur.values[key] = value; all[t.id] = cur; save();
   queueEvent(t.id, "recorded", { [key]: value });
 }
 function taskCard(t, opts = {}) {
@@ -1461,6 +1465,8 @@ function taskCard(t, opts = {}) {
       inp.value = v[f.key] ?? "";
       if (ro) inp.disabled = true;
       inp.addEventListener("change", () => { setValue(t, f.key, inp.value); refreshCard(c, t); });
+      let typing = null;
+      inp.addEventListener("input", () => { clearTimeout(typing); typing = setTimeout(() => { setValue(t, f.key, inp.value); refreshCard(c, t); }, 1200); });
       w.appendChild(inp); c.appendChild(w);
     }
   });
@@ -1668,7 +1674,7 @@ async function exportReview() {
     manuscript: { file: CONTENT.meta.ms_file, label: CONTENT.meta.ms_label, sha512: CONTENT.meta.ms_sha512 },
     task_register_sha512: CONTENT.meta.tasks_sha512, exported_utc: new Date().toISOString(),
     person: person ? { id: person.id || null, role: person.role, role_title: roleDef(person.role).title, name: personName(person) } : null,
-    unsaved_changes: state.queue.length,
+    unsaved_changes: state.queue.length, refused_changes: (state.refused || []).length,
     ...responsesFor(state.steps),
     annotations: (BOARD.comments || []).filter(mine).map(c => ({ number: c.seq, entered_utc: c.at_utc, section: c.section, item: c.item, reply_to: c.reply_to ?? null, text: c.body,
       current_response: currentStatus(c.seq) || null, sha512: c.hash })),
@@ -1772,7 +1778,7 @@ async function flush() {
           p_recorded: q.recorded, p_client_ref: clientRef(), p_page_version: CONFIG.version, p_pass: cred });
       } catch (e) {
         if (!person || person.id !== who) break;
-        if (e.message === "bad_event") { state.queue.shift(); save(); continue; }
+        if (e.message === "bad_event") { state.refused = (state.refused || []).concat([q]); state.queue.shift(); save(); continue; }
         if (e.message === "person_gone") { personGone(); return; }
         break;
       }
@@ -1785,11 +1791,16 @@ async function flush() {
 function updateSync() {
   const box = $("#sync"), t = $("#sync-text");
   if (!person || readOnly()) { box.className = "sync"; t.textContent = readOnly() ? "Nothing is saved in read only" : ""; return; }
-  if (state.queue.length) { box.className = "sync pending"; t.textContent = state.queue.length === 1 ? "1 change waiting to save" : state.queue.length + " changes waiting to save"; }
+  const oldest = state.queue.length ? Date.now() - new Date(state.queue[0].local_at).getTime() : 0;
+  if ((state.refused || []).length) { box.className = "sync warn"; t.textContent = `${state.refused.length} ${state.refused.length === 1 ? "change was" : "changes were"} refused by Symposion and kept on this device: please tell the administrator`; }
+  else if (state.queue.length && oldest > 60000) { box.className = "sync warn"; t.textContent = `${state.queue.length} ${state.queue.length === 1 ? "change has" : "changes have"} not reached Symposion yet; kept on this device and retried`; }
+  else if (state.queue.length) { box.className = "sync pending"; t.textContent = state.queue.length === 1 ? "1 change waiting to save" : state.queue.length + " changes waiting to save"; }
   else if (state.lastSync) { box.className = "sync ok"; t.textContent = "Progress saved " + fmtTime(state.lastSync); }
   else { box.className = "sync"; t.textContent = "Nothing to save yet"; }
 }
 window.addEventListener("online", flush);
+document.addEventListener("visibilitychange", () => { if (document.hidden) { document.querySelectorAll("#read textarea, #read input[type=text], #read input[type=number], #read input[type=date], #ledger input[type=text], #ledger input[type=number], #ledger textarea").forEach(i => i.dispatchEvent(new Event("change"))); flush(); } });
+setInterval(() => { updateSync(); if (state.queue.length) flush(); }, 20000);
 
 /* ---------- administrator: team progress, passcode resets and registrations ---------- */
 function foldPerson(events) {
