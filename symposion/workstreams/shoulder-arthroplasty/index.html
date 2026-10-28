@@ -25,6 +25,7 @@ a:hover{color:var(--teal)}
 button{font-family:var(--body);font-size:15px;cursor:pointer}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [hidden]{display:none!important}
+.charcount{font-size:.78rem;color:var(--muted,#6a6355);text-align:right;margin-top:2px}.charcount.full{color:#8a2d1c;font-weight:600}
 /* page view: the Word pages as laid out, with a selectable text layer and paragraph notes in the margin */
 .shell:has(.pv-doc){max-width:1520px;grid-template-columns:230px minmax(0,1fr) 260px;gap:32px}
 body:has(.pv-doc) .top-in,body:has(.pv-doc) .mainnav-in,body:has(.pv-doc) .platform-in,body:has(.pv-doc) .foot-in{max-width:1520px}
@@ -499,7 +500,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_4", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_6", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -1460,14 +1461,19 @@ function taskCard(t, opts = {}) {
     } else {
       const w = el("div", { class: "field" });
       w.appendChild(el("label", { for: id }, esc(f.label)));
-      const inp = f.type === "textarea" ? el("textarea", { id, maxlength: "1200" })
+      const inp = f.type === "textarea" ? el("textarea", { id, maxlength: "3500" })
         : el("input", { id, type: f.type === "date" ? "date" : f.type === "number" ? "number" : "text", step: "any", maxlength: "300" });
       inp.value = v[f.key] ?? "";
       if (ro) inp.disabled = true;
       inp.addEventListener("change", () => { setValue(t, f.key, inp.value); refreshCard(c, t); });
       let typing = null;
       inp.addEventListener("input", () => { clearTimeout(typing); typing = setTimeout(() => { setValue(t, f.key, inp.value); refreshCard(c, t); }, 1200); });
-      w.appendChild(inp); c.appendChild(w);
+      w.appendChild(inp);
+      if (f.type === "textarea") {   // visible limit, so a long paste is never cut off unnoticed (28 October 2026)
+        const cnt = el("div", { class: "charcount" }); const upd = () => { cnt.textContent = `${inp.value.length.toLocaleString("en-GB")} of 3,500 characters`; cnt.classList.toggle("full", inp.value.length >= 3500); };
+        inp.addEventListener("input", upd); upd(); w.appendChild(cnt);
+      }
+      c.appendChild(w);
     }
   });
   if (canPost() && t.kind !== "review") { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn(t.study ? `Study ${t.study.study_id}: ${t.study.author.split(",")[0]} ${t.study.year}` : t.title)); c.appendChild(co); }
