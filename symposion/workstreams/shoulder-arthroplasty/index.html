@@ -425,14 +425,14 @@ dialog .err{margin-top:14px}
       <ul class="partners gate-partners" aria-label="Principal institutions"></ul>
       <p class="gate-kicker">Scoping review, Part 1</p>
       <h1 id="gate-title">Shoulder arthroplasty in the management of shoulder trauma</h1>
-      <p>The manuscript, section by section, with the lead reviewer&rsquo;s tasks and the author board. Enter the passcode you were sent to open it.</p>
+      <p>The manuscript for review by all authors, section by section. Enter the <strong>project passcode</strong> from the email you were sent. It opens the page for everyone; you will then choose your name.</p>
       <div class="field">
-        <label for="pass">Passcode</label>
+        <label for="pass">Project passcode</label>
         <input id="pass" name="pass" type="password" required spellcheck="false" autocapitalize="off">
       </div>
       <button class="btn" type="submit" id="open-btn">Open the manuscript</button>
       <div class="err" id="gate-err" role="alert" hidden></div>
-      <p class="gate-foot">The content of this page is encrypted and opens only with the passcode, which never leaves your browser.</p>
+      <p class="gate-foot">The content of this page is encrypted and opens only with the project passcode, which never leaves your browser.</p>
     </form>
     <div class="hosted">
       <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
@@ -500,7 +500,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_6", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_7", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -540,6 +540,7 @@ const MSG = {
   bad_new_passcode: "Choose a passcode of 6 to 64 characters.",
   already_registered: "That role or name already has a passcode. Go back and enter it.",
   not_found: "No one is registered under that name in this role.",
+  not_listed: "That name is not registered for this review. Please contact Dr Hall.",
   bad_name: "Enter your name, between 2 and 80 characters.",
   bad_workstream: "This review is not set up for saving yet.",
   name_taken: "Another person in that role already has that name.",
@@ -561,7 +562,7 @@ async function rpc(fn, args) {
 }
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const roleDef = k => (CONTENT.roles || []).find(r => r.key === k) || { key: k, title: k };
-const personLabel = p => roleDef(p.role).title + (p.seq ? " " + p.seq : "");
+const personLabel = p => roleDef(p.role).title + (p.seq && !roleDef(p.role).unnumbered ? " " + p.seq : "");
 const personName = p => p.name || roleDef(p.role).name || "";
 const personFull = p => personLabel(p) + (personName(p) ? ": " + personName(p) : "");
 
@@ -679,30 +680,32 @@ function showDialog(step, ctx = {}) {
   const back = () => showDialog("roles");
   if (step === "roles") {
     box.appendChild(el("h3", { id: "role-title" }, "Who is reviewing?"));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 2 of 3. The project passcode has opened the page. Choose your name; you will then enter your own personal passcode."));
     if (ctx.note) box.appendChild(el("p", { class: "dlg-note" }, esc(ctx.note)));
     const wrap = el("div", { class: "roles" });
     const other = el("div", { class: "roles" });
-    CONTENT.roles.filter(rd => !rd.locked).concat(CONTENT.roles.filter(rd => rd.locked)).forEach(rd => {
-      const b = el("button", { type: "button", "data-role": rd.key, class: rd.locked ? "locked" : "" });
-      b.appendChild(el("span", { class: "rt" }, esc(rd.title) + (rd.named ? " *" : "")));
-      if (rd.locked) b.appendChild(el("span", { class: "rn" }, LOCK + esc((rd.name ? rd.name + ", " : "") + (rd.sub || "passcode required"))));
-      else if (rd.named) b.appendChild(el("span", { class: "rn" }, "Enter your name"));
-      else if (rd.name) b.appendChild(el("span", { class: "rn" }, esc(rd.name)));
-      b.onclick = async () => {
-        if (rd.key === "admin") return showDialog("admin");
-        if (rd.key === "readonly") return showDialog("readonly");
-        if (rd.named) return showDialog("name", { rd });
-        b.disabled = true;
-        try {
-          const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key });
-          if (r.found) showDialog("passcode", { who: { role: rd.key } });
-          else showDialog("setpass", { rd });
-        } catch (e) { b.disabled = false; dlgError(box, e); }
-      };
-      (rd.locked ? other : wrap).appendChild(b);
+    const add = (rd, name, sub, locked, go) => {
+      const b = el("button", { type: "button", "data-role": rd.key, class: locked ? "locked" : "" });
+      if (name) b.setAttribute("data-name", name);
+      b.appendChild(el("span", { class: "rt" }, esc(name || rd.title)));
+      b.appendChild(el("span", { class: "rn" }, (locked ? LOCK : "") + esc(sub)));
+      b.onclick = async () => { b.disabled = true; try { await go(); } catch (e) { dlgError(box, e); } b.disabled = false; };
+      (rd.key === "readonly" ? other : wrap).appendChild(b);
+    };
+    CONTENT.roles.filter(rd => !rd.hidden).forEach(rd => {
+      if (rd.key === "admin") add(rd, rd.name, rd.title, true, async () => showDialog("admin"));
+      else if (rd.key === "readonly") add(rd, null, rd.sub || "passcode required", true, async () => showDialog("readonly"));
+      else if (rd.roster) rd.roster.forEach(nm => add(rd, nm, rd.title, false, async () => {
+        const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key, p_name: nm });
+        if (!r.found) throw new Error("not_listed");
+        showDialog("passcode", { who: { role: rd.key, seq: r.seq, name: r.name } });
+      }));
+      else add(rd, rd.name, rd.title, false, async () => {
+        const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key });
+        if (r.found) showDialog("passcode", { who: { role: rd.key } }); else showDialog("setpass", { rd });
+      });
     });
     box.appendChild(wrap);
-    if (CONTENT.roles.some(r => r.named)) box.appendChild(el("p", { class: "dlg-note" }, "* Each person in these roles enters their own name and is numbered in the order they join. Use the same name each time to pick up where you left off."));
     if (other.children.length) {
       const o = el("div", { class: "roles-other" });
       o.appendChild(el("p", {}, "Other access"));
@@ -764,12 +767,13 @@ function showDialog(step, ctx = {}) {
     focusFirst(f, "#pc1");
   } else if (step === "passcode") {
     const w = ctx.who;
-    box.appendChild(el("h3", { id: "role-title" }, "Enter your passcode"));
+    box.appendChild(el("h3", { id: "role-title" }, "Your personal passcode"));
     box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 3 of 3. This is your own passcode, not the project passcode. The first time, enter the temporary passcode given in your email; you will then choose your own."));
     if (ctx.error) box.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[ctx.error] || MSG.server)));
     const f = el("form", { autocomplete: "off" });
-    f.innerHTML = passField("pc", "Your passcode") + SHOW +
-      `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>
+    f.innerHTML = passField("pc", "Personal passcode") + SHOW +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>
        <p class="dlg-note">Forgotten it? Ask the administrator to set a temporary passcode.</p>`;
     showToggle(f);
     f.querySelector("[data-back]").onclick = back;
@@ -788,7 +792,7 @@ function showDialog(step, ctx = {}) {
   } else if (step === "change") {
     const { r, old } = ctx;
     box.appendChild(el("h3", { id: "role-title" }, "Choose a new passcode"));
-    box.appendChild(el("p", { class: "dlg-note" }, "The administrator set a temporary passcode for you. Choose your own now; it replaces the temporary one."));
+    box.appendChild(el("p", { class: "dlg-note" }, "You have signed in with your temporary passcode. Choose your own personal passcode now. It replaces the temporary one, and from now on it is the passcode you enter after choosing your name."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("pc1", "New passcode, 6 to 64 characters") + passField("pc2", "Repeat the new passcode") + SHOW +
       `<div class="dlg-actions"><button class="btn live" type="submit">Save and open</button></div>`;
@@ -807,10 +811,10 @@ function showDialog(step, ctx = {}) {
   } else if (step === "admin") {
     const rd = CONTENT.roles.find(r => r.key === "admin");
     box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
-    box.appendChild(el("p", { class: "dlg-note" }, "This role is locked. Enter the administrator passcode."));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 3 of 3. This role is locked. Enter your administrator passcode, which is separate from the project passcode."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("ap", "Administrator passcode") +
-      `<div class="dlg-actions"><button class="btn live" type="submit">Unlock</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>`;
+      `<div class="dlg-actions"><button class="btn live" type="submit">Unlock</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>`;
     f.querySelector("[data-back]").onclick = back;
     f.onsubmit = async ev => {
       ev.preventDefault();
@@ -830,7 +834,7 @@ function showDialog(step, ctx = {}) {
     box.appendChild(el("p", { class: "dlg-note" }, "You can read every part of the manuscript, with the entry boxes and buttons greyed out. Enter the project passcode."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("rp", "Project passcode") +
-      `<div class="dlg-actions"><button class="btn live" type="submit">Open to read</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>`;
+      `<div class="dlg-actions"><button class="btn live" type="submit">Open to read</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>`;
     f.querySelector("[data-back]").onclick = back;
     f.onsubmit = async ev => {
       ev.preventDefault();
@@ -1609,7 +1613,7 @@ function renderBody(s) {
   if (qs.length) {
     const q = el("div", { class: "queries" });
     q.appendChild(el("h3", { class: "sub" }, qs.length === 1 ? "A query for the lead reviewer in this section" : `${["", "One", "Two", "Three", "Four", "Five", "Six"][qs.length] || qs.length} queries for the lead reviewer in this section`));
-    q.appendChild(el("p", { class: "ctx" }, "They match the highlighted notes in the text. Answer here; the senior author places the answers in the Word file."));
+    q.appendChild(el("p", { class: "ctx" }, "They match the highlighted notes in the text. Answer here; Dr Hall places the answers in the Word file."));
     qs.forEach(t => q.appendChild(taskCard(t)));
     wrap.appendChild(q);
     wrap.appendChild(el("h3", { class: "sub" }, "The section"));
@@ -1838,7 +1842,7 @@ async function renderTeam() {
   const count = (p, r) => CONTENT.routes[r].steps.filter(s => (folded[p.id][r][s.key] || {}).done).length;
   const answeredBy = p => { const keep = state.steps; state.steps = folded[p.id]; const n = Object.values(TASKS()).filter(taskStatus).length; state.steps = keep; return n; };
   const lastAt = p => (by[p.id] || []).reduce((m, e) => e.created_at > m ? e.created_at : m, "");
-  const lab = p => roleDef(p.role).title + (p.seq ? " " + p.seq : "");
+  const lab = p => roleDef(p.role).title + (p.seq && !roleDef(p.role).unnumbered ? " " + p.seq : "");
 
   read.appendChild(el("h3", {}, "People"));
   const rows = [];
@@ -1906,7 +1910,7 @@ function tempCode() {
 
 function fixDialog(act, p, live) {
   const d = $("#fix-dialog"), box = $("#fix-body");
-  const lab = x => roleDef(x.role).title + (x.seq ? " " + x.seq : "") + (x.name ? ", " + x.name : "");
+  const lab = x => roleDef(x.role).title + (x.seq && !roleDef(x.role).unnumbered ? " " + x.seq : "") + (x.name ? ", " + x.name : "");
   box.innerHTML = "";
   box.appendChild(el("h3", { id: "fix-title" }, { rename: "Rename", merge: "Merge", remove: "Remove", reset: "Reset passcode" }[act]));
   box.appendChild(el("p", { class: "dlg-note" }, esc(lab(p) + (!p.name && roleDef(p.role).name ? ", " + roleDef(p.role).name : ""))));
