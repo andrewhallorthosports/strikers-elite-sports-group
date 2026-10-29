@@ -67,6 +67,20 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .tbl th,.tbl td{border-bottom:1px solid var(--rule);padding:5px 6px;vertical-align:top;text-align:left}
 .tbl th{border-bottom:2px solid var(--navy)}
 .para img{max-width:100%;height:auto;background:#fff;border:1px solid var(--rule)}
+.sheet{background:#FFFEFC;border:1px solid #E2DBCB;box-shadow:0 1px 3px rgba(40,30,10,.10);padding:22px 28px 18px;margin-top:6px}
+.sheet>.sub:first-child{margin-top:0}
+.sheet .para .ptext,.sheet .para .ptext p{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.sheet .para .ptext table,.sheet .para .ptext th,.sheet .para .ptext td{text-align:left;hyphens:manual}
+@media (max-width:780px){
+  body .shell{padding:12px 6px 48px;gap:16px}
+  body .read{max-width:none}
+  .sheet{padding:16px 13px 12px;border-left-color:transparent;border-right-color:transparent;box-shadow:0 1px 2px rgba(40,30,10,.12)}
+  .sheet .para{grid-template-columns:18px minmax(0,1fr);grid-template-areas:"n t" ". b";gap:0 6px;padding:5px 0}
+  .sheet .para .pnum{grid-area:n;font-size:11.5px;padding-top:5px;color:#9A8466}
+  .sheet .para .ptext{grid-area:t;font-size:17px;line-height:1.62}
+  .sheet .para .pnote{grid-area:b;justify-self:end;opacity:1;margin:2px 0 4px;padding:1px 8px;font-size:12px}
+  .sheet .para.list .ptext{padding-left:12px}
+}
 .task{background:var(--ivory);border:1px solid var(--rule);border-left:3px solid var(--rule);padding:14px 16px;margin:0 0 14px}
 .task.answered{border-left-color:var(--teal)}
 .task h4{font-family:var(--display);font-size:19px;color:var(--navy);margin:0 0 2px;line-height:1.2}
@@ -243,6 +257,11 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .pack .name{font-family:var(--display);font-size:22px;color:var(--navy);font-weight:600;line-height:1.2}
 .pack .desc{color:var(--muted);font-size:15px;margin-top:4px}
 .pack .meta{font-size:13px;color:var(--muted);margin-top:6px}
+.dl-word{display:inline-flex;align-items:center;gap:9px;background:none;border:0;padding:10px 2px;margin:0;color:#0B57D0;font-family:var(--body);font-size:16.5px;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer;text-align:left}
+.dl-word:hover{color:#0842A0}
+.dl-word:disabled{opacity:.65;cursor:wait}
+.dl-word .wordico{flex:none;display:block}
+.pack .meta{overflow-wrap:anywhere}
 @media (max-width:560px){.pack li{grid-template-columns:1fr}}
 
 /* Tables from the protocol */
@@ -500,7 +519,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_8", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_9", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -1668,7 +1687,7 @@ function renderBody(s) {
   }
   if (PV() && PV().sections[s.section_key]) wrap.appendChild(viewSwitch());
   if (pageViewOn(s)) { wrap.appendChild(pageView(s)); return wrap; }
-  wrap.insertAdjacentHTML("beforeend", s.html);
+  const sheet = el("div", { class: "sheet" }); sheet.innerHTML = s.html; wrap.appendChild(sheet);
   const noted = new Set((BOARD.comments || []).filter(c => c.section === s.title).map(c => String(c.item || "").replace(/\D/g, "")));
   wrap.querySelectorAll(".para").forEach(p => {
     if (noted.has(p.dataset.n)) p.classList.add("noted");
@@ -1774,17 +1793,20 @@ function renderSearch() {
 function packItem(p) {
   const li = el("li");
   li.appendChild(el("div", {}, `<div class="name">${esc(p.label)}</div><div class="desc">${esc(p.desc)}</div><div class="meta">${esc(p.file)} &nbsp; ${esc(p.size)}</div>`));
-  const b = el("button", { class: "btn live", type: "button" }, "Download");
+  const isDoc = /\.docx$/i.test(p.file);
+  const WORDICO = '<svg class="wordico" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="4" fill="#185ABD"/><text x="14" y="20.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="17" fill="#fff">W</text></svg>';
+  const b = el("button", { class: isDoc ? "dl-word" : "btn live", type: "button" }, isDoc ? WORDICO + "<span>Download the Word document</span>" : "Download");
+  const setB = t => { if (isDoc) b.querySelector("span").textContent = t; else b.textContent = t; };
   b.onclick = async () => {
-    b.disabled = true; b.textContent = "Preparing";
+    b.disabled = true; setB("Preparing");
     try {
       const r = await fetch(p.enc, { cache: "no-store" }); const buf = new Uint8Array(await r.arrayBuffer());
       const plain = await decryptBytes(KEY, p.iv, buf);
       const url = URL.createObjectURL(new Blob([plain], { type: p.mime }));
       const a = el("a", { href: url, download: p.file }); document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 4000);
-      b.textContent = "Downloaded";
-    } catch (e) { b.textContent = "Download failed, try again"; }
+      setB("Downloaded, open it in Word");
+    } catch (e) { setB("Download failed, try again"); }
     b.disabled = false;
   };
   const bw = el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;align-items:center" }); bw.appendChild(b);
