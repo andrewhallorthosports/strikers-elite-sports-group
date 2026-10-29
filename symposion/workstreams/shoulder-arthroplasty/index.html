@@ -500,7 +500,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_7", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_8", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -536,8 +536,10 @@ const MSG = {
   admin_locked: "Too many attempts. Wait fifteen minutes and try again.",
   bad_passcode: "That passcode is not right.",
   no_passcode: "No passcode has been set for this person yet.",
-  person_locked: "Too many wrong attempts. Wait fifteen minutes, or ask the administrator to set a temporary passcode.",
+  person_locked: "Too many wrong attempts. Wait fifteen minutes, or choose Forgotten it and email yourself a one-time code.",
   bad_new_passcode: "Choose a passcode of 6 to 64 characters.",
+  bad_code: "That code was not accepted. It may have expired or been used; you can ask for a new one.",
+  not_configured: "Codes cannot be emailed just now. Please contact Dr Hall.",
   already_registered: "That role or name already has a passcode. Go back and enter it.",
   not_found: "No one is registered under that name in this role.",
   not_listed: "That name is not registered for this review. Please contact Dr Hall.",
@@ -774,9 +776,10 @@ function showDialog(step, ctx = {}) {
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("pc", "Personal passcode") + SHOW +
       `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>
-       <p class="dlg-note">Forgotten it? Ask the administrator to set a temporary passcode.</p>`;
+       <p class="dlg-note">Forgotten it, or the temporary passcode is not accepted? <a href="#" data-forgot>Email me a one-time code</a> so that I can choose a new personal passcode.</p>`;
     showToggle(f);
     f.querySelector("[data-back]").onclick = back;
+    f.querySelector("[data-forgot]").onclick = ev => { ev.preventDefault(); showDialog("reset", { who: w }); };
     f.onsubmit = async ev => {
       ev.preventDefault();
       const pass = f.querySelector("#pc").value, btn = f.querySelector(".btn.live");
@@ -789,6 +792,51 @@ function showDialog(step, ctx = {}) {
     };
     box.appendChild(f);
     focusFirst(f, "#pc");
+  } else if (step === "reset") {
+    const w = ctx.who;
+    box.appendChild(el("h3", { id: "role-title" }, "Choose a new personal passcode"));
+    box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
+    if (!ctx.sent) {
+      box.appendChild(el("p", { class: "dlg-note" }, "A one-time code will be emailed to the address held for you. It is valid for 15 minutes and can be used once. Your current passcode, if you have one, stays valid until you use the code."));
+      const f = el("form", { autocomplete: "off" });
+      f.innerHTML = `<div class="dlg-actions"><button class="btn live" type="submit">Email me a code</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
+      f.querySelector("[data-back]").onclick = () => showDialog("passcode", { who: w });
+      f.onsubmit = async ev => {
+        ev.preventDefault();
+        const btn = f.querySelector(".btn.live"); btn.disabled = true;
+        try {
+          let r; try { r = await fetch(CONFIG.supabase.url + "/functions/v1/symposion-reset", { method: "POST",
+            headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json" },
+            body: JSON.stringify({ slug: CONFIG.workstream, role: w.role, name: w.name || null }) }); } catch (e) { throw new Error("offline"); }
+          if (r.status === 503) throw new Error("not_configured");
+          if (!r.ok) throw new Error("server");
+          showDialog("reset", { who: w, sent: true });
+        } catch (e) { btn.disabled = false; dlgError(f, e); }
+      };
+      box.appendChild(f);
+    } else {
+      box.appendChild(el("p", { class: "dlg-note" }, "If an address is held for you, a code is on its way. Check your inbox and junk folder; it can take a minute or two. Enter it below with the new personal passcode you want to use."));
+      const f = el("form", { autocomplete: "off" });
+      f.innerHTML = `<div class="dlg-field"><label for="rc">One-time code from the email</label><input id="rc" required spellcheck="false" autocapitalize="characters" autocomplete="one-time-code" maxlength="20"></div>` +
+        passField("pc1", "New personal passcode, 6 to 64 characters") + passField("pc2", "Repeat the new passcode") + SHOW +
+        `<div class="dlg-actions"><button class="btn live" type="submit">Save new passcode and open</button><button class="btn quiet" type="button" data-again>Send another code</button></div>`;
+      showToggle(f);
+      f.querySelector("[data-again]").onclick = () => showDialog("reset", { who: w });
+      f.onsubmit = async ev => {
+        ev.preventDefault();
+        const code = f.querySelector("#rc").value, a = f.querySelector("#pc1").value, b2 = f.querySelector("#pc2").value, btn = f.querySelector(".btn.live");
+        if (a.length < 6) return dlgError(f, new Error("bad_new_passcode"));
+        if (a !== b2) { f.querySelectorAll(".err").forEach(x => x.remove()); return f.appendChild(el("div", { class: "err", role: "alert" }, "The two passcodes are not the same.")); }
+        btn.disabled = true;
+        try {
+          await rpc("symposion_reset_confirm", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_code: code, p_new: a });
+          const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_pass: a });
+          cred = a; await becomePerson(r);
+        } catch (e) { btn.disabled = false; dlgError(f, e); }
+      };
+      box.appendChild(f);
+      focusFirst(f, "#rc");
+    }
   } else if (step === "change") {
     const { r, old } = ctx;
     box.appendChild(el("h3", { id: "role-title" }, "Choose a new passcode"));
