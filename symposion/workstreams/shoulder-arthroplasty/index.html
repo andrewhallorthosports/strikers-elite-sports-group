@@ -444,14 +444,10 @@ dialog .err{margin-top:14px}
       <ul class="partners gate-partners" aria-label="Principal institutions"></ul>
       <p class="gate-kicker">Scoping review, Part 1</p>
       <h1 id="gate-title">Shoulder arthroplasty in the management of shoulder trauma</h1>
-      <p>The manuscript for review by all authors, section by section. Enter the <strong>project passcode</strong> from the email you were sent. It opens the page for everyone; you will then choose your name.</p>
-      <div class="field">
-        <label for="pass">Project passcode</label>
-        <input id="pass" name="pass" type="password" required spellcheck="false" autocapitalize="off">
-      </div>
-      <button class="btn" type="submit" id="open-btn">Open the manuscript</button>
+      <p>The manuscript for review by all authors, section by section. Choose your name and enter your personal passcode. The first time, a one-time code is emailed to you so that you can choose your own passcode.</p>
+      <button class="btn" type="submit" id="open-btn">Sign in</button>
       <div class="err" id="gate-err" role="alert" hidden></div>
-      <p class="gate-foot">The content of this page is encrypted and opens only with the project passcode, which never leaves your browser.</p>
+      <p class="gate-foot">The content of this page is encrypted. It opens only for the named authors, after they sign in with their own passcode.</p>
     </form>
     <div class="hosted">
       <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
@@ -519,7 +515,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_10", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_11", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -582,7 +578,8 @@ async function rpc(fn, args) {
   return body;
 }
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const roleDef = k => (CONTENT.roles || []).find(r => r.key === k) || { key: k, title: k };
+const ROLES = () => (CONTENT && CONTENT.roles) || CONFIG.roles || [];
+const roleDef = k => ROLES().find(r => r.key === k) || { key: k, title: k };
 const personLabel = p => roleDef(p.role).title + (p.seq && !roleDef(p.role).unnumbered ? " " + p.seq : "");
 const personName = p => p.name || roleDef(p.role).name || "";
 const personFull = p => personLabel(p) + (personName(p) ? ": " + personName(p) : "");
@@ -625,15 +622,8 @@ const gateForm = document.getElementById("gate-form");
 gateForm.addEventListener("submit", async ev => {
   ev.preventDefault();
   const btn = document.getElementById("open-btn"), err = document.getElementById("gate-err");
-  err.hidden = true; btn.disabled = true; btn.textContent = "Opening";
-  try { await unlock(document.getElementById("pass").value.trim()); start(); }
-  catch (e) {
-    err.textContent = e.message === "pass"
-      ? "That passcode does not open this workstream. Check it against the message it came in, including capitals and hyphens."
-      : "The manuscript could not be loaded. Check your connection and try again.";
-    err.hidden = false;
-  }
-  btn.disabled = false; btn.textContent = "Open the manuscript";
+  err.hidden = true;
+  showDialog("roles");
 });
 
 /* ---------- rendering helpers ---------- */
@@ -643,7 +633,7 @@ const steps = () => CONTENT.routes[state.route].steps;
 const fmtTime = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 let started = false;
-function start() {
+function start(signedIn) {
   document.getElementById("gate").hidden = true;
   document.getElementById("app").hidden = false;
   $("#foot-version").textContent = "Manuscript " + CONTENT.meta.ms_label + ", review page " + CONTENT.meta.version + ", built " + CONTENT.meta.built + ".";
@@ -653,10 +643,11 @@ function start() {
     document.querySelectorAll(".route button").forEach(b => b.addEventListener("click", () => { state.route = b.dataset.route; save(); render(); }));
     $("#steps-toggle").addEventListener("click", () => setRail(!$("#rail").classList.contains("open")));
     $("#who-change").addEventListener("click", () => { save(); showDialog("roles"); });
-    $("#role-dialog").addEventListener("cancel", ev => { if (!person) ev.preventDefault(); });
+    $("#role-dialog").addEventListener("cancel", ev => { if (!person) ev.preventDefault(); });   // before sign-in the gate stays behind it
   }
   render();
   updateSync();
+  if (signedIn) return;
   const last = readLast();
   if (last && last.role === "readonly") enterReadOnly();
   else if (last && last.role === "admin") showDialog("admin");
@@ -701,7 +692,7 @@ function showDialog(step, ctx = {}) {
   const back = () => showDialog("roles");
   if (step === "roles") {
     box.appendChild(el("h3", { id: "role-title" }, "Who is reviewing?"));
-    box.appendChild(el("p", { class: "dlg-note" }, "Step 2 of 3. The project passcode has opened the page. Choose your name; you will then enter your own personal passcode."));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 1 of 2. Choose your name; you will then enter your personal passcode, or, the first time, a one-time code emailed to you."));
     if (ctx.note) box.appendChild(el("p", { class: "dlg-note" }, esc(ctx.note)));
     const wrap = el("div", { class: "roles" });
     const other = el("div", { class: "roles" });
@@ -713,17 +704,19 @@ function showDialog(step, ctx = {}) {
       b.onclick = async () => { b.disabled = true; try { await go(); } catch (e) { dlgError(box, e); } b.disabled = false; };
       (rd.key === "readonly" ? other : wrap).appendChild(b);
     };
-    CONTENT.roles.filter(rd => !rd.hidden).forEach(rd => {
+    ROLES().filter(rd => !rd.hidden && rd.key !== "readonly").forEach(rd => {
       if (rd.key === "admin") add(rd, rd.name, rd.title, true, async () => showDialog("admin"));
       else if (rd.key === "readonly") add(rd, null, rd.sub || "passcode required", true, async () => showDialog("readonly"));
       else if (rd.roster) rd.roster.forEach(nm => add(rd, nm, rd.title, false, async () => {
         const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key, p_name: nm });
         if (!r.found) throw new Error("not_listed");
-        showDialog("passcode", { who: { role: rd.key, seq: r.seq, name: r.name } });
+        const who = { role: rd.key, seq: r.seq, name: r.name };
+        showDialog(r.first ? "reset" : "passcode", { who, first: !!r.first });
       }));
       else add(rd, rd.name, rd.title, false, async () => {
         const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key });
-        if (r.found) showDialog("passcode", { who: { role: rd.key } }); else showDialog("setpass", { rd });
+        if (!r.found) throw new Error("not_listed");
+        showDialog(r.first ? "reset" : "passcode", { who: { role: rd.key }, first: !!r.first });
       });
     });
     box.appendChild(wrap);
@@ -790,12 +783,12 @@ function showDialog(step, ctx = {}) {
     const w = ctx.who;
     box.appendChild(el("h3", { id: "role-title" }, "Your personal passcode"));
     box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
-    box.appendChild(el("p", { class: "dlg-note" }, "Step 3 of 3. This is your own passcode, not the project passcode. The first time, enter the temporary passcode given in your email; you will then choose your own."));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 2 of 2. Enter the personal passcode you chose when you first signed in."));
     if (ctx.error) box.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[ctx.error] || MSG.server)));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("pc", "Personal passcode") + SHOW +
       `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>
-       <p class="dlg-note">Forgotten it, or the temporary passcode is not accepted? <a href="#" data-forgot>Email me a one-time code</a> so that I can choose a new personal passcode.</p>`;
+       <p class="dlg-note">First time here, or forgotten it? <a href="#" data-forgot>Email me a one-time code</a> so that I can choose my personal passcode.</p>`;
     showToggle(f);
     f.querySelector("[data-back]").onclick = back;
     f.querySelector("[data-forgot]").onclick = ev => { ev.preventDefault(); showDialog("reset", { who: w }); };
@@ -806,20 +799,22 @@ function showDialog(step, ctx = {}) {
       try {
         const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_pass: pass });
         cred = pass;
-        if (r.must_change) showDialog("change", { r, old: pass }); else await becomePerson(r);
+        if (r.must_change) showDialog("change", { r, old: pass }); else await enterWith(r);
       } catch (e) { btn.disabled = false; f.querySelector("#pc").value = ""; dlgError(f, e); }
     };
     box.appendChild(f);
     focusFirst(f, "#pc");
   } else if (step === "reset") {
     const w = ctx.who;
-    box.appendChild(el("h3", { id: "role-title" }, "Choose a new personal passcode"));
+    box.appendChild(el("h3", { id: "role-title" }, ctx.first ? "First sign-in" : "Choose a new personal passcode"));
     box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
     if (!ctx.sent) {
-      box.appendChild(el("p", { class: "dlg-note" }, "A one-time code will be emailed to the address held for you. It is valid for 15 minutes and can be used once. Your current passcode, if you have one, stays valid until you use the code."));
+      box.appendChild(el("p", { class: "dlg-note" }, ctx.first
+        ? "Step 2 of 2. A one-time code will be emailed to the address Dr Hall holds for you. It is valid for 15 minutes and can be used once. You will then choose your own personal passcode, which is the only passcode you need from then on."
+        : "A one-time code will be emailed to the address held for you. It is valid for 15 minutes and can be used once. Your current passcode stays valid until you use the code."));
       const f = el("form", { autocomplete: "off" });
       f.innerHTML = `<div class="dlg-actions"><button class="btn live" type="submit">Email me a code</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
-      f.querySelector("[data-back]").onclick = () => showDialog("passcode", { who: w });
+      f.querySelector("[data-back]").onclick = () => ctx.first ? back() : showDialog("passcode", { who: w });
       f.onsubmit = async ev => {
         ev.preventDefault();
         const btn = f.querySelector(".btn.live"); btn.disabled = true;
@@ -829,7 +824,7 @@ function showDialog(step, ctx = {}) {
             body: JSON.stringify({ slug: CONFIG.workstream, role: w.role, name: w.name || null }) }); } catch (e) { throw new Error("offline"); }
           if (r.status === 503) throw new Error("not_configured");
           if (!r.ok) throw new Error("server");
-          showDialog("reset", { who: w, sent: true });
+          showDialog("reset", { who: w, sent: true, first: ctx.first });
         } catch (e) { btn.disabled = false; dlgError(f, e); }
       };
       box.appendChild(f);
@@ -840,7 +835,7 @@ function showDialog(step, ctx = {}) {
         passField("pc1", "New personal passcode, 6 to 64 characters") + passField("pc2", "Repeat the new passcode") + SHOW +
         `<div class="dlg-actions"><button class="btn live" type="submit">Save new passcode and open</button><button class="btn quiet" type="button" data-again>Send another code</button></div>`;
       showToggle(f);
-      f.querySelector("[data-again]").onclick = () => showDialog("reset", { who: w });
+      f.querySelector("[data-again]").onclick = () => showDialog("reset", { who: w, first: ctx.first });
       f.onsubmit = async ev => {
         ev.preventDefault();
         const code = f.querySelector("#rc").value, a = f.querySelector("#pc1").value, b2 = f.querySelector("#pc2").value, btn = f.querySelector(".btn.live");
@@ -850,7 +845,7 @@ function showDialog(step, ctx = {}) {
         try {
           await rpc("symposion_reset_confirm", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_code: code, p_new: a });
           const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_pass: a });
-          cred = a; await becomePerson(r);
+          cred = a; await enterWith(r);
         } catch (e) { btn.disabled = false; dlgError(f, e); }
       };
       box.appendChild(f);
@@ -870,15 +865,16 @@ function showDialog(step, ctx = {}) {
       if (a.length < 6) return dlgError(f, new Error("bad_new_passcode"));
       if (a !== b2) { f.querySelectorAll(".err").forEach(x => x.remove()); return f.appendChild(el("div", { class: "err", role: "alert" }, "The two passcodes are not the same.")); }
       btn.disabled = true;
-      try { await rpc("symposion_set_passcode", { p_slug: CONFIG.workstream, p_person: r.id, p_old: old, p_new: a }); cred = a; await becomePerson(r); }
+      try { await rpc("symposion_set_passcode", { p_slug: CONFIG.workstream, p_person: r.id, p_old: old, p_new: a }); cred = a;
+            await enterWith(await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: r.role, p_name: r.name || null, p_pass: a })); }
       catch (e) { btn.disabled = false; dlgError(f, e); }
     };
     box.appendChild(f);
     focusFirst(f, "#pc1");
   } else if (step === "admin") {
-    const rd = CONTENT.roles.find(r => r.key === "admin");
+    const rd = ROLES().find(r => r.key === "admin");
     box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
-    box.appendChild(el("p", { class: "dlg-note" }, "Step 3 of 3. This role is locked. Enter your administrator passcode, which is separate from the project passcode."));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 2 of 2. This role is locked. Enter your administrator passcode."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("ap", "Administrator passcode") +
       `<div class="dlg-actions"><button class="btn live" type="submit">Unlock</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>`;
@@ -890,7 +886,7 @@ function showDialog(step, ctx = {}) {
       try {
         const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: "admin", p_pass: secret });
         cred = secret;
-        await becomePerson(r);
+        await enterWith(r);
       } catch (e) { btn.disabled = false; f.querySelector("#ap").value = ""; dlgError(f, e); }
     };
     box.appendChild(f);
@@ -920,6 +916,16 @@ function enterReadOnly() {
   lsSet(STORE_KEY + ".last", JSON.stringify({ role: "readonly" }));
   state = blankState(); state.positioned = true;
   closeDialog(); updateWho(); render(); updateSync();
+}
+
+/* Signed in: the reply carries the page key for a named author, so the content is opened here the first time in this tab. */
+async function enterWith(r) {
+  if (!CONTENT) {
+    if (!r || !r.site_key) throw new Error("not_listed");
+    try { await unlock(r.site_key); } catch (e) { throw new Error("server"); }
+    start(true);
+  }
+  await becomePerson(r);
 }
 
 /* The person is known and has proved who they are: load their saved progress from Symposion, then show the walkthrough. */
