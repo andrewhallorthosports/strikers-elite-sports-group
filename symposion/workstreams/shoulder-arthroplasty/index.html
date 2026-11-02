@@ -98,6 +98,7 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 }
 .task{background:var(--ivory);border:1px solid var(--rule);border-left:3px solid var(--rule);padding:14px 16px;margin:0 0 14px}
 .task.answered{border-left-color:var(--teal)}
+.task ul.grp{margin:4px 0 12px;padding-left:20px;font-size:15px;line-height:1.45}.task ul.grp li{margin:2px 0}
 .task h4{font-family:var(--display);font-size:19px;color:var(--navy);margin:0 0 2px;line-height:1.2}
 .task .tk{font-size:13px;color:var(--umber);margin:0 0 6px}
 .task .tstat{float:right;font-size:12.5px;color:var(--muted)}
@@ -530,7 +531,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_11", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_12", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -1504,13 +1505,14 @@ $("#suggest-btn").addEventListener("click", () => {
 const LEAD_VIEW = () => !!person && (person.role === "lead" || person.role === "admin");
 const TASKS = () => { const all = CONTENT.tasks || {}, out = {}; Object.keys(all).forEach(k => { if (!all[k].lead_only || LEAD_VIEW()) out[k] = all[k]; }); return out; };
 const taskRec = id => (state.steps[ROUTE] || {})[id] || { values: {} };
-const KIND = { review: "Section review", query: "Query to the lead reviewer", decision: "Charting decision", check: "Rehabilitation check" };
+const KIND = { review: "Section review", query: "Query to the lead reviewer", decision: "Charting decision", check: "Rehabilitation check", group: "Rehabilitation decision" };
 function taskStatus(t) {
   const v = taskRec(t.id).values || {};
   const has = k => String(v[k] ?? "").trim() !== "";
   if (t.kind === "review") return has("verdict");
   if (t.kind === "decision") return has("decision") && (v.decision === t.fields[0].options[0] || has("reason") || has("value"));
   if (t.kind === "check") return has("finding") && (v.finding === t.fields[0].options[0] || has("text"));
+  if (t.kind === "group") return has("decision") && (v.decision === t.fields[0].options[0] || has("exceptions"));
   return t.fields.filter(f => f.type !== "textarea" && f.key !== "note").every(f => has(f.key)) || (t.fields.every(f => f.type === "textarea") && t.fields.some(f => has(f.key)));
 }
 function setValue(t, key, value) {
@@ -1535,6 +1537,15 @@ function taskCard(t, opts = {}) {
   } else if (!opts.bare) head += `<h4>${esc(t.title)}</h4>`;
   c.innerHTML = head;
   if (t.context) c.appendChild(el("p", { class: "ctx" }, esc(t.context)));
+  if (t.studies && t.studies.length) {   // one decision covering several studies, each with its current code and links
+    const ul = el("ul", { class: "grp" });
+    t.studies.forEach(st => {
+      const links = [st.doi ? `<a href="https://doi.org/${esc(st.doi)}" target="_blank" rel="noopener">DOI</a>` : "",
+        st.pmid ? `<a href="https://pubmed.ncbi.nlm.nih.gov/${esc(st.pmid)}/" target="_blank" rel="noopener">PubMed</a>` : ""].filter(Boolean).join(", ");
+      ul.appendChild(el("li", {}, `<strong>Study ${esc(String(st.study_id))}: ${esc(st.author)} ${esc(st.year)}</strong>${st.note ? ". " + esc(st.note) : ""}${links ? " (" + links + ")" : ""}`));
+    });
+    c.appendChild(ul);
+  }
   if (t.kind === "decision") c.appendChild(el("dl", {}, `<dt>As charted</dt><dd>${esc(t.charted || "(blank)")}</dd><dt>At source</dt><dd>${esc(t.source_value)}</dd>${t.evidence ? `<dt>Basis</dt><dd>${esc(t.evidence)}</dd>` : ""}`));
   if (t.kind === "check") c.appendChild(el("dl", {}, `<dt>As charted</dt><dd>${esc(t.charted || "(blank)")}</dd><dt>Why it is here</dt><dd>Only the abstract could be checked, and an abstract cannot confirm that rehabilitation is absent from the paper.</dd>`));
   t.fields.forEach(f => {
@@ -1571,7 +1582,8 @@ function taskCard(t, opts = {}) {
   if (canPost() && t.kind !== "review") { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn(t.study ? `Study ${t.study.study_id}: ${t.study.author.split(",")[0]} ${t.study.year}` : t.title)); c.appendChild(co); }
   return c;
 }
-function refreshCard(c, t) { c.classList.toggle("answered", taskStatus(t)); const s = c.querySelector(".tstat"); if (s) s.textContent = taskStatus(t) ? "Answered" : "Not yet answered"; renderPhases(); updateTally(); }
+function refreshSetProgress() { const h = document.getElementById("set-progress"); if (!h) return; const ids = (h.dataset.ids || "").split(" ").filter(Boolean), list = ids.map(id => TASKS()[id]).filter(Boolean); h.textContent = `${list.filter(taskStatus).length} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`; }
+function refreshCard(c, t) { refreshSetProgress(); c.classList.toggle("answered", taskStatus(t)); const s = c.querySelector(".tstat"); if (s) s.textContent = taskStatus(t) ? "Answered" : "Not yet answered"; renderPhases(); updateTally(); }
 function updateTally() {
   const all = Object.values(TASKS()), n = all.filter(taskStatus).length;
   const t = $("#tally"); if (t) t.innerHTML = `<strong>${n} of ${all.length}</strong> tasks answered.`;
@@ -1727,7 +1739,7 @@ function renderLedger(s) {
   const ro = readOnly();
   if (s.kind === "tasks") {
     const list = s.task_ids.map(id => TASKS()[id]).filter(Boolean), n = list.filter(taskStatus).length;
-    led.appendChild(el("p", { class: "hint" }, `${n} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`));
+    led.appendChild(el("p", { class: "hint", id: "set-progress", "data-ids": list.map(t => t.id).join(" ") }, `${n} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`));
   } else {
     led.appendChild(el("p", { class: "hint" }, ro ? "Read only: nothing can be entered or saved." : "Each answer saves to your own record as you give it. To comment on a single paragraph, use Annotate beside it (on the Word pages, it appears in the margin as you point at the paragraph)."));
     (s.task_ids || []).filter(id => TASKS()[id] && TASKS()[id].kind === "review").forEach(id => led.appendChild(taskCard(TASKS()[id], { bare: true })));
