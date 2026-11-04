@@ -99,6 +99,7 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .task{background:var(--ivory);border:1px solid var(--rule);border-left:3px solid var(--rule);padding:14px 16px;margin:0 0 14px}
 .task.answered{border-left-color:var(--teal)}
 .task ul.grp{margin:4px 0 12px;padding-left:20px;font-size:15px;line-height:1.45}.task ul.grp li{margin:2px 0}
+.task dl.codemeta{display:grid;grid-template-columns:max-content 1fr;gap:2px 12px;margin:2px 0 12px;font-size:15px}.task dl.codemeta dt{font-weight:600}.task dl.codemeta dd{margin:0;overflow-wrap:anywhere}
 .task h4{font-family:var(--display);font-size:19px;color:var(--navy);margin:0 0 2px;line-height:1.2}
 .task .tk{font-size:13px;color:var(--umber);margin:0 0 6px}
 .task .tstat{float:right;font-size:12.5px;color:var(--muted)}
@@ -531,7 +532,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_12", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_13", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "second", "title": "Co-author & Independent Reviewer", "named": true, "unnumbered": true, "roster": ["Rosa Morgan-Young"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -645,7 +646,9 @@ gateForm.addEventListener("submit", async ev => {
 /* ---------- rendering helpers ---------- */
 const $ = s => document.querySelector(s);
 const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (html) e.innerHTML = html; return e; };
-const steps = () => CONTENT.routes[state.route].steps;
+const IND = () => !!person && person.role === "second";   // co-author and independent reviewer: the author view plus her coding sets
+const stepVisible = s => (person && person.role === "admin") || IND() || (s.audience || "authors") !== "reviewer";
+const steps = () => CONTENT.routes[state.route].steps.filter(stepVisible);
 const fmtTime = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 let started = false;
@@ -1037,7 +1040,7 @@ function renderWalk() {
     if (ph >= 0) list.appendChild(el("li", { class: "ph", "aria-hidden": "true" }, `${ph + 1}. ${esc(phases()[ph].title)}`));
     const li = el("li", { class: "step " + (rec.done ? "done " : "") + (i === idx ? "current" : "") });
     const b = el("button", { type: "button", "data-n": String(s.n), "aria-current": i === idx ? "step" : "false" },
-      `<span class="node" aria-hidden="true">${s.n}</span><span class="t">${s.title}${rec.done ? '<span class="sr"> (complete)</span>' : ""}</span>`);
+      `<span class="node" aria-hidden="true">${i + 1}</span><span class="t">${s.title}${rec.done ? '<span class="sr"> (complete)</span>' : ""}</span>`);
     b.onclick = () => { state.stepIndex[state.route] = i; save(); setRail(false); renderWalk(); $("#read").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "smooth" }); };
     li.appendChild(b); list.appendChild(li);
   });
@@ -1049,7 +1052,7 @@ function renderWalk() {
   const ab = alertBar(); if (ab) read.appendChild(ab);
   if (idx === 0 && CONTENT.routes[state.route].intro_text) read.appendChild(el("p", { class: "intro" }, CONTENT.routes[state.route].intro_text));
   const pi = phaseIndexOf(s.n);
-  read.appendChild(el("p", { class: "kicker" }, `${s.kind === "tasks" ? "Task set" : "Section"} ${s.n} of ${steps().length}` + (pi >= 0 ? `, ${esc(phases()[pi].title)}` : "")));
+  read.appendChild(el("p", { class: "kicker" }, `${s.kind === "tasks" ? "Task set" : "Section"} ${idx + 1} of ${steps().length}` + (pi >= 0 ? `, ${esc(phases()[pi].title)}` : "")));
   read.appendChild(el("h2", {}, s.title));
   if (s.aim && false) {
     const g = el("dl", { class: "glance", "aria-label": "This step at a glance" });
@@ -1067,7 +1070,7 @@ function renderWalk() {
 }
 
 /* ---------- the order of the research: phases, the navigation strip and the route map ---------- */
-const phases = () => (CONTENT.phases || {})[state.route] || [];
+const phases = () => ((CONTENT.phases || {})[state.route] || []).filter(p => p.steps.some(n => steps().some(s => s.n === n)));
 const phaseIndexOf = n => phases().findIndex(p => p.steps.includes(n));
 const stepDone = (route, key) => !!((state.steps[route] || {})[key] || {}).done;
 const ROLE_WORDS = { lead: /lead reviewer/i, second: /second reviewer/i, senior: /senior reviewer/i };
@@ -1103,9 +1106,10 @@ function renderMap() {
   const m = el("div", { class: "map appear overview" });
   const ab = alertBar(); if (ab) m.appendChild(ab);
   m.appendChild(el("p", { class: "kicker" }, "Overview"));
-  m.appendChild(el("h2", {}, esc(CONTENT.overview_title || "The manuscript")));
+  const OVR = (person && (CONTENT.overview_roles || {})[person.role]) || {};
+  m.appendChild(el("h2", {}, esc(OVR.title || CONTENT.overview_title || "The manuscript")));
   m.appendChild(el("p", { class: "fulltitle" }, esc(CONTENT.meta.full_title)));
-  m.appendChild(el("p", { class: "lede" }, esc(CONTENT.overview_lede)));
+  m.appendChild(el("p", { class: "lede" }, esc(OVR.lede || CONTENT.overview_lede)));
   const files = (CONTENT.pack || []).filter(p => !p.lead_only || LEAD_VIEW());
   if (files.length) { const fx = el("ul", { class: "pack overview-files" }); files.forEach(p => fx.appendChild(packItem(p))); m.appendChild(fx); }
   const guide = person ? (CONTENT.role_guide || {})[person.role] : "";
@@ -1115,7 +1119,7 @@ function renderMap() {
     m.appendChild(y);
   }
   m.appendChild(el("h3", {}, "How it works"));
-  const how = el("ol", { class: "howto" }); how.innerHTML = CONTENT.howto_html; m.appendChild(how);
+  const how = el("ol", { class: "howto" }); how.innerHTML = OVR.howto_html || CONTENT.howto_html; m.appendChild(how);
   m.appendChild(el("h3", {}, "Sections and task sets"));
   const S = state.steps[ROUTE] || {};
   let t = "<div class='scroll'><table class='teamtable'><thead><tr><th>Part</th><th class='n'>Tasks answered</th><th>Marked</th></tr></thead><tbody>";
@@ -1503,9 +1507,9 @@ $("#suggest-btn").addEventListener("click", () => {
 
 /* ---------- tasks: each answer is saved as it is given, against the task, under the person who gave it ---------- */
 const LEAD_VIEW = () => !!person && (person.role === "lead" || person.role === "admin");
-const TASKS = () => { const all = CONTENT.tasks || {}, out = {}; Object.keys(all).forEach(k => { if (!all[k].lead_only || LEAD_VIEW()) out[k] = all[k]; }); return out; };
+const TASKS = () => { const all = CONTENT.tasks || {}, out = {}, adm = !!person && person.role === "admin"; Object.keys(all).forEach(k => { const t = all[k]; if ((!t.lead_only || LEAD_VIEW()) && (adm || IND() || !t.reviewer_only)) out[k] = t; }); return out; };
 const taskRec = id => (state.steps[ROUTE] || {})[id] || { values: {} };
-const KIND = { review: "Section review", query: "Query to the lead reviewer", decision: "Charting decision", check: "Rehabilitation check", group: "Rehabilitation decision" };
+const KIND = { review: "Section review", query: "Query to the lead reviewer", decision: "Charting decision", check: "Rehabilitation check", group: "Rehabilitation decision", code: "Independent coding" };
 function taskStatus(t) {
   const v = taskRec(t.id).values || {};
   const has = k => String(v[k] ?? "").trim() !== "";
@@ -1513,6 +1517,8 @@ function taskStatus(t) {
   if (t.kind === "decision") return has("decision") && (v.decision === t.fields[0].options[0] || has("reason") || has("value"));
   if (t.kind === "check") return has("finding") && (v.finding === t.fields[0].options[0] || has("text"));
   if (t.kind === "group") return has("decision") && (v.decision === t.fields[0].options[0] || has("exceptions"));
+  if (t.kind === "code") { const nil = ["Not described", "Not reported"]; const codeOk = !t.fields.some(f => f.key === "code") || has("code");
+    return codeOk && has("role") && ((nil.includes(v.role) && (!v.code || v.code === "Not described")) || has("evidence")); }
   return t.fields.filter(f => f.type !== "textarea" && f.key !== "note").every(f => has(f.key)) || (t.fields.every(f => f.type === "textarea") && t.fields.some(f => has(f.key)));
 }
 function setValue(t, key, value) {
@@ -1537,6 +1543,8 @@ function taskCard(t, opts = {}) {
   } else if (!opts.bare) head += `<h4>${esc(t.title)}</h4>`;
   c.innerHTML = head;
   if (t.context) c.appendChild(el("p", { class: "ctx" }, esc(t.context)));
+  if (t.kind === "code") c.appendChild(el("dl", { class: "codemeta" }, `<dt>Type</dt><dd>${esc(t.study_type)}</dd><dt>Full text</dt><dd><code>${esc(t.file)}</code> in the shared folder</dd>` +
+    (t.link ? `<dt>Online</dt><dd><a href="${esc(t.link)}" target="_blank" rel="noopener">${esc(t.link)}</a></dd>` : "")));
   if (t.studies && t.studies.length) {   // one decision covering several studies, each with its current code and links
     const ul = el("ul", { class: "grp" });
     t.studies.forEach(st => {
@@ -1692,7 +1700,7 @@ function renderBody(s) {
   const wrap = el("div", { class: "appear ms" });
   if (s.kind === "tasks") {
     if (s.intro) wrap.appendChild(el("p", { class: "lede" }, s.intro));
-    if (!LEAD_VIEW()) { wrap.appendChild(el("p", { class: "lede" }, "These tasks are assigned to the lead reviewer.")); return wrap; }
+    if (!LEAD_VIEW() && s.audience !== "reviewer") { wrap.appendChild(el("p", { class: "lede" }, "These tasks are assigned to the lead reviewer.")); return wrap; }
     const list = s.task_ids.map(id => TASKS()[id]).filter(Boolean);
     const filt = state.open.filter || "all";
     const bar = el("div", { class: "taskfilter", role: "group", "aria-label": "Show" });
