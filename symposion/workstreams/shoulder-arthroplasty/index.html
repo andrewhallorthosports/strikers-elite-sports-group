@@ -532,7 +532,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_13", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "second", "title": "Co-author & Independent Reviewer", "named": true, "unnumbered": true, "roster": ["Rosa Morgan-Young"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_14", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "second", "title": "Co-author & Independent Reviewer", "named": true, "unnumbered": true, "roster": ["Rosa Morgan-Young"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Dr Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -649,6 +649,22 @@ const el = (tag, attrs = {}, html = "") => { const e = document.createElement(ta
 const IND = () => !!person && person.role === "second";   // co-author and independent reviewer: the author view plus her coding sets
 const stepVisible = s => (person && person.role === "admin") || IND() || (s.audience || "authors") !== "reviewer";
 const steps = () => CONTENT.routes[state.route].steps.filter(stepVisible);
+const codingSets = () => CONTENT.routes[state.route].steps.filter(s => s.audience === "reviewer");
+const IND_LOCKED = () => IND() && !codingSets().every(s => stepDone(ROUTE, s.key));
+const lockedFor = s => IND_LOCKED() && (s.audience || "authors") !== "reviewer";
+function lockNote(s) {
+  const w = el("div", { class: "appear lockbox" });
+  const left = codingSets().filter(x => !stepDone(ROUTE, x.key)).length;
+  w.appendChild(el("p", { class: "lede" }, `This part opens once the independent coding is complete, so that your codes are made without knowledge of the review\u2019s findings. ${left === 1 ? "One coding set remains" : left + " coding sets remain"} to be marked complete.`));
+  const first = codingSets().find(x => !stepDone(ROUTE, x.key)) || codingSets()[0];
+  const b = el("button", { class: "btn live", type: "button" }, `Go to ${esc(first.title)}`); b.onclick = () => goStep(first.n); w.appendChild(b);
+  return w;
+}
+function applyLock() {
+  const L = IND_LOCKED();
+  document.querySelectorAll('#nav-board, .ref button[data-view="pack"], .ref button[data-view="decisions"]').forEach(b => { b.hidden = L; });
+  if (L && !["map", "walk"].includes(state.view)) state.view = "map";
+}
 const fmtTime = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 let started = false;
@@ -1011,6 +1027,7 @@ function updateWho() {
 
 function render() {
   document.querySelectorAll(".mainnav-in > button[data-view], .ref button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
+  applyLock();
   renderPhases();
   const shell = $("#shell");
   const walk = state.view === "walk";
@@ -1029,6 +1046,7 @@ function render() {
 }
 
 function renderWalk() {
+  applyLock();
   document.querySelectorAll(".route button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.route === state.route)));
   const list = $("#steps"); list.innerHTML = "";
   const idx = state.stepIndex[state.route] || 0;
@@ -1060,13 +1078,13 @@ function renderWalk() {
       `<dt>To enter here</dt><dd>${s.records.length ? esc(s.records.map(r => r.label).join("; ")) + ". Use the box headed Results for this step." : "Nothing beyond marking the step complete."}</dd>`;
     read.appendChild(g);
   }
-  if (canPost()) { const co = el("div", { class: "comment-on" }); const area = s.title; co.appendChild(commentOn(area)); co.appendChild(suggestOn(area)); read.appendChild(co); }
-  read.appendChild(renderBody(s));
+  if (canPost() && !lockedFor(s)) { const co = el("div", { class: "comment-on" }); const area = s.title; co.appendChild(commentOn(area)); co.appendChild(suggestOn(area)); read.appendChild(co); }
+  read.appendChild(lockedFor(s) ? lockNote(s) : renderBody(s));
   const pager = el("div", { class: "pager" });
   if (idx > 0) { const p = el("button", { class: "btn quiet", type: "button" }, "Previous section"); p.onclick = () => { state.stepIndex[state.route] = idx - 1; save(); renderWalk(); }; pager.appendChild(p); } else pager.appendChild(el("span"));
   if (idx < steps().length - 1) { const n = el("button", { class: "btn quiet", type: "button" }, "Next section"); n.onclick = () => { state.stepIndex[state.route] = idx + 1; save(); renderWalk(); }; pager.appendChild(n); }
   read.appendChild(pager);
-  renderLedger(s);
+  if (lockedFor(s)) { const led = $("#ledger"); led.className = "ledger"; led.innerHTML = "<h4>This section</h4><p class=\"hint\">Opens when the coding is complete.</p>"; } else renderLedger(s);
 }
 
 /* ---------- the order of the research: phases, the navigation strip and the route map ---------- */
@@ -1110,7 +1128,7 @@ function renderMap() {
   m.appendChild(el("h2", {}, esc(OVR.title || CONTENT.overview_title || "The manuscript")));
   m.appendChild(el("p", { class: "fulltitle" }, esc(CONTENT.meta.full_title)));
   m.appendChild(el("p", { class: "lede" }, esc(OVR.lede || CONTENT.overview_lede)));
-  const files = (CONTENT.pack || []).filter(p => !p.lead_only || LEAD_VIEW());
+  const files = IND_LOCKED() ? [] : (CONTENT.pack || []).filter(p => !p.lead_only || LEAD_VIEW());
   if (files.length) { const fx = el("ul", { class: "pack overview-files" }); files.forEach(p => fx.appendChild(packItem(p))); m.appendChild(fx); }
   const guide = person ? (CONTENT.role_guide || {})[person.role] : "";
   if (guide) {
@@ -1150,7 +1168,7 @@ function renderMap() {
 /* ---------- the author board: shared, numbered, immutable comments, with alerts for the lead author and administrator ---------- */
 let BOARD = { loaded: false, comments: [], statuses: [], last_seen: 0, unread: 0, intact: true, checked_at: null, can_mark: false, error: null };
 const STATUS_LABEL = { acknowledged: "Acknowledged", addressed: "Addressed", not_adopted: "Not adopted", reopened: "Reopened" };
-const canPost = () => !!person && !!person.id && !readOnly() && !!cred;
+const canPost = () => !!person && !!person.id && !readOnly() && !!cred && !IND_LOCKED();
 const ukTime = iso => new Date(iso).toLocaleString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
 const draftKey = () => STORE_KEY + ".draft." + (person && person.id ? person.id : "none");
 function readDraft() { try { return JSON.parse(lsGet(draftKey()) || "null") || { section: "General", item: "", body: "", reply: null }; } catch (e) { return { section: "General", item: "", body: "", reply: null }; } }
