@@ -25,6 +25,7 @@ a:hover{color:var(--teal)}
 button{font-family:var(--body);font-size:15px;cursor:pointer}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [hidden]{display:none!important}
+.charcount{font-size:.78rem;color:var(--muted,#6a6355);text-align:right;margin-top:2px}.charcount.full{color:#8a2d1c;font-weight:600}
 /* page view: the Word pages as laid out, with a selectable text layer and paragraph notes in the margin */
 .shell:has(.pv-doc){max-width:1520px;grid-template-columns:230px minmax(0,1fr) 260px;gap:32px}
 body:has(.pv-doc) .top-in,body:has(.pv-doc) .mainnav-in,body:has(.pv-doc) .platform-in,body:has(.pv-doc) .foot-in{max-width:1520px}
@@ -66,8 +67,24 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .tbl th,.tbl td{border-bottom:1px solid var(--rule);padding:5px 6px;vertical-align:top;text-align:left}
 .tbl th{border-bottom:2px solid var(--navy)}
 .para img{max-width:100%;height:auto;background:#fff;border:1px solid var(--rule)}
+.sheet{background:#FFFEFC;border:1px solid #E2DBCB;box-shadow:0 1px 3px rgba(40,30,10,.10);padding:22px 28px 18px;margin-top:6px}
+.sheet>.sub:first-child{margin-top:0}
+.sheet .para .ptext,.sheet .para .ptext p{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.sheet .para .ptext table,.sheet .para .ptext th,.sheet .para .ptext td{text-align:left;hyphens:manual}
+@media (max-width:780px){
+  body .shell{padding:12px 6px 48px;gap:16px}
+  body .read{max-width:none}
+  .sheet{padding:16px 13px 12px;border-left-color:transparent;border-right-color:transparent;box-shadow:0 1px 2px rgba(40,30,10,.12)}
+  .sheet .para{grid-template-columns:18px minmax(0,1fr);grid-template-areas:"n t" ". b";gap:0 6px;padding:5px 0}
+  .sheet .para .pnum{grid-area:n;font-size:11.5px;padding-top:5px;color:#9A8466}
+  .sheet .para .ptext{grid-area:t;font-size:17px;line-height:1.62}
+  .sheet .para .pnote{grid-area:b;justify-self:end;opacity:1;margin:2px 0 4px;padding:1px 8px;font-size:12px}
+  .sheet .para.list .ptext{padding-left:12px}
+}
 .task{background:var(--ivory);border:1px solid var(--rule);border-left:3px solid var(--rule);padding:14px 16px;margin:0 0 14px}
 .task.answered{border-left-color:var(--teal)}
+.task ul.grp{margin:4px 0 12px;padding-left:20px;font-size:15px;line-height:1.45}.task ul.grp li{margin:2px 0}
+.task dl.codemeta{display:grid;grid-template-columns:max-content 1fr;gap:2px 12px;margin:2px 0 12px;font-size:15px}.task dl.codemeta dt{font-weight:600}.task dl.codemeta dd{margin:0;overflow-wrap:anywhere}
 .task h4{font-family:var(--display);font-size:19px;color:var(--navy);margin:0 0 2px;line-height:1.2}
 .task .tk{font-size:13px;color:var(--umber);margin:0 0 6px}
 .task .tstat{float:right;font-size:12.5px;color:var(--muted)}
@@ -247,6 +264,11 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .pack .name{font-family:var(--display);font-size:22px;color:var(--navy);font-weight:600;line-height:1.2}
 .pack .desc{color:var(--muted);font-size:15px;margin-top:4px}
 .pack .meta{font-size:13px;color:var(--muted);margin-top:6px}
+.dl-word{display:inline-flex;align-items:center;gap:9px;background:none;border:0;padding:10px 2px;margin:0;color:#0B57D0;font-family:var(--body);font-size:16.5px;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer;text-align:left}
+.dl-word:hover{color:#0842A0}
+.dl-word:disabled{opacity:.65;cursor:wait}
+.dl-word .wordico{flex:none;display:block}
+.pack .meta{overflow-wrap:anywhere}
 @media (max-width:560px){.pack li{grid-template-columns:1fr}}
 
 /* Tables from the protocol */
@@ -341,12 +363,6 @@ dialog .err{margin-top:14px}
 .authors .ap{font-size:14.5px;color:var(--ink)}
 .authors .ar{font-size:14px;color:var(--muted)}
 .authors .as{font-size:13px;color:var(--teal)}
-.roster{display:grid;gap:6px;margin:10px 0 14px;max-height:46vh;overflow-y:auto}
-.roster button{display:flex;flex-direction:column;gap:1px;text-align:left;background:#fff;border:1px solid var(--rule);padding:8px 12px;border-radius:2px;color:var(--ink)}
-.roster button:hover{border-color:var(--teal)}
-.roster .rt{font-weight:500;color:var(--navy);line-height:1.3}
-.roster .rn{font-size:13.5px;color:var(--muted)}
-.pack .meta{overflow-wrap:anywhere}
 .roles-other{margin-top:16px;padding-top:12px;border-top:1px solid var(--rule)}
 .roles-other p{font-size:13.5px;color:var(--muted);margin:0 0 8px}
 .roles-other .roles{grid-template-columns:1fr 1fr;margin:0}
@@ -442,14 +458,10 @@ dialog .err{margin-top:14px}
       <ul class="partners gate-partners" aria-label="Principal institutions"><li class="lead"><img src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Group and University of St Andrews" title="STRIKERS Elite Sports Group and University of St Andrews"></li><li class="collab-label">In collaboration with</li><li class="collab"><img src="assets/aspetar.png" alt="Aspetar Orthopaedic and Sports Medicine Hospital" title="Aspetar Orthopaedic and Sports Medicine Hospital"></li><li class="collab"><img src="assets/etpi.png" alt="European Tour Performance Institute" title="European Tour Performance Institute"></li></ul>
       <p class="gate-kicker">Scoping review and framework development</p>
       <h1 id="gate-title">Performance Medicine for the optimisation of health and human potential</h1>
-      <p>The manuscript, section by section, with the lead reviewer&rsquo;s tasks and the author board. Enter the passcode you were sent to open it.</p>
-      <div class="field">
-        <label for="pass">Passcode</label>
-        <input id="pass" name="pass" type="password" required spellcheck="false" autocapitalize="off">
-      </div>
-      <button class="btn" type="submit" id="open-btn">Open the manuscript</button>
+      <p>The manuscript for review by all authors, section by section. Choose your name and enter your personal passcode. The first time, a one-time code is emailed to you so that you can choose your own passcode.</p>
+      <button class="btn" type="submit" id="open-btn">Sign in</button>
       <div class="err" id="gate-err" role="alert" hidden></div>
-      <p class="gate-foot">The content of this page is encrypted and opens only with the passcode, which never leaves your browser.</p>
+      <p class="gate-foot">The content of this page is encrypted. It opens only for the named authors, after they sign in with their own passcode.</p>
     </form>
     <div class="hosted">
       <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
@@ -517,7 +529,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "performance-medicine", "version": "v0_1", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}};
+const CONFIG = {"workstream": "performance-medicine", "version": "v0_1", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "second", "title": "Second Reviewer", "named": true, "unnumbered": true, "roster": []}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": []}, {"key": "admin", "title": "Symposion Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Senior Author", "name": "Dr Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -553,10 +565,13 @@ const MSG = {
   admin_locked: "Too many attempts. Wait fifteen minutes and try again.",
   bad_passcode: "That passcode is not right.",
   no_passcode: "No passcode has been set for this person yet.",
-  person_locked: "Too many wrong attempts. Wait fifteen minutes, or ask the administrator to set a temporary passcode.",
+  person_locked: "Too many wrong attempts. Wait fifteen minutes, or choose Forgotten it and email yourself a one-time code.",
   bad_new_passcode: "Choose a passcode of 6 to 64 characters.",
+  bad_code: "That code was not accepted. It may have expired or been used; you can ask for a new one.",
+  not_configured: "Codes cannot be emailed just now. Please contact Dr Hall.",
   already_registered: "That role or name already has a passcode. Go back and enter it.",
   not_found: "No one is registered under that name in this role.",
+  not_listed: "That name is not registered for this review. Please contact Dr Hall.",
   bad_name: "Enter your name, between 2 and 80 characters.",
   bad_workstream: "This review is not set up for saving yet.",
   name_taken: "Another person in that role already has that name.",
@@ -577,8 +592,9 @@ async function rpc(fn, args) {
   return body;
 }
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const roleDef = k => (CONTENT.roles || []).find(r => r.key === k) || { key: k, title: k };
-const personLabel = p => roleDef(p.role).title + (p.seq ? " " + p.seq : "");
+const ROLES = () => (CONTENT && CONTENT.roles) || CONFIG.roles || [];
+const roleDef = k => ROLES().find(r => r.key === k) || { key: k, title: k };
+const personLabel = p => roleDef(p.role).title + (p.seq && !roleDef(p.role).unnumbered ? " " + p.seq : "");
 const personName = p => p.name || roleDef(p.role).name || "";
 const personFull = p => personLabel(p) + (personName(p) ? ": " + personName(p) : "");
 
@@ -620,26 +636,36 @@ const gateForm = document.getElementById("gate-form");
 gateForm.addEventListener("submit", async ev => {
   ev.preventDefault();
   const btn = document.getElementById("open-btn"), err = document.getElementById("gate-err");
-  err.hidden = true; btn.disabled = true; btn.textContent = "Opening";
-  try { await unlock(document.getElementById("pass").value.trim()); start(); }
-  catch (e) {
-    err.textContent = e.message === "pass"
-      ? "That passcode does not open this workstream. Check it against the message it came in, including capitals and hyphens."
-      : "The manuscript could not be loaded. Check your connection and try again.";
-    err.hidden = false;
-  }
-  btn.disabled = false; btn.textContent = "Open the manuscript";
+  err.hidden = true;
+  showDialog("roles");
 });
 
 /* ---------- rendering helpers ---------- */
 const $ = s => document.querySelector(s);
 const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (html) e.innerHTML = html; return e; };
-const visibleSteps = route => CONTENT.routes[route].steps.filter(s => !s.lead_only || LEAD_VIEW());
-const steps = () => visibleSteps(state.route);
+const IND = () => !!person && person.role === "second";   // co-author and independent reviewer: the author view plus her coding sets
+const stepVisible = s => ((person && person.role === "admin") || IND() || (s.audience || "authors") !== "reviewer") && (!s.lead_only || LEAD_VIEW());
+const steps = () => CONTENT.routes[state.route].steps.filter(stepVisible);
+const codingSets = () => CONTENT.routes[state.route].steps.filter(s => s.audience === "reviewer");
+const IND_LOCKED = () => IND() && !codingSets().every(s => stepDone(ROUTE, s.key));
+const lockedFor = s => IND_LOCKED() && (s.audience || "authors") !== "reviewer";
+function lockNote(s) {
+  const w = el("div", { class: "appear lockbox" });
+  const left = codingSets().filter(x => !stepDone(ROUTE, x.key)).length;
+  w.appendChild(el("p", { class: "lede" }, `This part opens once the independent coding is complete, so that your codes are made without knowledge of the review\u2019s findings. ${left === 1 ? "One coding set remains" : left + " coding sets remain"} to be marked complete.`));
+  const first = codingSets().find(x => !stepDone(ROUTE, x.key)) || codingSets()[0];
+  const b = el("button", { class: "btn live", type: "button" }, `Go to ${esc(first.title)}`); b.onclick = () => goStep(first.n); w.appendChild(b);
+  return w;
+}
+function applyLock() {
+  const L = IND_LOCKED();
+  document.querySelectorAll('#nav-board, .ref button[data-view="pack"], .ref button[data-view="decisions"]').forEach(b => { b.hidden = L; });
+  if (L && !["map", "walk"].includes(state.view)) state.view = "map";
+}
 const fmtTime = iso => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 let started = false;
-function start() {
+function start(signedIn) {
   document.getElementById("gate").hidden = true;
   document.getElementById("app").hidden = false;
   $("#foot-version").textContent = "Manuscript " + CONTENT.meta.ms_label + ", review page " + CONTENT.meta.version + ", built " + CONTENT.meta.built + ".";
@@ -649,10 +675,11 @@ function start() {
     document.querySelectorAll(".route button").forEach(b => b.addEventListener("click", () => { state.route = b.dataset.route; save(); render(); }));
     $("#steps-toggle").addEventListener("click", () => setRail(!$("#rail").classList.contains("open")));
     $("#who-change").addEventListener("click", () => { save(); showDialog("roles"); });
-    $("#role-dialog").addEventListener("cancel", ev => { if (!person) ev.preventDefault(); });
+    $("#role-dialog").addEventListener("cancel", ev => { if (!person) ev.preventDefault(); });   // before sign-in the gate stays behind it
   }
   render();
   updateSync();
+  if (signedIn) return;
   const last = readLast();
   if (last && last.role === "readonly") enterReadOnly();
   else if (last && last.role === "admin") showDialog("admin");
@@ -697,30 +724,34 @@ function showDialog(step, ctx = {}) {
   const back = () => showDialog("roles");
   if (step === "roles") {
     box.appendChild(el("h3", { id: "role-title" }, "Who is reviewing?"));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 1 of 2. Choose your name; you will then enter your personal passcode, or, the first time, a one-time code emailed to you."));
     if (ctx.note) box.appendChild(el("p", { class: "dlg-note" }, esc(ctx.note)));
     const wrap = el("div", { class: "roles" });
     const other = el("div", { class: "roles" });
-    CONTENT.roles.filter(rd => !rd.locked).concat(CONTENT.roles.filter(rd => rd.locked)).forEach(rd => {
-      const b = el("button", { type: "button", "data-role": rd.key, class: rd.locked ? "locked" : "" });
-      b.appendChild(el("span", { class: "rt" }, esc(rd.title) + (rd.named ? " *" : "")));
-      if (rd.locked) b.appendChild(el("span", { class: "rn" }, LOCK + esc((rd.name ? rd.name + ", " : "") + (rd.sub || "passcode required"))));
-      else if (rd.named) b.appendChild(el("span", { class: "rn" }, "Enter your name"));
-      else if (rd.name) b.appendChild(el("span", { class: "rn" }, esc(rd.name)));
-      b.onclick = async () => {
-        if (rd.key === "admin") return showDialog("admin");
-        if (rd.key === "readonly") return showDialog("readonly");
-        if (rd.named) return showDialog("name", { rd });
-        b.disabled = true;
-        try {
-          const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key });
-          if (r.found) showDialog("passcode", { who: { role: rd.key } });
-          else showDialog("setpass", { rd });
-        } catch (e) { b.disabled = false; dlgError(box, e); }
-      };
-      (rd.locked ? other : wrap).appendChild(b);
+    const add = (rd, name, sub, locked, go) => {
+      const b = el("button", { type: "button", "data-role": rd.key, class: locked ? "locked" : "" });
+      if (name) b.setAttribute("data-name", name);
+      b.appendChild(el("span", { class: "rt" }, esc(name || rd.title)));
+      b.appendChild(el("span", { class: "rn" }, (locked ? LOCK : "") + esc(sub)));
+      b.onclick = async () => { b.disabled = true; try { await go(); } catch (e) { dlgError(box, e); } b.disabled = false; };
+      (rd.key === "readonly" ? other : wrap).appendChild(b);
+    };
+    ROLES().filter(rd => !rd.hidden && rd.key !== "readonly").forEach(rd => {
+      if (rd.key === "admin") add(rd, rd.name, rd.title, true, async () => showDialog("admin"));
+      else if (rd.key === "readonly") add(rd, null, rd.sub || "passcode required", true, async () => showDialog("readonly"));
+      else if (rd.roster) rd.roster.forEach(nm => add(rd, nm, rd.title, false, async () => {
+        const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key, p_name: nm });
+        if (!r.found) throw new Error("not_listed");
+        const who = { role: rd.key, seq: r.seq, name: r.name };
+        showDialog(r.first ? "reset" : "passcode", { who, first: !!r.first });
+      }));
+      else add(rd, rd.name, rd.title, false, async () => {
+        const r = await rpc("symposion_lookup", { p_slug: CONFIG.workstream, p_role: rd.key });
+        if (!r.found) throw new Error("not_listed");
+        showDialog(r.first ? "reset" : "passcode", { who: { role: rd.key }, first: !!r.first });
+      });
     });
     box.appendChild(wrap);
-    if (CONTENT.roles.some(r => r.named)) box.appendChild(el("p", { class: "dlg-note" }, "* Each person in these roles enters their own name and is numbered in the order they join. Use the same name each time to pick up where you left off."));
     if (other.children.length) {
       const o = el("div", { class: "roles-other" });
       o.appendChild(el("p", {}, "Other access"));
@@ -729,19 +760,6 @@ function showDialog(step, ctx = {}) {
   } else if (step === "name") {
     const rd = ctx.rd;
     box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
-    const listed = (CONTENT.authors || []).filter(a => a.site_role === rd.key);
-    if (listed.length && !ctx.name) {
-      box.appendChild(el("p", { class: "dlg-note" }, "Choose your name. If it is not listed, enter it below."));
-      const r = el("div", { class: "roster" });
-      listed.forEach(a => {
-        const b = el("button", { type: "button" });
-        b.appendChild(el("span", { class: "rt" }, esc(a.name)));
-        b.appendChild(el("span", { class: "rn" }, esc(a.profession)));
-        b.onclick = () => { const i = box.querySelector("#nm"); i.value = a.name; i.form.requestSubmit(); };
-        r.appendChild(b);
-      });
-      box.appendChild(r);
-    }
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = `<div class="dlg-field"><label for="nm">Your name</label><input id="nm" maxlength="80" required spellcheck="false" autocomplete="name"></div>
       <div class="dlg-actions"><button class="btn live" type="submit">Continue</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
@@ -795,15 +813,17 @@ function showDialog(step, ctx = {}) {
     focusFirst(f, "#pc1");
   } else if (step === "passcode") {
     const w = ctx.who;
-    box.appendChild(el("h3", { id: "role-title" }, "Enter your passcode"));
+    box.appendChild(el("h3", { id: "role-title" }, "Your personal passcode"));
     box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 2 of 2. Enter the personal passcode you chose when you first signed in."));
     if (ctx.error) box.appendChild(el("div", { class: "err", role: "alert" }, esc(MSG[ctx.error] || MSG.server)));
     const f = el("form", { autocomplete: "off" });
-    f.innerHTML = passField("pc", "Your passcode") + SHOW +
-      `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>
-       <p class="dlg-note">Forgotten it? Ask the administrator to set a temporary passcode.</p>`;
+    f.innerHTML = passField("pc", "Personal passcode") + SHOW +
+      `<div class="dlg-actions"><button class="btn live" type="submit">Open my progress</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>
+       <p class="dlg-note">First time here, or forgotten it? <a href="#" data-forgot>Email me a one-time code</a> so that I can choose my personal passcode.</p>`;
     showToggle(f);
     f.querySelector("[data-back]").onclick = back;
+    f.querySelector("[data-forgot]").onclick = ev => { ev.preventDefault(); showDialog("reset", { who: w }); };
     f.onsubmit = async ev => {
       ev.preventDefault();
       const pass = f.querySelector("#pc").value, btn = f.querySelector(".btn.live");
@@ -811,15 +831,62 @@ function showDialog(step, ctx = {}) {
       try {
         const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_pass: pass });
         cred = pass;
-        if (r.must_change) showDialog("change", { r, old: pass }); else await becomePerson(r);
+        if (r.must_change) showDialog("change", { r, old: pass }); else await enterWith(r);
       } catch (e) { btn.disabled = false; f.querySelector("#pc").value = ""; dlgError(f, e); }
     };
     box.appendChild(f);
     focusFirst(f, "#pc");
+  } else if (step === "reset") {
+    const w = ctx.who;
+    box.appendChild(el("h3", { id: "role-title" }, ctx.first ? "First sign-in" : "Choose a new personal passcode"));
+    box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
+    if (!ctx.sent) {
+      box.appendChild(el("p", { class: "dlg-note" }, ctx.first
+        ? "Step 2 of 2. A one-time code will be emailed to the address Dr Hall holds for you. It is valid for 15 minutes and can be used once. You will then choose your own personal passcode, which is the only passcode you need from then on."
+        : "A one-time code will be emailed to the address held for you. It is valid for 15 minutes and can be used once. Your current passcode stays valid until you use the code."));
+      const f = el("form", { autocomplete: "off" });
+      f.innerHTML = `<div class="dlg-actions"><button class="btn live" type="submit">Email me a code</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
+      f.querySelector("[data-back]").onclick = () => ctx.first ? back() : showDialog("passcode", { who: w });
+      f.onsubmit = async ev => {
+        ev.preventDefault();
+        const btn = f.querySelector(".btn.live"); btn.disabled = true;
+        try {
+          let r; try { r = await fetch(CONFIG.supabase.url + "/functions/v1/symposion-reset", { method: "POST",
+            headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json" },
+            body: JSON.stringify({ slug: CONFIG.workstream, role: w.role, name: w.name || null }) }); } catch (e) { throw new Error("offline"); }
+          if (r.status === 503) throw new Error("not_configured");
+          if (!r.ok) throw new Error("server");
+          showDialog("reset", { who: w, sent: true, first: ctx.first });
+        } catch (e) { btn.disabled = false; dlgError(f, e); }
+      };
+      box.appendChild(f);
+    } else {
+      box.appendChild(el("p", { class: "dlg-note" }, "If an address is held for you, a code is on its way. Check your inbox and junk folder; it can take a minute or two. Enter it below with the new personal passcode you want to use."));
+      const f = el("form", { autocomplete: "off" });
+      f.innerHTML = `<div class="dlg-field"><label for="rc">One-time code from the email</label><input id="rc" required spellcheck="false" autocapitalize="characters" autocomplete="one-time-code" maxlength="20"></div>` +
+        passField("pc1", "New personal passcode, 6 to 64 characters") + passField("pc2", "Repeat the new passcode") + SHOW +
+        `<div class="dlg-actions"><button class="btn live" type="submit">Save new passcode and open</button><button class="btn quiet" type="button" data-again>Send another code</button></div>`;
+      showToggle(f);
+      f.querySelector("[data-again]").onclick = () => showDialog("reset", { who: w, first: ctx.first });
+      f.onsubmit = async ev => {
+        ev.preventDefault();
+        const code = f.querySelector("#rc").value, a = f.querySelector("#pc1").value, b2 = f.querySelector("#pc2").value, btn = f.querySelector(".btn.live");
+        if (a.length < 6) return dlgError(f, new Error("bad_new_passcode"));
+        if (a !== b2) { f.querySelectorAll(".err").forEach(x => x.remove()); return f.appendChild(el("div", { class: "err", role: "alert" }, "The two passcodes are not the same.")); }
+        btn.disabled = true;
+        try {
+          await rpc("symposion_reset_confirm", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_code: code, p_new: a });
+          const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: w.role, p_name: w.name || null, p_pass: a });
+          cred = a; await enterWith(r);
+        } catch (e) { btn.disabled = false; dlgError(f, e); }
+      };
+      box.appendChild(f);
+      focusFirst(f, "#rc");
+    }
   } else if (step === "change") {
     const { r, old } = ctx;
     box.appendChild(el("h3", { id: "role-title" }, "Choose a new passcode"));
-    box.appendChild(el("p", { class: "dlg-note" }, "The administrator set a temporary passcode for you. Choose your own now; it replaces the temporary one."));
+    box.appendChild(el("p", { class: "dlg-note" }, "You have signed in with your temporary passcode. Choose your own personal passcode now. It replaces the temporary one, and from now on it is the passcode you enter after choosing your name."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("pc1", "New passcode, 6 to 64 characters") + passField("pc2", "Repeat the new passcode") + SHOW +
       `<div class="dlg-actions"><button class="btn live" type="submit">Save and open</button></div>`;
@@ -830,18 +897,19 @@ function showDialog(step, ctx = {}) {
       if (a.length < 6) return dlgError(f, new Error("bad_new_passcode"));
       if (a !== b2) { f.querySelectorAll(".err").forEach(x => x.remove()); return f.appendChild(el("div", { class: "err", role: "alert" }, "The two passcodes are not the same.")); }
       btn.disabled = true;
-      try { await rpc("symposion_set_passcode", { p_slug: CONFIG.workstream, p_person: r.id, p_old: old, p_new: a }); cred = a; await becomePerson(r); }
+      try { await rpc("symposion_set_passcode", { p_slug: CONFIG.workstream, p_person: r.id, p_old: old, p_new: a }); cred = a;
+            await enterWith(await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: r.role, p_name: r.name || null, p_pass: a })); }
       catch (e) { btn.disabled = false; dlgError(f, e); }
     };
     box.appendChild(f);
     focusFirst(f, "#pc1");
   } else if (step === "admin") {
-    const rd = CONTENT.roles.find(r => r.key === "admin");
+    const rd = ROLES().find(r => r.key === "admin");
     box.appendChild(el("h3", { id: "role-title" }, esc(rd.title)));
-    box.appendChild(el("p", { class: "dlg-note" }, "This role is locked. Enter the administrator passcode."));
+    box.appendChild(el("p", { class: "dlg-note" }, "Step 2 of 2. This role is locked. Enter your administrator passcode."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("ap", "Administrator passcode") +
-      `<div class="dlg-actions"><button class="btn live" type="submit">Unlock</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>`;
+      `<div class="dlg-actions"><button class="btn live" type="submit">Unlock</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>`;
     f.querySelector("[data-back]").onclick = back;
     f.onsubmit = async ev => {
       ev.preventDefault();
@@ -850,7 +918,7 @@ function showDialog(step, ctx = {}) {
       try {
         const r = await rpc("symposion_enter", { p_slug: CONFIG.workstream, p_role: "admin", p_pass: secret });
         cred = secret;
-        await becomePerson(r);
+        await enterWith(r);
       } catch (e) { btn.disabled = false; f.querySelector("#ap").value = ""; dlgError(f, e); }
     };
     box.appendChild(f);
@@ -861,7 +929,7 @@ function showDialog(step, ctx = {}) {
     box.appendChild(el("p", { class: "dlg-note" }, "You can read every part of the manuscript, with the entry boxes and buttons greyed out. Enter the project passcode."));
     const f = el("form", { autocomplete: "off" });
     f.innerHTML = passField("rp", "Project passcode") +
-      `<div class="dlg-actions"><button class="btn live" type="submit">Open to read</button><button class="btn quiet" type="button" data-back>Choose another role</button></div>`;
+      `<div class="dlg-actions"><button class="btn live" type="submit">Open to read</button><button class="btn quiet" type="button" data-back>Choose another name</button></div>`;
     f.querySelector("[data-back]").onclick = back;
     f.onsubmit = async ev => {
       ev.preventDefault();
@@ -880,6 +948,16 @@ function enterReadOnly() {
   lsSet(STORE_KEY + ".last", JSON.stringify({ role: "readonly" }));
   state = blankState(); state.positioned = true;
   closeDialog(); updateWho(); render(); updateSync();
+}
+
+/* Signed in: the reply carries the page key for a named author, so the content is opened here the first time in this tab. */
+async function enterWith(r) {
+  if (!CONTENT) {
+    if (!r || !r.site_key) throw new Error("not_listed");
+    try { await unlock(r.site_key); } catch (e) { throw new Error("server"); }
+    start(true);
+  }
+  await becomePerson(r);
 }
 
 /* The person is known and has proved who they are: load their saved progress from Symposion, then show the walkthrough. */
@@ -907,7 +985,7 @@ async function pullServer() {
     state.steps = steps;
     if (!state.positioned) {
       for (const route of Object.keys(CONTENT.routes)) {
-        const list = visibleSteps(route);
+        const list = CONTENT.routes[route].steps.filter(stepVisible);
         const i = list.findIndex(s => !(steps[route][s.key] || {}).done);
         state.stepIndex[route] = i < 0 ? list.length - 1 : i;
       }
@@ -946,6 +1024,7 @@ function updateWho() {
 
 function render() {
   document.querySelectorAll(".mainnav-in > button[data-view], .ref button").forEach(b => b.setAttribute("aria-current", b.dataset.view === state.view ? "page" : "false"));
+  applyLock();
   renderPhases();
   const shell = $("#shell");
   const walk = state.view === "walk";
@@ -964,6 +1043,7 @@ function render() {
 }
 
 function renderWalk() {
+  applyLock();
   document.querySelectorAll(".route button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.route === state.route)));
   const list = $("#steps"); list.innerHTML = "";
   const idx = state.stepIndex[state.route] || 0;
@@ -995,17 +1075,17 @@ function renderWalk() {
       `<dt>To enter here</dt><dd>${s.records.length ? esc(s.records.map(r => r.label).join("; ")) + ". Use the box headed Results for this step." : "Nothing beyond marking the step complete."}</dd>`;
     read.appendChild(g);
   }
-  if (canPost()) { const co = el("div", { class: "comment-on" }); const area = s.title; co.appendChild(commentOn(area)); co.appendChild(suggestOn(area)); read.appendChild(co); }
-  read.appendChild(renderBody(s));
+  if (canPost() && !lockedFor(s)) { const co = el("div", { class: "comment-on" }); const area = s.title; co.appendChild(commentOn(area)); co.appendChild(suggestOn(area)); read.appendChild(co); }
+  read.appendChild(lockedFor(s) ? lockNote(s) : renderBody(s));
   const pager = el("div", { class: "pager" });
   if (idx > 0) { const p = el("button", { class: "btn quiet", type: "button" }, "Previous section"); p.onclick = () => { state.stepIndex[state.route] = idx - 1; save(); renderWalk(); }; pager.appendChild(p); } else pager.appendChild(el("span"));
   if (idx < steps().length - 1) { const n = el("button", { class: "btn quiet", type: "button" }, "Next section"); n.onclick = () => { state.stepIndex[state.route] = idx + 1; save(); renderWalk(); }; pager.appendChild(n); }
   read.appendChild(pager);
-  renderLedger(s);
+  if (lockedFor(s)) { const led = $("#ledger"); led.className = "ledger"; led.innerHTML = "<h4>This section</h4><p class=\"hint\">Opens when the coding is complete.</p>"; } else renderLedger(s);
 }
 
 /* ---------- the order of the research: phases, the navigation strip and the route map ---------- */
-const phases = () => ((CONTENT.phases || {})[state.route] || []).map(p => ({ ...p, steps: p.steps.filter(n => steps().some(s => s.n === n)) })).filter(p => p.steps.length);
+const phases = () => ((CONTENT.phases || {})[state.route] || []).filter(p => p.steps.some(n => steps().some(s => s.n === n)));
 const phaseIndexOf = n => phases().findIndex(p => p.steps.includes(n));
 const stepDone = (route, key) => !!((state.steps[route] || {})[key] || {}).done;
 const ROLE_WORDS = { lead: /lead reviewer/i, second: /second reviewer/i, senior: /senior reviewer/i };
@@ -1041,10 +1121,11 @@ function renderMap() {
   const m = el("div", { class: "map appear overview" });
   const ab = alertBar(); if (ab) m.appendChild(ab);
   m.appendChild(el("p", { class: "kicker" }, "Overview"));
-  m.appendChild(el("h2", {}, esc(CONTENT.overview_title || "The manuscript")));
+  const OVR = (person && (CONTENT.overview_roles || {})[person.role]) || {};
+  m.appendChild(el("h2", {}, esc(OVR.title || CONTENT.overview_title || "The manuscript")));
   m.appendChild(el("p", { class: "fulltitle" }, esc(CONTENT.meta.full_title)));
-  m.appendChild(el("p", { class: "lede" }, esc(CONTENT.overview_lede)));
-  const files = (CONTENT.pack || []).filter(p => !p.lead_only || LEAD_VIEW());
+  m.appendChild(el("p", { class: "lede" }, esc(OVR.lede || CONTENT.overview_lede)));
+  const files = IND_LOCKED() ? [] : (CONTENT.pack || []).filter(p => !p.lead_only || LEAD_VIEW());
   if (files.length) { const fx = el("ul", { class: "pack overview-files" }); files.forEach(p => fx.appendChild(packItem(p))); m.appendChild(fx); }
   const guide = person ? (CONTENT.role_guide || {})[person.role] : "";
   if (guide) {
@@ -1053,7 +1134,7 @@ function renderMap() {
     m.appendChild(y);
   }
   m.appendChild(el("h3", {}, "How it works"));
-  const how = el("ol", { class: "howto" }); how.innerHTML = CONTENT.howto_html; m.appendChild(how);
+  const how = el("ol", { class: "howto" }); how.innerHTML = OVR.howto_html || CONTENT.howto_html; m.appendChild(how);
   m.appendChild(el("h3", {}, "Sections and task sets"));
   const S = state.steps[ROUTE] || {};
   let t = "<div class='scroll'><table class='teamtable'><thead><tr><th>Part</th><th class='n'>Tasks answered</th><th>Marked</th></tr></thead><tbody>";
@@ -1097,7 +1178,7 @@ function renderMap() {
 /* ---------- the author board: shared, numbered, immutable comments, with alerts for the lead author and administrator ---------- */
 let BOARD = { loaded: false, comments: [], statuses: [], last_seen: 0, unread: 0, intact: true, checked_at: null, can_mark: false, error: null };
 const STATUS_LABEL = { acknowledged: "Acknowledged", addressed: "Addressed", not_adopted: "Not adopted", reopened: "Reopened" };
-const canPost = () => !!person && !!person.id && !readOnly() && !!cred;
+const canPost = () => !!person && !!person.id && !readOnly() && !!cred && !IND_LOCKED();
 const ukTime = iso => new Date(iso).toLocaleString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
 const draftKey = () => STORE_KEY + ".draft." + (person && person.id ? person.id : "none");
 function readDraft() { try { return JSON.parse(lsGet(draftKey()) || "null") || { section: "General", item: "", body: "", reply: null }; } catch (e) { return { section: "General", item: "", body: "", reply: null }; } }
@@ -1454,15 +1535,18 @@ $("#suggest-btn").addEventListener("click", () => {
 
 /* ---------- tasks: each answer is saved as it is given, against the task, under the person who gave it ---------- */
 const LEAD_VIEW = () => !!person && (person.role === "lead" || person.role === "admin" || person.role === "senior");
-const TASKS = () => { const all = CONTENT.tasks || {}, out = {}; Object.keys(all).forEach(k => { if (!all[k].lead_only || LEAD_VIEW()) out[k] = all[k]; }); return out; };
+const TASKS = () => { const all = CONTENT.tasks || {}, out = {}, adm = !!person && person.role === "admin"; Object.keys(all).forEach(k => { const t = all[k]; if ((!t.lead_only || LEAD_VIEW()) && (adm || IND() || !t.reviewer_only)) out[k] = t; }); return out; };
 const taskRec = id => (state.steps[ROUTE] || {})[id] || { values: {} };
-const KIND = { review: "Section review", query: "Item to confirm", decision: "Change for the lead reviewer", check: "Check" };
+const KIND = { review: "Section review", query: "Item to confirm", decision: "Change for the lead reviewer", check: "Check", group: "Decision", code: "Independent coding" };
 function taskStatus(t) {
   const v = taskRec(t.id).values || {};
   const has = k => String(v[k] ?? "").trim() !== "";
   if (t.kind === "review") return has("verdict");
   if (t.kind === "decision") return has("decision") && (v.decision === t.fields[0].options[0] || has("reason") || has("value"));
   if (t.kind === "check") return has("finding") && (v.finding === t.fields[0].options[0] || has("text"));
+  if (t.kind === "group") return has("decision") && (v.decision === t.fields[0].options[0] || has("exceptions"));
+  if (t.kind === "code") { const nil = ["Not described", "Not reported"]; const codeOk = !t.fields.some(f => f.key === "code") || has("code");
+    return codeOk && has("role") && ((nil.includes(v.role) && (!v.code || v.code === "Not described")) || has("evidence")); }
   return t.fields.filter(f => f.type !== "textarea" && f.key !== "note").every(f => has(f.key)) || (t.fields.every(f => f.type === "textarea") && t.fields.some(f => has(f.key)));
 }
 function setValue(t, key, value) {
@@ -1482,11 +1566,22 @@ function taskCard(t, opts = {}) {
   if (t.study) {
     const st = t.study, links = [st.doi ? `<a href="https://doi.org/${esc(st.doi)}" target="_blank" rel="noopener">DOI</a>` : "",
       st.pmid ? `<a href="https://pubmed.ncbi.nlm.nih.gov/${esc(st.pmid)}/" target="_blank" rel="noopener">PubMed</a>` : ""].filter(Boolean).join(", ");
-    head += `<h4>${esc(t.title)}</h4>`;
-    head += `<p class="ctx">${esc(st.study_id)}. ${esc(st.title || "")}.${links ? " " + links : ""}</p>`;
+    head += t.rows ? `<h4>${esc(t.title)}</h4>` : `<h4>Study ${st.study_id}: ${esc(st.author.split(",")[0])} ${esc(st.year)}${t.field_label ? ", " + esc(t.field_label.toLowerCase()) : ""}</h4>`;
+    head += `<p class="ctx">${esc(st.title || "")}${links ? " " + links : ""}</p>`;
   } else if (!opts.bare) head += `<h4>${esc(t.title)}</h4>`;
   c.innerHTML = head;
   if (t.context) c.appendChild(el("p", { class: "ctx" }, esc(t.context)));
+  if (t.kind === "code") c.appendChild(el("dl", { class: "codemeta" }, `<dt>Type</dt><dd>${esc(t.study_type)}</dd><dt>Full text</dt><dd><code>${esc(t.file)}</code> in the shared folder</dd>` +
+    (t.link ? `<dt>Online</dt><dd><a href="${esc(t.link)}" target="_blank" rel="noopener">${esc(t.link)}</a></dd>` : "")));
+  if (t.studies && t.studies.length) {   // one decision covering several studies, each with its current code and links
+    const ul = el("ul", { class: "grp" });
+    t.studies.forEach(st => {
+      const links = [st.doi ? `<a href="https://doi.org/${esc(st.doi)}" target="_blank" rel="noopener">DOI</a>` : "",
+        st.pmid ? `<a href="https://pubmed.ncbi.nlm.nih.gov/${esc(st.pmid)}/" target="_blank" rel="noopener">PubMed</a>` : ""].filter(Boolean).join(", ");
+      ul.appendChild(el("li", {}, `<strong>Study ${esc(String(st.study_id))}: ${esc(st.author)} ${esc(st.year)}</strong>${st.note ? ". " + esc(st.note) : ""}${links ? " (" + links + ")" : ""}`));
+    });
+    c.appendChild(ul);
+  }
   if (t.rows) c.appendChild(el("dl", {}, t.rows.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join("")));
   if (t.kind === "decision" && !t.rows) c.appendChild(el("dl", {}, `<dt>As charted</dt><dd>${esc(t.charted || "(blank)")}</dd><dt>At source</dt><dd>${esc(t.source_value)}</dd>${t.evidence ? `<dt>Basis</dt><dd>${esc(t.evidence)}</dd>` : ""}`));
   if (t.kind === "check") c.appendChild(el("dl", {}, `<dt>As charted</dt><dd>${esc(t.charted || "(blank)")}</dd><dt>Why it is here</dt><dd>Only the abstract could be checked, and an abstract cannot confirm that rehabilitation is absent from the paper.</dd>`));
@@ -1506,20 +1601,26 @@ function taskCard(t, opts = {}) {
     } else {
       const w = el("div", { class: "field" });
       w.appendChild(el("label", { for: id }, esc(f.label)));
-      const inp = f.type === "textarea" ? el("textarea", { id, maxlength: "1200" })
+      const inp = f.type === "textarea" ? el("textarea", { id, maxlength: "3500" })
         : el("input", { id, type: f.type === "date" ? "date" : f.type === "number" ? "number" : "text", step: "any", maxlength: "300" });
       inp.value = v[f.key] ?? "";
       if (ro) inp.disabled = true;
       inp.addEventListener("change", () => { setValue(t, f.key, inp.value); refreshCard(c, t); });
       let typing = null;
       inp.addEventListener("input", () => { clearTimeout(typing); typing = setTimeout(() => { setValue(t, f.key, inp.value); refreshCard(c, t); }, 1200); });
-      w.appendChild(inp); c.appendChild(w);
+      w.appendChild(inp);
+      if (f.type === "textarea") {   // visible limit, so a long paste is never cut off unnoticed (28 October 2026)
+        const cnt = el("div", { class: "charcount" }); const upd = () => { cnt.textContent = `${inp.value.length.toLocaleString("en-GB")} of 3,500 characters`; cnt.classList.toggle("full", inp.value.length >= 3500); };
+        inp.addEventListener("input", upd); upd(); w.appendChild(cnt);
+      }
+      c.appendChild(w);
     }
   });
-  if (canPost() && t.kind !== "review") { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn(t.title)); c.appendChild(co); }
+  if (canPost() && t.kind !== "review") { const co = el("div", { class: "comment-on" }); co.appendChild(commentOn(t.study && !t.rows ? `Study ${t.study.study_id}: ${t.study.author.split(",")[0]} ${t.study.year}` : t.title)); c.appendChild(co); }
   return c;
 }
-function refreshCard(c, t) { c.classList.toggle("answered", taskStatus(t)); const s = c.querySelector(".tstat"); if (s) s.textContent = taskStatus(t) ? "Answered" : "Not yet answered"; renderPhases(); updateTally(); }
+function refreshSetProgress() { const h = document.getElementById("set-progress"); if (!h) return; const ids = (h.dataset.ids || "").split(" ").filter(Boolean), list = ids.map(id => TASKS()[id]).filter(Boolean); h.textContent = `${list.filter(taskStatus).length} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`; }
+function refreshCard(c, t) { refreshSetProgress(); c.classList.toggle("answered", taskStatus(t)); const s = c.querySelector(".tstat"); if (s) s.textContent = taskStatus(t) ? "Answered" : "Not yet answered"; renderPhases(); updateTally(); }
 function updateTally() {
   const all = Object.values(TASKS()), n = all.filter(taskStatus).length;
   const t = $("#tally"); if (t) t.innerHTML = `<strong>${n} of ${all.length}</strong> tasks answered.`;
@@ -1628,7 +1729,7 @@ function renderBody(s) {
   const wrap = el("div", { class: "appear ms" });
   if (s.kind === "tasks") {
     if (s.intro) wrap.appendChild(el("p", { class: "lede" }, s.intro));
-    if (!LEAD_VIEW()) { wrap.appendChild(el("p", { class: "lede" }, "These tasks are assigned to the lead reviewer.")); return wrap; }
+    if (!LEAD_VIEW() && s.audience !== "reviewer") { wrap.appendChild(el("p", { class: "lede" }, "These tasks are assigned to the lead reviewer.")); return wrap; }
     const list = s.task_ids.map(id => TASKS()[id]).filter(Boolean);
     const filt = state.open.filter || "all";
     const bar = el("div", { class: "taskfilter", role: "group", "aria-label": "Show" });
@@ -1649,14 +1750,14 @@ function renderBody(s) {
   if (qs.length) {
     const q = el("div", { class: "queries" });
     q.appendChild(el("h3", { class: "sub" }, qs.length === 1 ? "A query for the lead reviewer in this section" : `${["", "One", "Two", "Three", "Four", "Five", "Six"][qs.length] || qs.length} queries for the lead reviewer in this section`));
-    q.appendChild(el("p", { class: "ctx" }, "They match the highlighted notes in the text. Answer here; the senior author places the answers in the Word file."));
+    q.appendChild(el("p", { class: "ctx" }, "They match the highlighted notes in the text. Answer here; Dr Hall places the answers in the Word file."));
     qs.forEach(t => q.appendChild(taskCard(t)));
     wrap.appendChild(q);
     wrap.appendChild(el("h3", { class: "sub" }, "The section"));
   }
   if (PV() && PV().sections[s.section_key]) wrap.appendChild(viewSwitch());
   if (pageViewOn(s)) { wrap.appendChild(pageView(s)); return wrap; }
-  wrap.insertAdjacentHTML("beforeend", s.html);
+  const sheet = el("div", { class: "sheet" }); sheet.innerHTML = s.html; wrap.appendChild(sheet);
   const noted = new Set((BOARD.comments || []).filter(c => c.section === s.title).map(c => String(c.item || "").replace(/\D/g, "")));
   wrap.querySelectorAll(".para").forEach(p => {
     if (noted.has(p.dataset.n)) p.classList.add("noted");
@@ -1675,7 +1776,7 @@ function renderLedger(s) {
   const ro = readOnly();
   if (s.kind === "tasks") {
     const list = s.task_ids.map(id => TASKS()[id]).filter(Boolean), n = list.filter(taskStatus).length;
-    led.appendChild(el("p", { class: "hint" }, `${n} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`));
+    led.appendChild(el("p", { class: "hint", id: "set-progress", "data-ids": list.map(t => t.id).join(" ") }, `${n} of ${list.length} answered. Each answer is saved as you give it; you can return to any of them.`));
   } else {
     led.appendChild(el("p", { class: "hint" }, ro ? "Read only: nothing can be entered or saved." : "Each answer saves to your own record as you give it. To comment on a single paragraph, use Annotate beside it (on the Word pages, it appears in the margin as you point at the paragraph)."));
     (s.task_ids || []).filter(id => TASKS()[id] && TASKS()[id].kind === "review").forEach(id => led.appendChild(taskCard(TASKS()[id], { bare: true })));
@@ -1762,17 +1863,20 @@ function renderSearch() {
 function packItem(p) {
   const li = el("li");
   li.appendChild(el("div", {}, `<div class="name">${esc(p.label)}</div><div class="desc">${esc(p.desc)}</div><div class="meta">${esc(p.file)} &nbsp; ${esc(p.size)}</div>`));
-  const b = el("button", { class: "btn live", type: "button" }, "Download");
+  const isDoc = /\.docx$/i.test(p.file);
+  const WORDICO = '<svg class="wordico" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="4" fill="#185ABD"/><text x="14" y="20.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="17" fill="#fff">W</text></svg>';
+  const b = el("button", { class: isDoc ? "dl-word" : "btn live", type: "button" }, isDoc ? WORDICO + "<span>Download the Word document</span>" : "Download");
+  const setB = t => { if (isDoc) b.querySelector("span").textContent = t; else b.textContent = t; };
   b.onclick = async () => {
-    b.disabled = true; b.textContent = "Preparing";
+    b.disabled = true; setB("Preparing");
     try {
       const r = await fetch(p.enc, { cache: "no-store" }); const buf = new Uint8Array(await r.arrayBuffer());
       const plain = await decryptBytes(KEY, p.iv, buf);
       const url = URL.createObjectURL(new Blob([plain], { type: p.mime }));
       const a = el("a", { href: url, download: p.file }); document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 4000);
-      b.textContent = "Downloaded";
-    } catch (e) { b.textContent = "Download failed, try again"; }
+      setB("Downloaded, open it in Word");
+    } catch (e) { setB("Download failed, try again"); }
     b.disabled = false;
   };
   const bw = el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;align-items:center" }); bw.appendChild(b);
@@ -1878,7 +1982,7 @@ async function renderTeam() {
   const count = (p, r) => CONTENT.routes[r].steps.filter(s => (folded[p.id][r][s.key] || {}).done).length;
   const answeredBy = p => { const keep = state.steps; state.steps = folded[p.id]; const n = Object.values(TASKS()).filter(taskStatus).length; state.steps = keep; return n; };
   const lastAt = p => (by[p.id] || []).reduce((m, e) => e.created_at > m ? e.created_at : m, "");
-  const lab = p => roleDef(p.role).title + (p.seq ? " " + p.seq : "");
+  const lab = p => roleDef(p.role).title + (p.seq && !roleDef(p.role).unnumbered ? " " + p.seq : "");
 
   read.appendChild(el("h3", {}, "People"));
   const rows = [];
@@ -1946,7 +2050,7 @@ function tempCode() {
 
 function fixDialog(act, p, live) {
   const d = $("#fix-dialog"), box = $("#fix-body");
-  const lab = x => roleDef(x.role).title + (x.seq ? " " + x.seq : "") + (x.name ? ", " + x.name : "");
+  const lab = x => roleDef(x.role).title + (x.seq && !roleDef(x.role).unnumbered ? " " + x.seq : "") + (x.name ? ", " + x.name : "");
   box.innerHTML = "";
   box.appendChild(el("h3", { id: "fix-title" }, { rename: "Rename", merge: "Merge", remove: "Remove", reset: "Reset passcode" }[act]));
   box.appendChild(el("p", { class: "dlg-note" }, esc(lab(p) + (!p.name && roleDef(p.role).name ? ", " + roleDef(p.role).name : ""))));
