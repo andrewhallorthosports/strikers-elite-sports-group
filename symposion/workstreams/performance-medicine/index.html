@@ -95,6 +95,9 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .gate-card{background:var(--ivory);border:1px solid var(--rule);border-top:3px solid var(--navy);padding:34px 36px 28px}
 .gate-card .gate-partners{gap:28px;padding:0 0 22px;border-bottom:1px solid var(--rule);margin:0 0 22px}
 .gate-card .gate-partners img{height:64px}
+.gate-card .gate-partners .lead,.gate-card .gate-partners .collab-label{flex-basis:100%}
+.gate-card .gate-partners .collab-label{margin:2px 0 -12px}
+.gate-card .gate-partners .collab img{height:51px}
 .gate-kicker{font-family:var(--display);font-size:17px;color:var(--umber);margin:0 0 4px!important}
 .gate-card h1{font-family:var(--display);font-weight:600;font-size:38px;line-height:1.08;color:var(--navy);margin:0 0 14px}
 .gate-card p{color:var(--muted);font-size:15.5px;margin:0 0 22px}
@@ -130,6 +133,8 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .partners{list-style:none;display:flex;align-items:center;gap:24px;margin:0;padding:0;flex-wrap:wrap}
 .partners li{display:flex}
 .partners img{height:52px;width:auto;display:block}
+.partners .collab img{height:42px}
+.partners .collab-label{align-items:center;font-size:13.5px;font-style:italic;color:var(--muted);white-space:nowrap}
 .top-in .partners{padding-right:30px;border-right:1px solid var(--rule)}
 .mainnav{border-top:1px solid var(--rule)}
 .mainnav-in{position:relative}
@@ -147,14 +152,14 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .ref{margin-left:auto;display:flex;gap:2px 8px;flex-wrap:wrap;padding-left:10px;border-left:1px solid var(--rule)}
 @media (max-width:980px){.ref{margin-left:0;border-left:0;padding-left:0}.phases{border-left:0;padding-left:0}}
 @media (max-width:780px){
-  .partners img{height:38px}.partners{gap:16px}
+  .partners img{height:38px}.partners{gap:16px}.partners .collab img{height:30px}
   .top-in{padding:14px 16px 12px}.top-in .partners{border-right:0;padding-right:0}
   .tb-title{font-size:23px}
   .platform-in,.mainnav-in{padding-left:16px;padding-right:16px}
   .mainnav-in{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
   .phases,.ref{flex-wrap:nowrap}
   .mainnav button{white-space:nowrap}
-  .gate-card{padding:26px 22px 22px}.gate-card .gate-partners img{height:46px}.gate-card .gate-partners{gap:18px}.gate-card h1{font-size:30px}
+  .gate-card{padding:26px 22px 22px}.gate-card .gate-partners img{height:46px}.gate-card .gate-partners .collab img{height:37px}.gate-card .gate-partners{gap:18px}.gate-card h1{font-size:30px}
 }
 .dlg-check{display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--muted);margin-top:12px}
 .dlg-check input{width:auto;margin:0}
@@ -434,7 +439,7 @@ dialog .err{margin-top:14px}
 <main id="gate" class="gate" aria-labelledby="gate-title">
   <div class="gate-wrap">
     <form class="gate-card" id="gate-form" autocomplete="off">
-      <ul class="partners gate-partners" aria-label="Principal institutions"></ul>
+      <ul class="partners gate-partners" aria-label="Principal institutions"><li class="lead"><img src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Group and University of St Andrews" title="STRIKERS Elite Sports Group and University of St Andrews"></li><li class="collab-label">In collaboration with</li><li class="collab"><img src="assets/aspetar.png" alt="Aspetar Orthopaedic and Sports Medicine Hospital" title="Aspetar Orthopaedic and Sports Medicine Hospital"></li><li class="collab"><img src="assets/etpi.png" alt="European Tour Performance Institute" title="European Tour Performance Institute"></li></ul>
       <p class="gate-kicker">Scoping review and framework development</p>
       <h1 id="gate-title">Performance Medicine for the optimisation of health and human potential</h1>
       <p>The manuscript, section by section, with the lead reviewer&rsquo;s tasks and the author board. Enter the passcode you were sent to open it.</p>
@@ -467,7 +472,7 @@ dialog .err{margin-top:14px}
 
   <header class="top">
     <div class="top-in">
-      <ul class="partners" id="partners" aria-label="Principal institutions"></ul>
+      <ul class="partners" id="partners" aria-label="Principal institutions"><li class="lead"><img src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Group and University of St Andrews" title="STRIKERS Elite Sports Group and University of St Andrews"></li><li class="collab-label">In collaboration with</li><li class="collab"><img src="assets/aspetar.png" alt="Aspetar Orthopaedic and Sports Medicine Hospital" title="Aspetar Orthopaedic and Sports Medicine Hospital"></li><li class="collab"><img src="assets/etpi.png" alt="European Tour Performance Institute" title="European Tour Performance Institute"></li></ul>
       <div class="tb-text"><p class="tb-kicker">Scoping review and framework development</p><p class="tb-title" id="tb-title">Performance Medicine for the optimisation of health and human potential</p></div>
     </div>
     <nav class="mainnav" aria-label="The review, in the order the work is done">
