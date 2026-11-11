@@ -499,7 +499,7 @@ dialog .err{margin-top:14px}
     </form>
     <div class="hosted">
       <div class="hosted-brand"><span class="hosted-label">Hosted on</span><span class="wordmark">SYMPOSION</span><img class="sa-logo" src="assets/strikers-st-andrews.png" alt="STRIKERS Elite Sports Injury Group and the University of St Andrews"></div>
-      <p>Symposion is a web-based research application designed and hosted by Dr Andrew J Hall, University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
+      <p>Symposion is a web-based research application designed and hosted by Andrew J Hall (AJH), University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
     </div>
   </div>
 </main>
@@ -549,7 +549,7 @@ dialog .err{margin-top:14px}
   <footer>
     <div class="foot-in">
       <div>
-        <p style="margin:0 0 6px">Symposion is a web-based research application designed and hosted by Dr Andrew J Hall, University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
+        <p style="margin:0 0 6px">Symposion is a web-based research application designed and hosted by Andrew J Hall (AJH), University of St Andrews, for the STRIKERS Elite Sports Injury Group. Contact: <a href="mailto:ajh52@st-andrews.ac.uk">ajh52@st-andrews.ac.uk</a>.</p>
         <p style="margin:0">Symposion is an Aurora Performance: Labs application under development, for authorised research group use. <span id="foot-version"></span></p>
       </div>
       <blockquote>Life is short, and Art long; the crisis fleeting; experience perilous, and decision difficult.<cite>Hippocrates, Aphorisms I.1, trans. Francis Adams</cite></blockquote>
@@ -564,7 +564,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "performance-medicine", "version": "v0_1", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "second", "title": "Second Reviewer", "named": true, "unnumbered": true, "roster": []}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": []}, {"key": "admin", "title": "Symposion Administrator", "name": "Dr Andrew Hall", "locked": true}, {"key": "senior", "title": "Senior Author", "name": "Dr Andrew Hall", "hidden": true}]};
+const CONFIG = {"workstream": "performance-medicine", "version": "v0_1", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "second", "title": "Second Reviewer", "named": true, "unnumbered": true, "roster": []}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": []}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Andrew Hall", "locked": true}, {"key": "senior", "title": "Senior Author", "name": "Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -603,10 +603,10 @@ const MSG = {
   person_locked: "Too many wrong attempts. Wait fifteen minutes, or choose Forgotten it and email yourself a one-time code.",
   bad_new_passcode: "Choose a passcode of 6 to 64 characters.",
   bad_code: "That code was not accepted. It may have expired or been used; you can ask for a new one.",
-  not_configured: "Codes cannot be emailed just now. Please contact Dr Hall.",
+  not_configured: "Codes cannot be emailed just now. Contact the Symposion Project Administrator (AJH).",
   already_registered: "That role or name already has a passcode. Go back and enter it.",
   not_found: "No one is registered under that name in this role.",
-  not_listed: "That name is not registered for this review. Please contact Dr Hall.",
+  not_listed: "That name is not registered for this review. Contact the Symposion Project Administrator (AJH).",
   bad_name: "Enter your name, between 2 and 80 characters.",
   bad_workstream: "This review is not set up for saving yet.",
   name_taken: "Another person in that role already has that name.",
@@ -624,7 +624,7 @@ const MSG = {
   same_email: "That is already your email address.",
   rate: "Too many codes have been asked for. Wait an hour and try again.",
   send: "The code could not be sent to that address. Check it and try again.",
-  person_gone: "Your registration could not be found. Please contact Dr Hall."
+  person_gone: "Your registration could not be found. Contact the Symposion Project Administrator (AJH)."
 };
 async function rpc(fn, args) {
   let r;
@@ -891,7 +891,7 @@ function showDialog(step, ctx = {}) {
     box.appendChild(el("p", { class: "dlg-note" }, esc(personFull(w))));
     if (!ctx.sent) {
       box.appendChild(el("p", { class: "dlg-note" }, ctx.first
-        ? "Step 2 of 2. A one-time code will be emailed to the address Dr Hall holds for you. It is valid for 15 minutes and can be used once. You will then choose your own personal passcode, which is the only passcode you need from then on."
+        ? "Step 2 of 2. A one-time code will be emailed to the address held for you. It is valid for 15 minutes and can be used once. You will then choose your own personal passcode, which is the only passcode you need from then on."
         : "A one-time code will be emailed to the address held for you. It is valid for 15 minutes and can be used once. Your current passcode stays valid until you use the code."));
       const f = el("form", { autocomplete: "off" });
       f.innerHTML = `<div class="dlg-actions"><button class="btn live" type="submit">Email me a code</button><button class="btn quiet" type="button" data-back>Back</button></div>`;
@@ -1336,7 +1336,7 @@ function detailsPanel() {
   b.onclick = () => detailsDialog({ mode: "edit" }); s.appendChild(b);
   if (LEAD_VIEW() && DET_TEAM && DET_TEAM.length) {
     s.appendChild(el("h3", { style: "margin-top:22px" }, "Author details"));
-    s.appendChild(el("p", { class: "hint" }, "As each author has given them. Shown to the lead reviewer, the senior author and the administrator only."));
+    s.appendChild(el("p", { class: "hint" }, "As each author has given them. Shown to the lead reviewer and the Symposion Project Administrator (AJH) only."));
     let t = "<div class='scroll'><table class='teamtable authordetails'><thead><tr><th>Author</th><th>Affiliations</th><th>Email and ORCID</th><th>Interests</th><th>CRediT</th><th>Confirmed</th></tr></thead><tbody>";
     DET_TEAM.forEach(p => {
       const D = p.details || {};
@@ -2105,7 +2105,7 @@ function renderBody(s) {
   if (qs.length) {
     const q = el("div", { class: "queries" });
     q.appendChild(el("h3", { class: "sub" }, qs.length === 1 ? "A query for the lead reviewer in this section" : `${["", "One", "Two", "Three", "Four", "Five", "Six"][qs.length] || qs.length} queries for the lead reviewer in this section`));
-    q.appendChild(el("p", { class: "ctx" }, "They match the highlighted notes in the text. Answer here; Dr Hall places the answers in the Word file."));
+    q.appendChild(el("p", { class: "ctx" }, "They match the highlighted notes in the text. Answer here; AJH places the answers in the Word file."));
     qs.forEach(t => q.appendChild(taskCard(t)));
     wrap.appendChild(q);
     wrap.appendChild(el("h3", { class: "sub" }, "The section"));

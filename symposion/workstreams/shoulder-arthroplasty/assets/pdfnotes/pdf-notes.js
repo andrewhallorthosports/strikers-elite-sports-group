@@ -99,7 +99,7 @@
       const f = await fetch(d.url); if (!f.ok) throw new Error("storage");
       const bytes = await f.arrayBuffer();
       const sha = hex(await crypto.subtle.digest("SHA-512", bytes));
-      if (sha !== d.sha512) { banner("bad", "This file does not match its recorded fingerprint, so it has been withheld. Please tell Dr Hall."); $("stage").innerHTML = ""; return; }
+      if (sha !== d.sha512) { banner("bad", "This file does not match its recorded fingerprint, so it has been withheld. Report this to the Symposion Project Administrator (AJH)."); $("stage").innerHTML = ""; return; }
       S.pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(bytes) }).promise;
     } catch (e) { banner("bad", say(e)); $("stage").innerHTML = ""; return; }
     $("n").textContent = S.pdf.numPages; $("pg").max = S.pdf.numPages;
@@ -108,7 +108,7 @@
     async function loadNotes() {
       try { const d = await o.rpc("symposion_pdf_notes", Object.assign(base(), { p_file: o.file })); S.notes = d.notes || []; S.blind = !!d.blind; S.intact = d.intact !== false; }
       catch (e) { banner("bad", say(e)); return; }
-      banner(S.intact ? (S.blind ? "info" : "") : "bad", !S.intact ? "The note record has failed its integrity check. Please tell Dr Hall." : S.blind ? "While your coding sets are open you see only your own notes here; everyone else's become visible when you complete them." : "");
+      banner(S.intact ? (S.blind ? "info" : "") : "bad", !S.intact ? "The note record has failed its integrity check. Report this to the Symposion Project Administrator (AJH)." : S.blind ? "While your coding sets are open you see only your own notes here; everyone else's become visible when you complete them." : "");
       list();
     }
     function tops() { return S.notes.filter((n) => n.kind !== "reply"); }
