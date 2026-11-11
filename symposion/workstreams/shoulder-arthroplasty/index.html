@@ -202,10 +202,10 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .shell{max-width:1240px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:270px minmax(0,1fr) 290px;gap:40px;align-items:start}
 .shell.wide{grid-template-columns:minmax(0,1fr)}
 @media (max-width:1100px){.shell{grid-template-columns:240px minmax(0,1fr)}.ledger{grid-column:2}}
-@media (max-width:780px){.shell{grid-template-columns:minmax(0,1fr);gap:24px}.ledger{grid-column:auto}.rail{position:static!important}}
+@media (max-width:780px){.shell{grid-template-columns:minmax(0,1fr);gap:24px}.ledger{grid-column:auto;max-height:none;overflow-y:visible}.rail{position:static!important;max-height:none!important;overflow-y:visible!important;padding-right:0}}
 
 /* Route switch and rail */
-.rail{position:sticky;top:20px}
+.rail{position:sticky;top:20px;max-height:calc(100vh - 40px);overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin}
 .route{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);background:var(--ivory);margin-bottom:22px}
 .route button{background:none;border:0;padding:10px 8px;font-size:14.5px;color:var(--muted);line-height:1.25}
 .route button[aria-pressed="true"]{background:var(--navy);color:var(--ivory)}
@@ -242,7 +242,7 @@ mark.query{background:#F4E3B5;color:var(--ink);padding:0 3px}
 .intro{border-left:3px solid var(--umber);padding:2px 0 2px 18px;color:var(--muted);margin:0 0 28px;font-style:italic}
 
 /* Ledger */
-.ledger{background:var(--ivory);border:1px solid var(--rule);padding:22px 20px;position:sticky;top:20px}
+.ledger{background:var(--ivory);border:1px solid var(--rule);padding:22px 20px;position:sticky;top:20px;max-height:calc(100vh - 40px);overflow-y:auto;overscroll-behavior:contain}
 .ledger h4{font-family:var(--display);font-weight:600;font-size:21px;color:var(--navy);margin:0 0 6px}
 .ledger .hint{font-size:14px;color:var(--muted);margin:0 0 16px}
 .ledger .field{margin-bottom:14px}
@@ -1418,6 +1418,8 @@ function renderWalk() {
   });
   $("#tally").innerHTML = `<strong>${done} of ${steps().length}</strong> sections and task sets marked complete.`;
   $("#toggle-count").textContent = `${done} of ${steps().length} complete`;
+  { const cur = list.querySelector("li.current"), rl = $("#rail");
+    if (cur && rl.scrollHeight > rl.clientHeight + 2) rl.scrollTop = Math.max(0, cur.offsetTop + list.offsetTop - rl.clientHeight / 2 + cur.offsetHeight / 2); }
   const s = steps()[idx];
   const read = $("#read");
   read.innerHTML = "";
