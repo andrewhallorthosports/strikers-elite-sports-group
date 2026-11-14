@@ -308,6 +308,7 @@ footer{border-top:1px solid var(--rule);background:var(--ivory)}
 .foot-in blockquote{margin:0;font-family:var(--display);font-size:18px;font-style:italic;color:var(--umber)}
 .foot-in blockquote cite{display:block;font-style:normal;font-family:var(--body);font-size:13px;color:var(--muted);margin-top:4px}
 @media (max-width:780px){.foot-in{grid-template-columns:1fr}}
+.shell:has(.as-split){max-width:1640px;grid-template-columns:230px minmax(0,1fr);gap:32px}body:has(.as-split) .top-in,body:has(.as-split) .mainnav-in,body:has(.as-split) .platform-in,body:has(.as-split) .foot-in{max-width:1640px}.shell:has(.as-split) .ledger{grid-column:2;position:static}.read:has(.as-split){max-width:none}.as-split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,1fr);gap:28px;align-items:start}.as-ref{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;background:var(--ivory);border:1px solid var(--rule);border-radius:4px}.as-head{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--rule)}.as-tabs{display:flex;gap:6px;flex:1;flex-wrap:wrap}.as-tabs button,.as-fold{font:inherit;font-size:14px;padding:5px 12px;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink);cursor:pointer}.as-tabs button[aria-selected=true]{background:var(--navy);border-color:var(--navy);color:#fff}.as-fold{display:none}.as-body{overflow:auto;padding:12px 14px;min-height:0}.as-body .vjfig{margin:0}.as-body .vjfigure{padding:6px}.as-body .vjfigure img{width:auto;max-width:100%;max-height:calc(100vh - 150px);margin:0 auto}.as-body .caption,.as-body p{font-size:14px;line-height:1.5}.as-body table{font-size:13.5px;line-height:1.45;border-collapse:collapse;width:100%;table-layout:fixed}.as-body th,.as-body td{vertical-align:top;padding:5px 8px 5px 0;text-align:left;overflow-wrap:break-word}.as-body tr.grp td{border-top:1px solid var(--umber)}.as-body td:first-child{color:var(--umber);font-weight:500;font-size:13px}.as-body th:nth-child(1){width:22%}.as-q .task{scroll-margin-top:12px}@media (max-width:1100px){.as-split{grid-template-columns:minmax(0,1fr) minmax(300px,1fr);gap:18px}}@media (max-width:780px){.shell:has(.as-split){grid-template-columns:minmax(0,1fr);gap:16px}.shell:has(.as-split) .ledger{grid-column:auto}}@media (max-width:860px){.as-split{display:block}.as-ref{top:0;z-index:5;max-height:46vh;margin:0 -6px 14px;box-shadow:0 6px 12px rgba(38,35,29,.12)}.as-body .vjfigure img{max-height:calc(46vh - 70px)}.as-fold{display:inline-block}.as-ref.folded .as-body{display:none}.as-ref.folded{max-height:none}}
 .vjfig{margin:18px 0 6px}.vjfigure{margin:0;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:10px;cursor:zoom-in}.vjfigure img{display:block;width:100%;height:auto}.vjfigure:focus-visible{outline:2px solid var(--teal);outline-offset:2px}#vjzoom{position:fixed;inset:0;z-index:60;background:rgba(20,22,28,.92);overflow:auto;padding:56px 16px 16px;text-align:center}#vjzoom img{max-width:none;width:min(2400px,200%);background:#fff;cursor:zoom-out}#vjzoom .vjclose{position:fixed;top:12px;right:12px}body.vjzoom-open{overflow:hidden}@media (max-width:560px){#vjzoom img{width:320%}}.sheet .caption{text-align:justify}.tcap{font-weight:500}#p-figt table{font-size:14.5px;line-height:1.45;border-collapse:collapse;width:100%;table-layout:fixed}#p-figt th,#p-figt td{vertical-align:top;padding:6px 8px 6px 0;overflow-wrap:break-word}#p-figt th:nth-child(1){width:24%}#p-figt th:nth-child(2){width:44%}#p-figt th:nth-child(3){width:32%}#p-figt tr.grp td{border-top:1px solid var(--umber)}#p-figt td:first-child{color:var(--umber);font-weight:500;font-size:13.5px;overflow-wrap:normal}#p-figt .scroll{overflow-x:visible}@media (max-width:560px){#p-figt table{font-size:13.5px}#p-figt th:nth-child(1){width:26%}#p-figt td:first-child{font-size:12.5px}}.buildrec{display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:8px 18px;margin:8px 0}.buildrec dt{color:var(--umber);font-weight:500}.buildrec dd{margin:0}@media (max-width:560px){.buildrec{grid-template-columns:1fr}}.pool h4{margin:18px 0 6px}.pool table{margin-bottom:6px}.pool ul{margin:4px 0 0;padding-left:1.2em}
 
 dialog{border:1px solid var(--rule);border-top:3px solid var(--umber);background:var(--ivory);color:var(--ink);padding:28px;width:min(480px,calc(100vw - 32px))}
@@ -2145,12 +2146,36 @@ function renderBody(s) {
       b.onclick = () => { state.open.filter = k; save(); renderWalk(); };
       bar.appendChild(b);
     });
-    wrap.appendChild(bar);
+    const refs = Array.isArray(s.refs) ? s.refs : [];
+    let host = wrap, split = null;
+    if (refs.length) {
+      split = el("div", { class: "as-split" });
+      const pane = el("aside", { class: "as-ref", "aria-label": "Under assessment" });
+      const head = el("div", { class: "as-head" });
+      const tabs = el("div", { class: "as-tabs", role: "tablist", "aria-label": "Under assessment" });
+      const fold = el("button", { type: "button", class: "as-fold", "aria-expanded": "true" }, "Hide");
+      head.appendChild(tabs); head.appendChild(fold); pane.appendChild(head);
+      const bodies = {};
+      const pick = k => { state.open.asRef = k; tabs.querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.k === k))); Object.entries(bodies).forEach(([kk, d]) => { d.hidden = kk !== k; }); };
+      refs.forEach(r => {
+        const b = el("button", { type: "button", role: "tab", "data-k": r.key }, esc(r.label)); b.onclick = () => pick(r.key); tabs.appendChild(b);
+        const d = el("div", { class: "as-body", role: "tabpanel", "aria-label": r.label }); d.innerHTML = r.html; bodies[r.key] = d; pane.appendChild(d);
+        d.querySelectorAll(".vjfig").forEach(hydrateFigure);
+      });
+      fold.onclick = () => { const shut = pane.classList.toggle("folded"); fold.textContent = shut ? "Show" : "Hide"; fold.setAttribute("aria-expanded", String(!shut)); };
+      pick(refs.some(r => r.key === state.open.asRef) ? state.open.asRef : refs[0].key);
+      split.appendChild(pane);
+      host = el("div", { class: "as-q" }); split.appendChild(host);
+      split.addEventListener("focusin", e => { const c = e.target.closest(".task[data-ref]"); if (c && bodies[c.dataset.ref]) pick(c.dataset.ref); });
+      split.addEventListener("pointerdown", e => { const c = e.target.closest(".task[data-ref]"); if (c && bodies[c.dataset.ref]) pick(c.dataset.ref); });
+    }
+    host.appendChild(bar);
     let group = null;
     list.filter(t => filt === "all" || (filt === "done") === taskStatus(t)).forEach(t => {
-      if (t.field_label && t.field_label !== group) { group = t.field_label; wrap.appendChild(el("h3", { class: "sub" }, esc(group))); }
-      wrap.appendChild(taskCard(t));
+      if (t.field_label && t.field_label !== group) { group = t.field_label; host.appendChild(el("h3", { class: "sub" }, esc(group))); }
+      const card = taskCard(t); if (t.ref) card.dataset.ref = t.ref; host.appendChild(card);
     });
+    if (split) wrap.appendChild(split);
     return wrap;
   }
   const qs = (s.task_ids || []).map(id => TASKS()[id]).filter(t => t && t.kind === "query");
