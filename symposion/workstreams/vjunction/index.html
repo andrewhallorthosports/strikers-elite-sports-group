@@ -615,6 +615,11 @@ function readLast() { try { return JSON.parse(lsGet(STORE_KEY + ".last") || "nul
 
 /* ---------- Symposion functions ---------- */
 const MSG = {
+  need_position: "Add at least one role or position.",
+  need_country: "Choose your main country of work.",
+  need_coi: "Choose whether you have interests to declare.",
+  need_coi_text: "Describe the interests you are declaring, or choose None to declare.",
+  need_credit: "Choose at least one CRediT contribution for this project.",
   offline: "Symposion could not be reached. Check your connection and try again.",
   server: "Something went wrong at Symposion. Try again in a moment.",
   admin_denied: "That passcode was not accepted.",
@@ -1133,6 +1138,24 @@ async function detFn(action, extra) {
 }
 
 /* Before the manuscript opens: the author confirms their details for this page (the administrator is not asked). */
+function detailsComplete(D) {
+  if (!person || person.role === "admin" || person.role === "readonly") return true;
+  if (!D || !D.confirmed) return false;
+  const coiOk = D.coi_none === true || (D.coi_none === false && String(D.coi || "").trim() !== "");
+  return (D.affiliations || []).length > 0 && (D.positions || []).length > 0 && !!D.country && coiOk && (D.credit || []).length > 0;
+}
+let askingDetails = false;
+async function askDetails() {
+  if (askingDetails) return;
+  askingDetails = true;
+  try { if (!DET) await fetchDetails(); } catch (e) {}
+  await new Promise(res => detailsDialog({ mode: "required", done: res }));
+  askingDetails = false;
+  if (detailsComplete(DET) && state.held && state.held.length) {
+    const h = state.held.splice(0); save();
+    h.forEach(q => state.queue.push(q)); save(); updateSync(); flush();
+  }
+}
 async function detailsGate() {
   const me = person;
   if (!me || me.role === "readonly") return true;
@@ -1144,7 +1167,7 @@ async function detailsGate() {
       if (person !== me) return false;
     }
   }
-  if (DET && DET.confirmed) return true;
+  if (detailsComplete(DET)) return true;
   await new Promise(res => detailsDialog({ mode: DET && DET.source === "other" ? "welcome" : "first", done: res }));
   return person === me;
 }
@@ -1205,10 +1228,11 @@ function detailsDialog(o) {
     b.onclick = () => detailsDialog(Object.assign({}, o, { review: true })); a.appendChild(b); box.appendChild(a);
     if (!d.open) d.showModal(); b.focus(); return;
   }
-  const D = DET || {}, full = o.mode !== "first", isAdm = person && person.role === "admin";
+  const D = DET || {}, full = true, isAdm = person && person.role === "admin";
   box.appendChild(el("h3", { id: "det-title" }, "Your details"));
   box.appendChild(el("p", { class: "dlg-note" }, o.mode === "first"
-    ? "Before the page opens, give your affiliations for this work. You can change anything here later, and add more, under Your details at the top of the page."
+    ? "Before anything is submitted on this page, please complete your details for this work: affiliations, role or position, country, declaration of interests and your CRediT contributions. ORCID, work setting and social media handles are optional. Everything can be changed later under Your details at the top of the page."
+    : o.mode === "required" ? "Your details for this work need to be complete before anything is submitted on this page: affiliations, role or position, country, declaration of interests and your CRediT contributions. What you entered has been kept on this device and is saved as soon as your details are complete."
     : o.mode === "welcome" ? "Check each part, change anything that differs for this work, then confirm. Everything except your CRediT contributions is shared with your other Symposion pages."
     : "Everything except your CRediT contributions is shared with your other Symposion pages, so a change here applies there too."));
   const f = el("form", { autocomplete: "off", novalidate: "" });
@@ -1264,10 +1288,10 @@ function detailsDialog(o) {
   let getPos = () => D.positions || [], getSoc = () => D.socials || [], getSettings = () => D.settings || [];
   let ctry = { value: D.country || "" }, sOther = { value: D.settings_other || "" }, coiNone = D.coi_none, coiText = { value: D.coi || "" }, getCredit = () => D.credit || [];
   if (full) {
-    const sP = sec("Professional role(s) or position(s)", "optional");
+    const sP = sec("Professional role(s) or position(s)");
     getPos = detListEditor(sP, D.positions || [], { limit: 8, max: 200, addLabel: "+ Add another role or position", label: "Role or position", placeholder: "e.g. Consultant in Sport and Exercise Medicine" });
 
-    const sC = sec("Main country of work", "optional");
+    const sC = sec("Main country of work");
     const cs = el("select", { "aria-label": "Main country of work" });
     cs.appendChild(el("option", { value: "" }, "Choose a country"));
     const names = detCountries(); if (D.country && !names.includes(D.country)) names.unshift(D.country);
@@ -1309,8 +1333,9 @@ function detailsDialog(o) {
   }
 
   const acts = el("div", { class: "dlg-actions" });
-  const save = el("button", { class: "btn live", type: "submit" }, gating ? "Confirm and open the page" : "Save my details");
+  const save = el("button", { class: "btn live", type: "submit" }, gating ? "Confirm my details" : "Save my details");
   acts.appendChild(save);
+  if (gating && !isAdm) { const later = el("button", { class: "btn quiet", type: "button" }, "Complete later"); later.onclick = finish; acts.appendChild(later); }
   if (!gating) { const c = el("button", { class: "btn quiet", type: "button" }, "Cancel"); c.onclick = () => d.close(); acts.appendChild(c); }
   f.appendChild(acts);
   f.onsubmit = async ev => {
@@ -1319,6 +1344,13 @@ function detailsDialog(o) {
     const fail = k => { const e = el("div", { class: "err", role: "alert" }, esc(MSG[k] || MSG.server)); f.insertBefore(e, acts); e.scrollIntoView({ block: "nearest" }); };
     const aff = getAff();
     if (!aff.length) return fail("no_affiliation");
+    if (!isAdm) {
+      if (!getPos().length) return fail("need_position");
+      if (!ctry.value) return fail("need_country");
+      const cn = coiNone._none; if (cn === null || cn === undefined) return fail("need_coi");
+      if (cn === false && !coiText.value.trim()) return fail("need_coi_text");
+      if (!getCredit().length) return fail("need_credit");
+    }
     const orc = oi.value.trim().toUpperCase().replace(/^(HTTPS?:\/\/)?(WWW\.)?ORCID\.ORG\//, "");
     if (orc && !orcidOk(orc)) return fail("bad_orcid");
     const sets = getSettings();
@@ -1626,6 +1658,7 @@ async function renderBoard(fresh = true) {
   comp.querySelector("#cm-post").onclick = async ev => {
     const btn = ev.currentTarget; comp.querySelectorAll(".err").forEach(x => x.remove());
     if (!body.value.trim()) { comp.appendChild(el("div", { class: "err", role: "alert" }, "Write the comment first.")); return; }
+    if (!detailsComplete(DET)) { await askDetails(); if (!detailsComplete(DET)) return; }
     btn.disabled = true; btn.textContent = "Posting";
     try {
       await rpc("symposion_board_post", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_section: sel.value, p_item: item.value, p_body: body.value, p_reply_to: readDraft().reply });
@@ -1790,6 +1823,7 @@ function openChange(pre = {}) {
     form.querySelectorAll(".err").forEach(x => x.remove());
     const body = box.querySelector("#chg-body").value;
     if (!body.trim()) { form.appendChild(el("div", { class: "err", role: "alert" }, "Write what should change first.")); return; }
+    if (!detailsComplete(DET)) { await askDetails(); if (!detailsComplete(DET)) return; }
     const btn = form.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Sending";
     try {
       const r = await rpc("symposion_change_post", { p_slug: CONFIG.workstream, p_person: person.id, p_pass: cred, p_kind: kindOf(),
@@ -2409,6 +2443,11 @@ function renderDecisions() {
 /* ---------- progress: saved at Symposion against the person, with a copy kept on this device ---------- */
 function queueEvent(step_key, event, recorded) {
   if (!person || !person.id || readOnly()) return;
+  if (!detailsComplete(DET)) {
+    state.held = state.held || [];
+    state.held.push({ route: state.route, step_key, event, recorded: recorded || {}, local_at: new Date().toISOString() });
+    save(); askDetails(); return;
+  }
   state.queue.push({ route: state.route, step_key, event, recorded: recorded || {}, local_at: new Date().toISOString() });
   save(); updateSync(); flush();
 }
