@@ -567,7 +567,7 @@ dialog .err{margin-top:14px}
 
 <script>
 "use strict";
-const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_14", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "second", "title": "Co-author & Independent Reviewer", "named": true, "unnumbered": true, "roster": ["Rosa Morgan-Young"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Andrew Hall", "hidden": true}]};
+const CONFIG = {"workstream": "shoulder-arthroplasty", "version": "v0_17", "content": "content.enc.json", "kdf": {"iterations": 310000}, "supabase": {"url": "https://rzokxmobuvrruwavhjzw.supabase.co", "key": "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16"}, "roles": [{"key": "lead", "title": "Lead Author & Lead Reviewer", "name": "Lewis Turmeau"}, {"key": "coauthor", "title": "Co-author", "named": true, "unnumbered": true, "roster": ["Mohamed El-Sayad", "Ruth Delaney", "Jack Wilby", "Paul Paterson-Byrne", "Edel Fanning"]}, {"key": "second", "title": "Co-author & Independent Reviewer", "named": true, "unnumbered": true, "roster": ["Rosa Morgan-Young"]}, {"key": "admin", "title": "Symposion Project Administrator", "name": "Andrew Hall", "locked": true}, {"key": "senior", "title": "Supervising Author", "name": "Andrew Hall", "hidden": true}]};
 const STORE_KEY = "symposion." + CONFIG.workstream + ".v2";
 let CONTENT = null, KEY = null, ENV = null;
 let person = null;   // { id, role, seq, name } for a registered person; { role: "readonly" } for a viewer
@@ -1900,7 +1900,7 @@ function openPdf(file, label) {
 }
 const TASKS = () => { const all = CONTENT.tasks || {}, out = {}, adm = !!person && person.role === "admin"; Object.keys(all).forEach(k => { const t = all[k]; if ((!t.lead_only || LEAD_VIEW()) && (adm || IND() || !t.reviewer_only)) out[k] = t; }); return out; };
 const taskRec = id => (state.steps[ROUTE] || {})[id] || { values: {} };
-const KIND = { review: "Section review", query: "Query to the lead reviewer", decision: "Charting decision", check: "Rehabilitation check", group: "Rehabilitation decision", code: "Independent coding" };
+const KIND = { review: "Section review", query: "Query to the lead reviewer", decision: "Charting decision", check: "Rehabilitation check", group: "Rehabilitation decision", code: "Independent coding", approval: "Final approval" };
 function taskStatus(t) {
   const v = taskRec(t.id).values || {};
   const has = k => String(v[k] ?? "").trim() !== "";
@@ -2096,7 +2096,7 @@ function renderBody(s) {
   const wrap = el("div", { class: "appear ms" });
   if (s.kind === "tasks") {
     if (s.intro) wrap.appendChild(el("p", { class: "lede" }, s.intro));
-    if (!LEAD_VIEW() && s.audience !== "reviewer" && s.audience !== "stress") { wrap.appendChild(el("p", { class: "lede" }, "These tasks are assigned to the lead reviewer.")); return wrap; }
+    if (!LEAD_VIEW() && s.audience !== "reviewer" && s.audience !== "stress" && s.audience !== "all") { wrap.appendChild(el("p", { class: "lede" }, "These tasks are assigned to the lead reviewer.")); return wrap; }
     const list = s.task_ids.map(id => TASKS()[id]).filter(Boolean);
     const filt = state.open.filter || "all";
     const bar = el("div", { class: "taskfilter", role: "group", "aria-label": "Show" });
