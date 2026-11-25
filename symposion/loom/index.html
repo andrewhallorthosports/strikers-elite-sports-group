@@ -70,7 +70,9 @@ ul.items li{margin:4px 0}
 .functions{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 26px}
 .functions ul{padding-left:20px;margin:4px 0}
 .functions li{margin:5px 0}
-.where{color:var(--muted);font-size:14px;display:block}
+.where{color:var(--muted);font-size:14px;display:block;overflow-wrap:anywhere}
+.stat{display:block;font-size:14px;color:var(--teal)}
+.livestats{grid-column:1/-1;background:var(--ivory);border:1px solid var(--rule);border-radius:4px;padding:2px 16px 12px}
 footer{margin-top:44px;color:var(--muted);font-size:13.5px;border-top:1px solid var(--rule);padding-top:12px}
 [hidden]{display:none!important}
 @media (max-width:600px){ h1{font-size:31px} .wrap{padding-top:18px} details.portal{padding:0 12px} }
@@ -110,17 +112,7 @@ footer{margin-top:44px;color:var(--muted);font-size:13.5px;border-top:1px solid 
 "use strict";
 const CONFIG = {
   supabase: { url: "https://rzokxmobuvrruwavhjzw.supabase.co", key: "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16" },
-  iterations: 310000,
-  records: "records.enc.json",
-  portals: [
-    { slug: "shoulder-arthroplasty", label: "Shoulder arthroplasty in trauma", base: "https://strikerselitesports.com/symposion/workstreams/shoulder-arthroplasty/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/shoulder-arthroplasty" },
-    { slug: "performance-medicine", label: "Performance medicine", base: "https://strikerselitesports.com/symposion/workstreams/performance-medicine/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/performance-medicine" },
-    { slug: "sports-medicine-event-care", label: "Sports medicine event care", base: "https://strikerselitesports.com/symposion/workstreams/sports-medicine-event-care/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/sports-medicine-event-care" },
-    { slug: "snap-acl", label: "SNAP ACL", base: "https://scottishnetwork.net/symposion/workstreams/snap-acl/", repo: "andrewhallorthosports/scottishnetwork", path: "symposion/workstreams/snap-acl" },
-    { slug: "vjunction", label: "V-junction", base: "https://strikerselitesports.com/symposion/workstreams/vjunction/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/vjunction" },
-    { slug: "heart-transplant-pathway", label: "Heart transplant pathway", base: "https://strikerselitesports.com/symposion/workstreams/heart-transplant-pathway/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/heart-transplant-pathway" },
-    { slug: "spondylolysis-football", label: "Spondylolysis in football", base: "https://strikerselitesports.com/symposion/workstreams/spondylolysis-football/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/spondylolysis-football" }
-  ]
+  iterations: 310000
 };
 const MSG = {
   admin_denied: "That passcode was not accepted.",
@@ -128,7 +120,7 @@ const MSG = {
   offline: "Symposion could not be reached. Check your connection and try again.",
   server: "Something went wrong at Symposion. Try again in a moment."
 };
-let PASS = null, RECORDS = null, GENERAL = null, RESULTS = {};
+let PASS = null, LOOM = null, RESULTS = {};
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -226,7 +218,7 @@ async function loadPortal(P) {
   catch (e) { R.error = MSG[e.message] || "This portal could not be opened (" + e.message + ")."; return R; }
   R.adminId = enter.id;
   const now = Date.now(), d7 = new Date(now - 7 * 864e5).toISOString(), d30 = new Date(now - 30 * 864e5).toISOString();
-  const content = enter.site_key ? settle(fetch(P.base + "content.enc.json", { cache: "no-store" })
+  const content = !P.base ? Promise.resolve({ ok: false, e: "no_record" }) : enter.site_key ? settle(fetch(P.base + "content.enc.json", { cache: "no-store" })
     .then(r => { if (!r.ok) throw new Error("fetch"); return r.json(); })
     .then(env => openSealed(enter.site_key, env, CONFIG.iterations))) : Promise.resolve({ ok: false, e: "no_site_key" });
   const [C, ov, board, chg, u7, u30, gh] = await Promise.all([
@@ -236,38 +228,38 @@ async function loadPortal(P) {
     settle(rpc("symposion_change_list", { p_slug: P.slug, p_person: enter.id, p_pass: PASS })),
     settle(rpc("symposion_usage_overview", { p_slug: P.slug, p_pass: PASS, p_since: d7, p_recent: 0 })),
     settle(rpc("symposion_usage_overview", { p_slug: P.slug, p_pass: PASS, p_since: d30, p_recent: 0 })),
-    settle(fetch("https://api.github.com/repos/" + P.repo + "/commits?per_page=1&path=" + encodeURIComponent(P.path), { headers: { Accept: "application/vnd.github+json" } })
+    !P.repo ? Promise.resolve({ ok: false, e: "no record" }) : settle(fetch("https://api.github.com/repos/" + P.repo + "/commits?per_page=1&path=" + encodeURIComponent(P.path), { headers: { Accept: "application/vnd.github+json" } })
       .then(r => { if (!r.ok) throw new Error("github_" + r.status); return r.json(); }))
   ]);
   Object.assign(R, { C, ov, board, chg, u7, u30, gh });
-  if (enter.site_key && RECORDS) {
-    if (RECORDS.portals[P.slug]) R.rec = await settle(openSealed(enter.site_key, RECORDS.portals[P.slug], RECORDS.iterations));
-    if (!GENERAL && RECORDS.general[P.slug]) { const g = await settle(openSealed(enter.site_key, RECORDS.general[P.slug], RECORDS.iterations)); if (g.ok) GENERAL = g.v; }
-  }
+  R.rec = P.record ? { ok: true, v: P.record } : null;
   return R;
 }
 async function loadAll() {
   $("#stamp").textContent = "Loading";
   $("#refresh").disabled = true;
-  try { const r = await fetch(CONFIG.records, { cache: "no-store" }); RECORDS = r.ok ? await r.json() : null; } catch (e) { RECORDS = null; }
+  try { LOOM = await rpc("symposion_loom_records", { p_pass: PASS }); }
+  catch (e) { $("#stamp").textContent = MSG[e.message] || MSG.server; $("#refresh").disabled = false; return; }
+  const portals = (LOOM.portals || []).map(w => { const r = w.record || {};
+    return { slug: w.slug, label: r.label || w.name, group: w.loom_group, description: w.description, base: r.base, repo: r.repo, path: r.path, record: w.record }; });
   const tbody = $("#summary tbody"); tbody.innerHTML = "";
   $("#portals").innerHTML = "";
-  CONFIG.portals.forEach(P => {
-    tbody.insertAdjacentHTML("beforeend", `<tr class="portal-row" id="row-${P.slug}"><td><a href="#p-${P.slug}">${esc(P.label)}</a></td><td colspan="6" class="sub">Loading</td></tr>`);
-    $("#portals").insertAdjacentHTML("beforeend", `<details class="portal" id="p-${P.slug}"><summary><span class="t">${esc(P.label)}</span><span class="m">Loading</span></summary></details>`);
+  portals.forEach(P => {
+    tbody.insertAdjacentHTML("beforeend", `<tr class="portal-row" id="row-${esc(P.slug)}"><td><a href="#p-${esc(P.slug)}">${esc(P.label)}</a></td><td colspan="6" class="sub">Loading</td></tr>`);
+    $("#portals").insertAdjacentHTML("beforeend", `<details class="portal" id="p-${esc(P.slug)}"><summary><span class="t">${esc(P.label)}</span><span class="m">Loading</span></summary></details>`);
   });
-  await Promise.all(CONFIG.portals.map(async P => { const R = await loadPortal(P); RESULTS[P.slug] = R; renderPortal(R); }));
   renderFunctions();
+  await Promise.all(portals.map(async P => { const R = await loadPortal(P); RESULTS[P.slug] = R; renderPortal(R); }));
   $("#stamp").textContent = "Read " + fmtTime(new Date().toISOString());
   $("#refresh").disabled = false;
 }
 
 /* ---------- rendering ---------- */
 function renderPortal(R) {
-  const P = R.P, row = $("#row-" + P.slug), box = $("#p-" + P.slug);
+  const P = R.P, row = document.getElementById("row-" + P.slug), box = document.getElementById("p-" + P.slug);
   const open = box.open;
   if (R.error) {
-    row.innerHTML = `<td><a href="${esc(P.base)}">${esc(P.label)}</a></td><td colspan="6" class="warn">${esc(R.error)}</td>`;
+    row.innerHTML = `<td><a href="#p-${esc(P.slug)}">${esc(P.label)}</a></td><td colspan="6" class="warn">${esc(R.error)}</td>`;
     box.innerHTML = `<summary><span class="t">${esc(P.label)}</span><span class="m warn">${esc(R.error)}</span></summary>`;
     return;
   }
@@ -281,14 +273,15 @@ function renderPortal(R) {
   const round = M.ms_label ? esc(M.ms_label) + (M.version ? ` <span class="sub">(page ${esc(M.version)})</span>` : "") : `<span class="sub">${C ? "" : "Older portal"}</span>`;
   const pc = prog ? (C ? `${prog.complete} of ${prog.rows.length}` : `${prog.rows.length} registered`) : "<span class='warn'>Not read</span>";
   const flags = prog && prog.rows.some(r => r.pstate === "Locked") ? "<span class='flag'>Locked passcode</span>" : "";
-  row.innerHTML = `<td><a href="#p-${P.slug}">${esc(P.label)}</a>${flags}</td><td>${round}</td><td class="num">${pc}</td>` +
+  row.innerHTML = `<td><a href="#p-${P.slug}">${esc(P.label)}</a>${flags}${P.group ? `<div class="sub">${esc(P.group)}</div>` : ""}</td><td>${round}</td><td class="num">${pc}</td>` +
     `<td class="num">${bs ? (bs.awaiting ? `<span class="warn">${bs.awaiting}</span>` : "0") : "<span class='warn'>Not read</span>"}</td>` +
     `<td class="num">${cs ? (cs.awaiting ? `<span class="warn">${cs.awaiting}</span>` : "0") : "<span class='warn'>Not read</span>"}</td>` +
     `<td class="num">${u7 ? `${u7.people} ${u7.people === 1 ? "person" : "people"}, ${hours(u7.active)}` : "<span class='warn'>Not read</span>"}</td><td>${esc(ago(lastAll))}</td>`;
 
-  let h = `<summary><span class="t">${esc(title)}</span><span class="m">${M.ms_label ? "Round: " + esc(M.ms_label) + " · " : ""}<a href="${esc(P.base)}" target="_blank" rel="noopener">Open portal</a></span></summary>`;
+  let h = `<summary><span class="t">${esc(title)}</span><span class="m">${M.ms_label ? "Round: " + esc(M.ms_label) + " · " : ""}${P.base ? `<a href="${esc(P.base)}" target="_blank" rel="noopener">Open portal</a>` : "No Loom record yet"}</span></summary>`;
   if (M.full_title) h += `<p class="sub" style="margin-top:12px">${esc(M.full_title)}</p>`;
-  if (!C) h += `<p class="sub" style="margin-top:12px">${R.C.e === "no_site_key" ? "This portal uses the older project passcode, so step titles and records are not available here; progress is shown from the saved events." : "The portal content could not be opened (" + esc(R.C.e) + ")."}</p>`;
+  if (!M.full_title && P.description) h += `<p class="sub" style="margin-top:12px">${esc(P.description)}</p>`;
+  if (!C) h += `<p class="sub" style="margin-top:12px">${R.C.e === "no_record" ? "This portal has no Loom record yet, so its address and content are not known here; add a row to symposion_loom_records." : R.C.e === "no_site_key" ? "This portal uses the older project passcode, so step titles and records are not available here; progress is shown from the saved events." : "The portal content could not be opened (" + esc(R.C.e) + ")."}</p>`;
 
   /* people */
   h += `<h3>People and progress</h3>`;
@@ -331,10 +324,10 @@ function renderPortal(R) {
   /* repository and database */
   h += `<div><h3>Repository and database</h3>`;
   if (R.gh.ok && R.gh.v[0]) { const c = R.gh.v[0]; h += `<p class="kv"><b>Last published:</b> ${esc(fmtDay(c.commit.author.date))}, <a href="${esc(c.html_url)}" target="_blank" rel="noopener">${esc(c.sha.slice(0, 7))}</a><br><span class="excerpt">${esc(clip(c.commit.message.split("\n")[0], 110))}</span></p>`; }
-  else h += `<p class="kv sub">Repository not read just now (${esc(R.gh.ok ? "no commits" : R.gh.e)}). <a href="https://github.com/${esc(P.repo)}/commits/main/${esc(P.path)}" target="_blank" rel="noopener">History</a></p>`;
+  else if (P.repo) h += `<p class="kv sub">Repository not read just now (${esc(R.gh.ok ? "no commits" : R.gh.e)}). <a href="https://github.com/${esc(P.repo)}/commits/main/${esc(P.path)}" target="_blank" rel="noopener">History</a></p>`;
   const dbOk = R.ov.ok && R.board.ok && R.chg.ok;
   h += `<p class="kv"><b>Database:</b> <span class="${dbOk ? "ok" : "warn"}">${dbOk ? "Reached" : "Partly unavailable"}</span>, ${esc(fmtTime(R.at))}${R.board.ok && R.board.v.intact && R.chg.ok && R.chg.v.intact ? "; board and change records intact" : ""}</p>`;
-  h += `<p class="kv"><a href="https://github.com/${esc(P.repo)}/tree/main/${esc(P.path)}" target="_blank" rel="noopener">Portal files</a></p></div>`;
+  h += (P.repo ? `<p class="kv"><a href="https://github.com/${esc(P.repo)}/tree/main/${esc(P.path)}" target="_blank" rel="noopener">Portal files</a></p>` : "") + `</div>`;
   /* records */
   if (R.rec && R.rec.ok) {
     const rec = R.rec.v;
@@ -343,6 +336,7 @@ function renderPortal(R) {
       h += `<p class="kv"><b>Kritis:</b> ${esc(rec.kritis.report)}, ${esc(rec.kritis.version)}, ${esc(rec.kritis.date)}<br><span class="excerpt">${esc(rec.kritis.verdict)}</span></p>`;
       if (rec.kritis.outstanding && rec.kritis.outstanding.length) h += `<ul class="items">` + rec.kritis.outstanding.map(x => `<li>${esc(x)}</li>`).join("") + `</ul>`;
     } else h += `<p class="kv"><b>Kritis:</b> <span class="sub">No examination recorded.</span></p>`;
+    if (rec.role) h += `<p class="kv"><b>My role:</b> ${esc(rec.role)}</p>`;
     if (rec.folder) h += `<p class="kv"><b>Folder:</b> <span class="excerpt">${esc(rec.folder)}</span></p>`;
     (rec.notes || []).forEach(n => h += `<p class="kv excerpt">${esc(n)}</p>`);
     h += `</div>`;
@@ -352,10 +346,14 @@ function renderPortal(R) {
   box.open = open;
 }
 function renderFunctions() {
-  const box = $("#functions");
-  if (!GENERAL) { box.innerHTML = `<p class="sub">The function list opens with the first portal key released at sign-in; none was available.</p>`; return; }
-  box.innerHTML = GENERAL.functions.map(g => `<div><h3>${esc(g.group)}</h3><ul>` + g.items.map(i =>
-    `<li>${i.url ? `<a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.label)}</a>` : esc(i.label)}${i.where ? `<span class="where">${esc(i.where)}</span>` : ""}</li>`).join("") + `</ul></div>`).join("");
+  const box = $("#functions"), st = (LOOM && LOOM.stats) || {}, fns = (LOOM && LOOM.functions) || [];
+  const live = `<div class="livestats"><h3>Live counts</h3><ul>
+    <li>${esc(st.workstreams)} active workstreams; ${esc((LOOM.portals || []).length)} with a live portal</li>
+    <li>Audit chain: ${esc(st.audit_entries)} entries, ${esc(st.audit_anchors)} trusted timestamps${st.audit_last ? ", last " + esc(fmtDay(st.audit_last)) : ""}</li>
+    <li>Kritis runs recorded in the database: ${esc(st.kritis_runs)} (${esc(st.kritis_findings)} findings)</li>
+    <li>Oghma translation jobs: ${esc(st.translation_jobs)}</li></ul><span class="where">Read from the Symposion database ${esc(fmtTime(st.read_at))}</span></div>`;
+  box.innerHTML = live + fns.map(g => `<div><h3>${esc(g.group)}</h3>${g.subtitle ? `<span class="where">${esc(g.subtitle)}</span>` : ""}<ul>` + (g.items || []).map(i =>
+    `<li>${i.url ? `<a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.label)}</a>` : esc(i.label)}${i.stat ? `<span class="stat">${esc(i.stat)}</span>` : ""}${i.where ? `<span class="where">${esc(i.where)}</span>` : ""}</li>`).join("") + `</ul></div>`).join("");
 }
 
 /* ---------- sign-in ---------- */
@@ -369,8 +367,8 @@ $("#gate-form").addEventListener("submit", async ev => {
   $("#gate").hidden = true; $("#home").hidden = false;
   loadAll();
 });
-$("#refresh").addEventListener("click", () => { GENERAL = null; loadAll(); });
-$("#lock").addEventListener("click", () => { PASS = null; RECORDS = null; GENERAL = null; RESULTS = {}; location.reload(); });
+$("#refresh").addEventListener("click", () => loadAll());
+$("#lock").addEventListener("click", () => { PASS = null; LOOM = null; RESULTS = {}; location.reload(); });
 </script>
 </body>
 </html>
