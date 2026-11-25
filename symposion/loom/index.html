@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Symposion: The Loom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#F2EDE2; --bone:#E7DFCD; --ivory:#FBF8F1; --ink:#26231D; --navy:#1E2D4A;
+  --teal:#2B7A78; --teal-wash:#E3EFEC; --umber:#6E4A2E; --muted:#6A6355; --rule:#D8CFBC;
+  --alert:#8A2F22; --alert-wash:#F6E6E1;
+  --display:'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --body:'Spectral', Georgia, 'Times New Roman', serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--parchment);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;font-feature-settings:"onum" 1,"kern" 1}
+a{color:var(--navy);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--teal)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:2px}
+button,input{font-family:var(--body);font-size:15px}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 16px 64px}
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:22px}
+.brand{font-family:var(--display);font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--umber)}
+h1{font-family:var(--display);font-weight:600;font-size:38px;line-height:1.1;margin:2px 0 0;color:var(--navy)}
+h2{font-family:var(--display);font-weight:600;font-size:27px;color:var(--navy);margin:34px 0 10px}
+h3{font-family:var(--display);font-weight:600;font-size:21px;color:var(--navy);margin:22px 0 6px}
+.sub{color:var(--muted);font-size:14.5px}
+.btn{border:1px solid var(--navy);background:var(--navy);color:var(--ivory);padding:8px 16px;border-radius:3px;cursor:pointer}
+.btn.quiet{background:transparent;color:var(--navy)}
+.btn:disabled{opacity:.55;cursor:default}
+/* gate */
+.gate{max-width:440px;margin:12vh auto 0;background:var(--ivory);border:1px solid var(--rule);padding:30px 28px;border-radius:4px}
+.gate h1{font-size:34px}
+.gate label{display:block;margin:20px 0 6px;font-size:15px}
+.gate input{width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:3px;background:#fff}
+.gate .btn{margin-top:16px}
+.err{color:var(--alert);background:var(--alert-wash);padding:8px 10px;border-radius:3px;margin-top:14px;font-size:14.5px}
+/* summary */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:lining-nums tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--navy);border-bottom:2px solid var(--navy);white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+tr.portal-row td:first-child a{font-weight:600}
+.flag{display:inline-block;font-size:12.5px;border:1px solid var(--alert);color:var(--alert);border-radius:10px;padding:0 8px;margin-left:4px;white-space:nowrap}
+.ok{color:var(--teal)}
+.warn{color:var(--alert)}
+.bar{display:inline-block;vertical-align:middle;width:72px;height:7px;background:var(--bone);border-radius:4px;overflow:hidden;margin-right:6px}
+.bar i{display:block;height:100%;background:var(--teal)}
+/* portal sections */
+details.portal{background:var(--ivory);border:1px solid var(--rule);border-radius:4px;margin:14px 0;padding:0 18px}
+details.portal>summary{cursor:pointer;list-style:none;padding:14px 0;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+details.portal>summary::-webkit-details-marker{display:none}
+details.portal>summary .t{font-family:var(--display);font-size:23px;font-weight:600;color:var(--navy)}
+details.portal>summary .m{color:var(--muted);font-size:14px}
+details.portal[open]>summary{border-bottom:1px solid var(--rule)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:4px 26px;padding-bottom:16px}
+.kv{margin:6px 0;font-size:15px}
+.kv b{font-weight:600}
+ul.items{margin:6px 0;padding-left:20px}
+ul.items li{margin:4px 0}
+.excerpt{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.grid>div,.kv,ul.items li{min-width:0;overflow-wrap:anywhere}
+.functions{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 26px}
+.functions ul{padding-left:20px;margin:4px 0}
+.functions li{margin:5px 0}
+.where{color:var(--muted);font-size:14px;display:block}
+footer{margin-top:44px;color:var(--muted);font-size:13.5px;border-top:1px solid var(--rule);padding-top:12px}
+[hidden]{display:none!important}
+@media (max-width:600px){ h1{font-size:31px} .wrap{padding-top:18px} details.portal{padding:0 12px} }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section id="gate" class="gate">
+    <div class="brand">Symposion</div>
+    <h1>The Loom</h1>
+    <p class="sub">Administrator homepage. Every live portal, its progress and the Symposion functions, in one place.</p>
+    <form id="gate-form" autocomplete="off">
+      <label for="pass">Administrator passcode</label>
+      <input id="pass" type="password" required autocomplete="current-password" spellcheck="false">
+      <button class="btn" id="go" type="submit">Open</button>
+      <div class="err" id="gate-err" hidden></div>
+    </form>
+  </section>
+
+  <section id="home" hidden>
+    <header class="top">
+      <div><div class="brand">Symposion</div><h1>The Loom</h1></div>
+      <div><span class="sub" id="stamp"></span> <button class="btn quiet" id="refresh" type="button">Refresh</button> <button class="btn quiet" id="lock" type="button">Lock</button></div>
+    </header>
+    <h2 style="margin-top:6px">Live portals</h2>
+    <div class="scroll"><table id="summary"><thead><tr>
+      <th>Portal</th><th>Round</th><th class="num">People complete</th><th class="num">Board awaiting</th><th class="num">Changes awaiting</th><th class="num">Active, 7 days</th><th>Last activity</th>
+    </tr></thead><tbody></tbody></table></div>
+    <div id="portals"></div>
+    <h2>Functions</h2>
+    <div id="functions" class="functions"></div>
+  </section>
+  <footer>Symposion research platform. Progress is read live from the Symposion database each time the page is opened or refreshed; nothing is stored on this device.</footer>
+</main>
+
+<script>
+"use strict";
+const CONFIG = {
+  supabase: { url: "https://rzokxmobuvrruwavhjzw.supabase.co", key: "sb_publishable_GU5yMapISLfcCnFlxSRGtw_8VkSOA16" },
+  iterations: 310000,
+  records: "records.enc.json",
+  portals: [
+    { slug: "shoulder-arthroplasty", label: "Shoulder arthroplasty in trauma", base: "https://strikerselitesports.com/symposion/workstreams/shoulder-arthroplasty/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/shoulder-arthroplasty" },
+    { slug: "performance-medicine", label: "Performance medicine", base: "https://strikerselitesports.com/symposion/workstreams/performance-medicine/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/performance-medicine" },
+    { slug: "sports-medicine-event-care", label: "Sports medicine event care", base: "https://strikerselitesports.com/symposion/workstreams/sports-medicine-event-care/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/sports-medicine-event-care" },
+    { slug: "snap-acl", label: "SNAP ACL", base: "https://scottishnetwork.net/symposion/workstreams/snap-acl/", repo: "andrewhallorthosports/scottishnetwork", path: "symposion/workstreams/snap-acl" },
+    { slug: "vjunction", label: "V-junction", base: "https://strikerselitesports.com/symposion/workstreams/vjunction/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/vjunction" },
+    { slug: "heart-transplant-pathway", label: "Heart transplant pathway", base: "https://strikerselitesports.com/symposion/workstreams/heart-transplant-pathway/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/heart-transplant-pathway" },
+    { slug: "spondylolysis-football", label: "Spondylolysis in football", base: "https://strikerselitesports.com/symposion/workstreams/spondylolysis-football/", repo: "andrewhallorthosports/strikers-elite-sports-group", path: "symposion/workstreams/spondylolysis-football" }
+  ]
+};
+const MSG = {
+  admin_denied: "That passcode was not accepted.",
+  admin_locked: "Too many attempts. Wait fifteen minutes and try again.",
+  offline: "Symposion could not be reached. Check your connection and try again.",
+  server: "Something went wrong at Symposion. Try again in a moment."
+};
+let PASS = null, RECORDS = null, GENERAL = null, RESULTS = {};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const fmtTime = iso => iso ? new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "";
+const fmtDay = iso => iso ? new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "";
+const ago = iso => {
+  if (!iso) return "None";
+  const d = (Date.now() - new Date(iso).getTime()) / 864e5;
+  return d < 1 ? "Today" : d < 2 ? "Yesterday" : Math.floor(d) + " days ago";
+};
+const hours = ms => { const m = Math.round((ms || 0) / 60000); return m < 60 ? m + " min" : (m / 60).toFixed(1) + " h"; };
+const clip = (s, n) => { s = String(s || "").replace(/\s+/g, " ").trim(); return s.length > n ? s.slice(0, n - 1) + "…" : s; };
+
+async function rpc(fn, args) {
+  let r;
+  try {
+    r = await fetch(CONFIG.supabase.url + "/rest/v1/rpc/" + fn, { method: "POST",
+      headers: { apikey: CONFIG.supabase.key, Authorization: "Bearer " + CONFIG.supabase.key, "Content-Type": "application/json" },
+      body: JSON.stringify(args) });
+  } catch (e) { throw new Error("offline"); }
+  let body = null; try { body = await r.json(); } catch (e) {}
+  if (!r.ok) throw new Error("server");
+  if (body && body.error) throw new Error(body.error);
+  return body;
+}
+async function openSealed(pass, env, iterations) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(env.salt), iterations, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(env.iv) }, key, b64(env.ct));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+const settle = p => p.then(v => ({ ok: true, v }), e => ({ ok: false, e: (e && e.message) || "server" }));
+
+/* ---------- progress, from the portal's own content and saved events ---------- */
+function roleTitle(C, role) { const r = C && (C.roles || []).find(x => x.key === role); return r ? r.title : ({ lead: "Lead reviewer", second: "Second reviewer", coauthor: "Co-author", admin: "Administrator" }[role] || role); }
+function roleUnnumbered(C, role) { const r = C && (C.roles || []).find(x => x.key === role); return !!(r && r.unnumbered); }
+function visible(C, s, role) {
+  if (s.lead_only || s.audience === "lead") return role === "lead";
+  if (s.audience === "stress") return !!(C.stress && C.stress.role === role);
+  if (s.audience === "reviewer") return role === "second";
+  return true;
+}
+function fold(events) {
+  const st = {};
+  events.slice().sort((a, b) => a.created_at < b.created_at ? -1 : 1).forEach(e => {
+    const k = e.route + "|" + e.step_key;
+    if (e.event === "completed") st[k] = true; else if (e.event === "reopened") st[k] = false;
+    else if (!(k in st)) st[k] = false;
+  });
+  return st;
+}
+function progress(C, ov) {
+  const live = ov.people.filter(p => !p.removed_at && p.role !== "admin" && p.role !== "readonly");
+  const by = {}; ov.events.forEach(e => (by[e.person_id] = by[e.person_id] || []).push(e));
+  const rows = live.map(p => {
+    const evs = by[p.id] || [], st = fold(evs);
+    const last = evs.reduce((m, e) => e.created_at > m ? e.created_at : m, "");
+    let done = 0, total = null;
+    if (C && C.routes) {
+      total = 0;
+      Object.entries(C.routes).forEach(([rt, r]) => r.steps.forEach(s => { if (visible(C, s, p.role)) { total++; if (st[rt + "|" + s.key]) done++; } }));
+    } else done = Object.values(st).filter(Boolean).length;
+    const pstate = p.locked ? "Locked" : !p.has_passcode ? "Not set" : p.must_change ? "Temporary" : "Set";
+    return { p, done, total, last, pstate };
+  });
+  const named = C ? (C.roles || []).filter(r => r.name && r.key !== "admin" && r.key !== "readonly" && r.key !== "senior" && !live.some(p => p.role === r.key)) : [];
+  return { rows, missing: named, complete: rows.filter(r => r.total && r.done >= r.total).length };
+}
+function boardSummary(b) {
+  const latest = {};
+  (b.statuses || []).forEach(s => latest[s.seq] = s.status);
+  const top = (b.comments || []).filter(c => !c.reply_to);
+  const awaiting = top.filter(c => !latest[c.seq] || latest[c.seq] === "reopened");
+  return { total: (b.comments || []).length, threads: top.length, awaiting: awaiting.length, recent: (b.comments || []).slice(-3).reverse() };
+}
+function changeSummary(c) {
+  const latest = {};
+  (c.statuses || []).forEach(s => latest[s.seq] = s.status);
+  const reqs = c.requests || [];
+  return { total: reqs.length, awaiting: c.awaiting || 0, discuss: reqs.filter(r => latest[r.seq] === "needs_discussion").length, recent: reqs.slice(-3).reverse(), latest };
+}
+function usageSummary(u) {
+  const ppl = (u && u.people) || [];
+  return { people: ppl.filter(p => p.sessions > 0).length, sessions: ppl.reduce((a, p) => a + (p.sessions || 0), 0), active: ppl.reduce((a, p) => a + (p.active_ms || 0), 0) };
+}
+
+/* ---------- loading ---------- */
+async function loadPortal(P) {
+  const R = { P, at: new Date().toISOString() };
+  let enter;
+  try { enter = await rpc("symposion_enter", { p_slug: P.slug, p_role: "admin", p_name: null, p_pass: PASS }); }
+  catch (e) { R.error = MSG[e.message] || "This portal could not be opened (" + e.message + ")."; return R; }
+  R.adminId = enter.id;
+  const now = Date.now(), d7 = new Date(now - 7 * 864e5).toISOString(), d30 = new Date(now - 30 * 864e5).toISOString();
+  const content = enter.site_key ? settle(fetch(P.base + "content.enc.json", { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error("fetch"); return r.json(); })
+    .then(env => openSealed(enter.site_key, env, CONFIG.iterations))) : Promise.resolve({ ok: false, e: "no_site_key" });
+  const [C, ov, board, chg, u7, u30, gh] = await Promise.all([
+    content,
+    settle(rpc("symposion_admin_overview", { p_slug: P.slug, p_pass: PASS })),
+    settle(rpc("symposion_board_list", { p_slug: P.slug, p_person: enter.id, p_pass: PASS, p_mark_seen: false })),
+    settle(rpc("symposion_change_list", { p_slug: P.slug, p_person: enter.id, p_pass: PASS })),
+    settle(rpc("symposion_usage_overview", { p_slug: P.slug, p_pass: PASS, p_since: d7, p_recent: 0 })),
+    settle(rpc("symposion_usage_overview", { p_slug: P.slug, p_pass: PASS, p_since: d30, p_recent: 0 })),
+    settle(fetch("https://api.github.com/repos/" + P.repo + "/commits?per_page=1&path=" + encodeURIComponent(P.path), { headers: { Accept: "application/vnd.github+json" } })
+      .then(r => { if (!r.ok) throw new Error("github_" + r.status); return r.json(); }))
+  ]);
+  Object.assign(R, { C, ov, board, chg, u7, u30, gh });
+  if (enter.site_key && RECORDS) {
+    if (RECORDS.portals[P.slug]) R.rec = await settle(openSealed(enter.site_key, RECORDS.portals[P.slug], RECORDS.iterations));
+    if (!GENERAL && RECORDS.general[P.slug]) { const g = await settle(openSealed(enter.site_key, RECORDS.general[P.slug], RECORDS.iterations)); if (g.ok) GENERAL = g.v; }
+  }
+  return R;
+}
+async function loadAll() {
+  $("#stamp").textContent = "Loading";
+  $("#refresh").disabled = true;
+  try { const r = await fetch(CONFIG.records, { cache: "no-store" }); RECORDS = r.ok ? await r.json() : null; } catch (e) { RECORDS = null; }
+  const tbody = $("#summary tbody"); tbody.innerHTML = "";
+  $("#portals").innerHTML = "";
+  CONFIG.portals.forEach(P => {
+    tbody.insertAdjacentHTML("beforeend", `<tr class="portal-row" id="row-${P.slug}"><td><a href="#p-${P.slug}">${esc(P.label)}</a></td><td colspan="6" class="sub">Loading</td></tr>`);
+    $("#portals").insertAdjacentHTML("beforeend", `<details class="portal" id="p-${P.slug}"><summary><span class="t">${esc(P.label)}</span><span class="m">Loading</span></summary></details>`);
+  });
+  await Promise.all(CONFIG.portals.map(async P => { const R = await loadPortal(P); RESULTS[P.slug] = R; renderPortal(R); }));
+  renderFunctions();
+  $("#stamp").textContent = "Read " + fmtTime(new Date().toISOString());
+  $("#refresh").disabled = false;
+}
+
+/* ---------- rendering ---------- */
+function renderPortal(R) {
+  const P = R.P, row = $("#row-" + P.slug), box = $("#p-" + P.slug);
+  const open = box.open;
+  if (R.error) {
+    row.innerHTML = `<td><a href="${esc(P.base)}">${esc(P.label)}</a></td><td colspan="6" class="warn">${esc(R.error)}</td>`;
+    box.innerHTML = `<summary><span class="t">${esc(P.label)}</span><span class="m warn">${esc(R.error)}</span></summary>`;
+    return;
+  }
+  const C = R.C.ok ? R.C.v : null, M = (C && C.meta) || {};
+  const title = M.short_title || P.label;
+  const prog = R.ov.ok ? progress(C, R.ov.v) : null;
+  const bs = R.board.ok ? boardSummary(R.board.v) : null;
+  const cs = R.chg.ok ? changeSummary(R.chg.v) : null;
+  const u7 = R.u7.ok ? usageSummary(R.u7.v) : null, u30 = R.u30.ok ? usageSummary(R.u30.v) : null;
+  const lastAll = prog ? prog.rows.reduce((m, r) => r.last > m ? r.last : m, "") : "";
+  const round = M.ms_label ? esc(M.ms_label) + (M.version ? ` <span class="sub">(page ${esc(M.version)})</span>` : "") : `<span class="sub">${C ? "" : "Older portal"}</span>`;
+  const pc = prog ? (C ? `${prog.complete} of ${prog.rows.length}` : `${prog.rows.length} registered`) : "<span class='warn'>Not read</span>";
+  const flags = prog && prog.rows.some(r => r.pstate === "Locked") ? "<span class='flag'>Locked passcode</span>" : "";
+  row.innerHTML = `<td><a href="#p-${P.slug}">${esc(P.label)}</a>${flags}</td><td>${round}</td><td class="num">${pc}</td>` +
+    `<td class="num">${bs ? (bs.awaiting ? `<span class="warn">${bs.awaiting}</span>` : "0") : "<span class='warn'>Not read</span>"}</td>` +
+    `<td class="num">${cs ? (cs.awaiting ? `<span class="warn">${cs.awaiting}</span>` : "0") : "<span class='warn'>Not read</span>"}</td>` +
+    `<td class="num">${u7 ? `${u7.people} ${u7.people === 1 ? "person" : "people"}, ${hours(u7.active)}` : "<span class='warn'>Not read</span>"}</td><td>${esc(ago(lastAll))}</td>`;
+
+  let h = `<summary><span class="t">${esc(title)}</span><span class="m">${M.ms_label ? "Round: " + esc(M.ms_label) + " · " : ""}<a href="${esc(P.base)}" target="_blank" rel="noopener">Open portal</a></span></summary>`;
+  if (M.full_title) h += `<p class="sub" style="margin-top:12px">${esc(M.full_title)}</p>`;
+  if (!C) h += `<p class="sub" style="margin-top:12px">${R.C.e === "no_site_key" ? "This portal uses the older project passcode, so step titles and records are not available here; progress is shown from the saved events." : "The portal content could not be opened (" + esc(R.C.e) + ")."}</p>`;
+
+  /* people */
+  h += `<h3>People and progress</h3>`;
+  if (!prog) h += `<p class="warn">${esc(MSG[R.ov.e] || R.ov.e)}</p>`;
+  else {
+    h += `<p class="sub">${C ? `${prog.complete} of ${prog.rows.length} registered ${prog.rows.length === 1 ? "person has" : "people have"} completed every section open to them.` : `${prog.rows.length} registered.`}${R.ov.v.unattributed ? ` ${R.ov.v.unattributed} earlier events cannot be attributed.` : ""}</p>`;
+    h += `<div class="scroll"><table><thead><tr><th>Role</th><th>Name</th><th>Passcode</th><th>${C ? "Sections complete" : "Steps marked complete"}</th><th>Last activity</th></tr></thead><tbody>`;
+    prog.rows.forEach(r => {
+      const lab = roleTitle(C, r.p.role) + (r.p.seq && !roleUnnumbered(C, r.p.role) ? " " + r.p.seq : "");
+      const pct = r.total ? Math.round(100 * r.done / r.total) : 0;
+      const sec = r.total != null ? `<span class="bar"><i style="width:${pct}%"></i></span>${r.done} of ${r.total}` : String(r.done);
+      h += `<tr><td>${esc(lab)}</td><td>${esc(r.p.name || "")}</td><td class="${r.pstate === "Locked" ? "warn" : ""}">${esc(r.pstate)}</td><td>${sec}</td><td>${r.last ? esc(fmtTime(r.last)) : "None"}</td></tr>`;
+    });
+    prog.missing.forEach(rd => h += `<tr><td>${esc(rd.title)}</td><td>${esc(rd.name)}</td><td colspan="3" class="sub">Has not opened the portal</td></tr>`);
+    if (!prog.rows.length && !prog.missing.length) h += `<tr><td colspan="5" class="sub">No one has registered yet.</td></tr>`;
+    h += `</tbody></table></div>`;
+  }
+
+  h += `<div class="grid">`;
+  /* board */
+  h += `<div><h3>Author board</h3>`;
+  if (!bs) h += `<p class="warn">${esc(MSG[R.board.e] || R.board.e)}</p>`;
+  else {
+    h += `<p class="kv"><b>${bs.awaiting}</b> of ${bs.threads} ${bs.threads === 1 ? "thread" : "threads"} awaiting a response; ${bs.total} ${bs.total === 1 ? "post" : "posts"} in all.${R.board.v.intact === false ? " <span class='flag'>Chain check failed</span>" : ""}</p>`;
+    if (bs.recent.length) h += `<ul class="items">` + bs.recent.map(c => `<li>${esc(c.author)}, ${esc(fmtTime(c.at))}${c.section ? ", " + esc(c.section) : ""}<br><span class="excerpt">${esc(clip(c.body, 160))}</span></li>`).join("") + `</ul>`;
+  }
+  h += `</div>`;
+  /* change requests */
+  h += `<div><h3>Change requests</h3>`;
+  if (!cs) h += `<p class="warn">${esc(MSG[R.chg.e] || R.chg.e)}</p>`;
+  else {
+    h += `<p class="kv"><b>${cs.awaiting}</b> awaiting a ruling${cs.discuss ? `, ${cs.discuss} marked for discussion` : ""}; ${cs.total} in all.${R.chg.v.intact === false ? " <span class='flag'>Chain check failed</span>" : ""}</p>`;
+    if (cs.recent.length) h += `<ul class="items">` + cs.recent.map(c => `<li>${esc(c.author)}, ${esc(fmtTime(c.at))}${c.area ? ", " + esc(c.area) : ""}${cs.latest[c.seq] ? "" : " <span class='flag'>Awaiting</span>"}<br><span class="excerpt">${esc(clip(c.body, 160))}</span></li>`).join("") + `</ul>`;
+  }
+  h += `</div>`;
+  /* usage */
+  h += `<div><h3>Use of the portal</h3>`;
+  const urow = (lab, u, r) => u ? `<p class="kv"><b>${lab}:</b> ${u.people} ${u.people === 1 ? "person" : "people"}, ${u.sessions} ${u.sessions === 1 ? "session" : "sessions"}, ${hours(u.active)} active</p>` : `<p class="kv warn">${lab}: ${esc(MSG[r.e] || r.e)}</p>`;
+  h += urow("Last 7 days", u7, R.u7) + urow("Last 30 days", u30, R.u30) + `<p class="sub">Administrator use is not counted.</p></div>`;
+  /* repository and database */
+  h += `<div><h3>Repository and database</h3>`;
+  if (R.gh.ok && R.gh.v[0]) { const c = R.gh.v[0]; h += `<p class="kv"><b>Last published:</b> ${esc(fmtDay(c.commit.author.date))}, <a href="${esc(c.html_url)}" target="_blank" rel="noopener">${esc(c.sha.slice(0, 7))}</a><br><span class="excerpt">${esc(clip(c.commit.message.split("\n")[0], 110))}</span></p>`; }
+  else h += `<p class="kv sub">Repository not read just now (${esc(R.gh.ok ? "no commits" : R.gh.e)}). <a href="https://github.com/${esc(P.repo)}/commits/main/${esc(P.path)}" target="_blank" rel="noopener">History</a></p>`;
+  const dbOk = R.ov.ok && R.board.ok && R.chg.ok;
+  h += `<p class="kv"><b>Database:</b> <span class="${dbOk ? "ok" : "warn"}">${dbOk ? "Reached" : "Partly unavailable"}</span>, ${esc(fmtTime(R.at))}${R.board.ok && R.board.v.intact && R.chg.ok && R.chg.v.intact ? "; board and change records intact" : ""}</p>`;
+  h += `<p class="kv"><a href="https://github.com/${esc(P.repo)}/tree/main/${esc(P.path)}" target="_blank" rel="noopener">Portal files</a></p></div>`;
+  /* records */
+  if (R.rec && R.rec.ok) {
+    const rec = R.rec.v;
+    h += `<div><h3>Records</h3>`;
+    if (rec.kritis) {
+      h += `<p class="kv"><b>Kritis:</b> ${esc(rec.kritis.report)}, ${esc(rec.kritis.version)}, ${esc(rec.kritis.date)}<br><span class="excerpt">${esc(rec.kritis.verdict)}</span></p>`;
+      if (rec.kritis.outstanding && rec.kritis.outstanding.length) h += `<ul class="items">` + rec.kritis.outstanding.map(x => `<li>${esc(x)}</li>`).join("") + `</ul>`;
+    } else h += `<p class="kv"><b>Kritis:</b> <span class="sub">No examination recorded.</span></p>`;
+    if (rec.folder) h += `<p class="kv"><b>Folder:</b> <span class="excerpt">${esc(rec.folder)}</span></p>`;
+    (rec.notes || []).forEach(n => h += `<p class="kv excerpt">${esc(n)}</p>`);
+    h += `</div>`;
+  }
+  h += `</div>`;
+  box.innerHTML = h;
+  box.open = open;
+}
+function renderFunctions() {
+  const box = $("#functions");
+  if (!GENERAL) { box.innerHTML = `<p class="sub">The function list opens with the first portal key released at sign-in; none was available.</p>`; return; }
+  box.innerHTML = GENERAL.functions.map(g => `<div><h3>${esc(g.group)}</h3><ul>` + g.items.map(i =>
+    `<li>${i.url ? `<a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.label)}</a>` : esc(i.label)}${i.where ? `<span class="where">${esc(i.where)}</span>` : ""}</li>`).join("") + `</ul></div>`).join("");
+}
+
+/* ---------- sign-in ---------- */
+$("#gate-form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const btn = $("#go"), err = $("#gate-err"), pass = $("#pass").value;
+  err.hidden = true; btn.disabled = true;
+  try { await rpc("symposion_admin_check", { p_pass: pass }); }
+  catch (e) { err.textContent = MSG[e.message] || MSG.server; err.hidden = false; btn.disabled = false; $("#pass").value = ""; return; }
+  PASS = pass; $("#pass").value = "";
+  $("#gate").hidden = true; $("#home").hidden = false;
+  loadAll();
+});
+$("#refresh").addEventListener("click", () => { GENERAL = null; loadAll(); });
+$("#lock").addEventListener("click", () => { PASS = null; RECORDS = null; GENERAL = null; RESULTS = {}; location.reload(); });
+</script>
+</body>
+</html>
